@@ -3,7 +3,8 @@ package com.bantads.ms_cliente.model.entity;
 import com.bantads.ms_cliente.model.enums.StatusCliente;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.validator.constraints.UUID;
+
+import java.util.UUID;
 
 @Getter
 @Setter
