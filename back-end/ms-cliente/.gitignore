@@ -1,33 +1,76 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+# =========================
+# Build & Dependency Folders
+# =========================
+/build/
+/out/
+/target/
+/.gradle/
+/mvnw
+/mvnw.cmd
+!gradle-wrapper.jar
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
+# =========================
+# IDEs
+# =========================
+# IntelliJ IDEA
+/.idea/
+/*.iml
+/*.iws
+/.idea_modules/
+/.idea/*
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
+# Eclipse
+/.project
+/.classpath
+/.settings/
+/.metadata/
+/bin/
 
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
+# VSCode
 .vscode/
+
+# =========================
+# OS Files
+# =========================
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Linux
+*~
+
+# =========================
+# Logs & Temporary Files
+# =========================
+*.log
+*.tmp
+*.swp
+*.bak
+*.orig
+*.rej
+
+# =========================
+# Spring Boot
+# =========================
+/spring.log
+/*.jar
+/*.war
+
+# =========================
+# Others
+# =========================
+# Maven Wrapper
+.mvn/wrapper/maven-wrapper.jar
+
+# Gradle Wrapper
+gradle-wrapper.jar
+
+# Generated test reports
+/test-results/
