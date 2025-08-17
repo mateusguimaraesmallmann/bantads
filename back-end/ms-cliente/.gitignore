@@ -1,76 +1,69 @@
-# =========================
-# Build & Dependency Folders
-# =========================
+# ===============================
+# Build directories
+# ===============================
 /build/
-/out/
 /target/
-/.gradle/
-/mvnw
-/mvnw.cmd
-!gradle-wrapper.jar
 
-# =========================
-# IDEs
-# =========================
+# ===============================
 # IntelliJ IDEA
-/.idea/
-/*.iml
-/*.iws
-/.idea_modules/
-/.idea/*
+# ===============================
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
 
-# Eclipse
-/.project
-/.classpath
-/.settings/
-/.metadata/
-/bin/
+# Configurações específicas da IDE que não precisam no Git
+misc.xml
+modules.xml
+vcs.xml
+workspace.xml
 
-# VSCode
-.vscode/
-
-# =========================
-# OS Files
-# =========================
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
-
-# macOS
+# ===============================
+# OS files
+# ===============================
 .DS_Store
-.AppleDouble
-.LSOverride
+Thumbs.db
 
-# Linux
-*~
-
-# =========================
-# Logs & Temporary Files
-# =========================
+# ===============================
+# Logs and temporary files
+# ===============================
 *.log
 *.tmp
+*.temp
 *.swp
-*.bak
-*.orig
-*.rej
+*.swo
 
-# =========================
-# Spring Boot
-# =========================
-/spring.log
-/*.jar
-/*.war
-
-# =========================
-# Others
-# =========================
-# Maven Wrapper
-.mvn/wrapper/maven-wrapper.jar
-
-# Gradle Wrapper
+# ===============================
+# Gradle
+# ===============================
+.gradle/
+gradle-app.setting
 gradle-wrapper.jar
+gradle-wrapper.properties
 
-# Generated test reports
-/test-results/
+# ===============================
+# Maven
+# ===============================
+/target/
+/pom.xml.tag
+/pom.xml.releaseBackup
+/pom.xml.versionsBackup
+/pom.xml.next
+/release.properties
+
+# ===============================
+# Environment files
+# ===============================
+.env
+*.env
+
+# ===============================
+# Spring Boot
+# ===============================
+/spring.log
+
+# ===============================
+# Others
+# ===============================
+.idea_modules/
