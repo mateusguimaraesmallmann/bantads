@@ -1,0 +1,32 @@
+<div class="container mt-5">
+  <h2 class="mb-4 text-center">Tela Inicial do Cliente</h2>
+
+  <!-- Saldo -->
+  <div class="card p-3 mb-4 shadow-sm">
+    <h4>
+      Saldo Atual:
+      <span
+        [ngClass]="{
+          'text-success': saldo >= 0,
+          'text-danger': saldo < 0
+        }"
+      >
+        {{ saldo | currency:'BRL' }}
+      </span>
+    </h4>
+  </div>
+
+  <!-- Menu de opções -->
+  <div class="row row-cols-1 row-cols-md-2 g-3">
+    <div class="col" *ngFor="let opcao of opcoes">
+      <div class="card shadow-sm h-100">
+        <div class="card-body d-flex justify-content-between align-items-center">
+          <span class="fw-bold">{{ opcao.nome }}</span>
+          <button class="btn btn-primary btn-sm" (click)="acao(opcao)">
+            Acessar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
