@@ -1,15 +1,16 @@
 package com.bantads.ms_cliente.model.dto.output;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.hibernate.annotations.processing.Pattern;
-import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.NoArgsConstructor;
 
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public final class EnderecoDTOOut {
 
     @Schema(type = "String", example = "Rua", description = "Tipo do logradouro (Rua, Avenida, etc.)")

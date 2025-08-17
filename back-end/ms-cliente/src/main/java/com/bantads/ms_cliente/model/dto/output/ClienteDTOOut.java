@@ -7,16 +7,17 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public final class ClienteDTOOut {
 
-    @Schema(type = "UUID", description = "ID")
-    private UUID id;
+    @Schema(type = "Long", description = "ID")
+    private Long id;
 
     @Schema(description = "Nome completo do cliente", example = "Maria da Silva")
     @NotBlank(message = "O nome é obrigatório")

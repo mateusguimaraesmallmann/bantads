@@ -3,11 +3,9 @@ package com.bantads.ms_cliente.controller;
 import com.bantads.ms_cliente.model.dto.input.CriarClienteDTOIn;
 import com.bantads.ms_cliente.model.dto.input.EditarClienteDTOIn;
 import com.bantads.ms_cliente.model.dto.output.ClienteDTOOut;
-import com.bantads.ms_cliente.model.entity.Cliente;
 import com.bantads.ms_cliente.service.ClienteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ClienteController {
 
-    private ClienteService clienteService;
+    private final ClienteService clienteService;
 
     @PostMapping
     public ResponseEntity<ClienteDTOOut> criarCliente(

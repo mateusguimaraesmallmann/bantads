@@ -2,9 +2,10 @@ package com.bantads.ms_cliente.model.entity;
 
 import com.bantads.ms_cliente.model.enums.StatusCliente;
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.util.UUID;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -16,8 +17,7 @@ public class Cliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true)
-    private UUID id;
+    private Long id;
 
     @Column
     @Enumerated(EnumType.STRING)
