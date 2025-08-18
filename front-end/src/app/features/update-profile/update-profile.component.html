@@ -56,6 +56,18 @@
           </div>
         </div>        
       </form>
+      <div class="row mt-4">
+        <div class="offset-sm-2 col-sm-10">
+
+          <div *ngIf="updateStatus === 'success'" class="alert alert-success">
+            Usuário atualizado com sucesso!
+          </div>
+
+          <div *ngIf="updateStatus === 'error'" class="alert alert-danger">
+            Falha ao atualizar. Por favor, tente novamente.
+          </div>
+          
+        </div>      
     </div>
   </div>
 </div>
