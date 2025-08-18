@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common'; 
 import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms'; 
 import { FormBuilder, Validators } from '@angular/forms'
+import { UserService } from '../../core/services/user.service';
+import { UserUpdate } from '../../core/models/user-update.model';
 
 @Component({
   selector: 'app-update-profile',
@@ -17,9 +19,13 @@ import { FormBuilder, Validators } from '@angular/forms'
 
 export class UpdateProfileComponent implements OnInit{
 
-  constructor(private fb: FormBuilder) {}
+  constructor(   
+    private fb: FormBuilder, 
+    private userService: UserService) 
+    {}
   
   updateUserForm!: FormGroup;
+  updateStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
 
   testUser = {
     nome: "Crysthôncio",
@@ -44,6 +50,37 @@ export class UpdateProfileComponent implements OnInit{
   }
 
   updateUser(): void {
-    alert('Dados Atualizados');
-  }  
+    if (this.updateUserForm.invalid) {
+      alert('Formulário inválido!');
+      return; 
+    }
+     this.updateStatus = 'loading';
+    const formValues = this.updateUserForm.value;
+
+    const userUpdate: UserUpdate = {
+      nome:formValues.nome,
+      email:formValues.email,
+      salario:formValues.salario,
+      endereco:formValues.endereco,
+      CEP:formValues.CEP,
+      cidade:formValues.cidade,
+      estado:formValues.estado
+    };
+
+    this.updateStatus = 'loading';
+
+    this.userService.updateUser(userUpdate).subscribe({
+      next: (response) => this.handleSuccess(response),
+      error: (err) => this.handleError(err)
+    });
+  }
+
+  handleSuccess(response: UserUpdate): void {
+    this.updateStatus = 'success';
+    this.testUser = response; 
+  }
+
+  handleError(error: any): void {
+    this.updateStatus = 'error';
+  }
 }
