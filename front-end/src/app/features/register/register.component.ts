@@ -4,10 +4,11 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ViacepService } from '../../../app/core/services/viacep.service';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap, catchError, of } from 'rxjs';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-register',
-  imports: [CommonModule, ReactiveFormsModule,  NgxMaskDirective],
+  imports: [CommonModule, ReactiveFormsModule,  NgxMaskDirective, RouterLink],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
