@@ -1,0 +1,30 @@
+<div class="admin-home">
+  <header class="mb-3">
+    <h1 class="titulo">Dashboard — Administrador</h1>
+    <p class="sub">Resumo por gerente (ordenado por saldo positivo)</p>
+  </header>
+
+    <section class="cards">
+    @for (l of linhas(); track l.id) {
+        <article class="card">
+        <div class="card-header">
+            <h2>{{ l.nome }}</h2>
+        </div>
+        <div class="card-body">
+            <div class="metric">
+            <span class="label">Clientes</span>
+            <span class="value">{{ l.qtdClientes }}</span>
+            </div>
+            <div class="metric">
+            <span class="label">Soma saldos (≥ 0)</span>
+            <span class="value positivo">{{ asCurrency(l.somaPositivos) }}</span>
+            </div>
+            <div class="metric">
+            <span class="label">Soma saldos (&lt; 0)</span>
+            <span class="value negativo">{{ asCurrency(l.somaNegativos) }}</span>
+            </div>
+        </div>
+        </article>
+    }
+    </section>
+</div>

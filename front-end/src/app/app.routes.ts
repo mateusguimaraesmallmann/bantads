@@ -5,6 +5,7 @@ import { LoginComponent } from './features/login/login.component';
 import { RegisterComponent } from './features/register/register.component';
 import { ManagerHomeComponent } from './features/manager-home/manager-home.component';
 import {TransactionHistoryComponent} from './features/transaction-history/transaction-history.component';
+import {AdministratorHomeComponent} from './features/administrator-home/administrator-home.component';
 
 export const routes: Routes = [
   
@@ -15,5 +16,6 @@ export const routes: Routes = [
   { path: 'update-profile', component: UpdateProfileComponent },
   { path: 'manager-home', component: ManagerHomeComponent},
   { path: 'transaction-history', component: TransactionHistoryComponent },
+  { path: 'administrator-home', component: AdministratorHomeComponent },
 
 ];
