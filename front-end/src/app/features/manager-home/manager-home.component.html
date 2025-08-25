@@ -22,13 +22,11 @@
             <li class="list-group-item">Reprovar</li>
         </ul>
         <ul class="list-group list-group-horizontal" *ngFor="let solicitacao of solicitacoes">
-            <li class="list-group-item">{{solicitacao.cpf}}</li>
+            <li class="list-group-item">{{solicitacao.cpf | mask: "000.000.000-00"}}</li>
             <li class="list-group-item">{{solicitacao.nome}}</li>
-            <li class="list-group-item">{{solicitacao.salario}}</li>
+            <li class="list-group-item">{{solicitacao.salario | currency: 'BRL'}}</li>
             <li class="list-group-item"><button id="aproveButton" type="button" class="btn btn-success" (click)="responseManager('aproveButton')">Aprovar</button></li>
             <li class="list-group-item"><button id="denyButton" type="button" class="btn btn-danger" (click)="responseManager('denyButton')">Reprovar</button></li>
         </ul>
     </div>
 </div>
-
-

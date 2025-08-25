@@ -1,19 +1,23 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { HeaderComponent } from '../../core/components/header/header.component';
 
 @Component({
   selector: 'app-manager-home',
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, NgxMaskPipe],
+  providers: [
+    provideNgxMask()
+  ],
   templateUrl: './manager-home.component.html',
   styleUrl: './manager-home.component.css'
 })
 export class ManagerHomeComponent {
 
     solicitacoes = [
-      {cpf: 123456789101, nome: "Tiago Salles", salario: 1500},
-      {cpf: 123456789101, nome: "Tiago Salles", salario: 1500},
-      {cpf: 123456789101, nome: "Tiago Salles", salario: 1500}
+      {cpf: '12345678910', nome: "Tiago Salles", salario: 1500},
+      {cpf: '12345678910', nome: "Tiago Salles", salario: 1500},
+      {cpf: '12345678910', nome: "Tiago Salles", salario: 1500}
     ]
 
 
