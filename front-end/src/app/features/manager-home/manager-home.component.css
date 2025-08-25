@@ -1,0 +1,64 @@
+.main-content
+{
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+p
+{
+    margin: 5px;
+}
+
+.hello-msg
+{
+    justify-content:left;
+    font-family: 'Inter', sans-serif;
+}
+
+.container
+{
+    display:flex;
+    justify-content: left;
+    flex-wrap: wrap;
+    padding-top:20px;
+}
+
+.card
+{
+    background: linear-gradient(135deg, #1a72df, #0d47a1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: 20px;
+    width: 260px;
+    height: 120px;
+    display: flex;
+    justify-content: left;
+}
+
+.card:hover
+{
+    box-shadow: 0 12px 28px #4da8f7;
+    transform: scale(1.07);
+}
+
+.card .card-content
+{
+    font-family: 'Inter', sans-serif;
+    color: #ffffff;
+    padding: 10px;
+    align-items: left;
+    justify-content: left;
+    text-align: left;
+}
+
+.table
+{
+    justify-content: center;
+    padding-top: 50px;
+}
+
+.list-group-horizontal .list-group-item {
+    flex-basis: 0;
+    flex-grow: 1;
+    text-align: center;
+}

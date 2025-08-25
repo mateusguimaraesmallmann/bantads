@@ -1,0 +1,34 @@
+<app-header></app-header>
+<div class="main-content">
+    <div class="hello-msg">
+        <p>Olá, usuário! 👋</p>
+        <p>Estas são as novas solicitações de aprovação de hoje.</p>
+    </div>
+    <div class="container">
+        <div class="card">
+            <div class="card-content">
+                <p>Pedidos pendentes</p>
+                <p>0</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="table">
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item">CPF</li>
+            <li class="list-group-item">Nome Completo</li>
+            <li class="list-group-item">Salário</li>
+            <li class="list-group-item">Aprovar</li>
+            <li class="list-group-item">Reprovar</li>
+        </ul>
+        <ul class="list-group list-group-horizontal" *ngFor="let solicitacao of solicitacoes">
+            <li class="list-group-item">{{solicitacao.cpf}}</li>
+            <li class="list-group-item">{{solicitacao.nome}}</li>
+            <li class="list-group-item">{{solicitacao.salario}}</li>
+            <li class="list-group-item"><button id="aproveButton" type="button" class="btn btn-success" (click)="responseManager('aproveButton')">Aprovar</button></li>
+            <li class="list-group-item"><button id="denyButton" type="button" class="btn btn-danger" (click)="responseManager('denyButton')">Reprovar</button></li>
+        </ul>
+    </div>
+</div>
+
+
