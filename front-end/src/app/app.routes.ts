@@ -3,6 +3,7 @@ import { ClientHomeComponent } from './features/client-home/client-home.componen
 import { UpdateProfileComponent } from './features/update-profile/update-profile.component';
 import { LoginComponent } from './features/login/login.component';
 import { RegisterComponent } from './features/register/register.component';
+import { ManagerHomeComponent } from './features/manager-home/manager-home.component';
 import {TransactionHistoryComponent} from './features/transaction-history/transaction-history.component';
 
 export const routes: Routes = [
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'client-home', component: ClientHomeComponent },
   { path: 'update-profile', component: UpdateProfileComponent },
+  { path: 'manager-home', component: ManagerHomeComponent},
   { path: 'transaction-history', component: TransactionHistoryComponent },
 
 ];
