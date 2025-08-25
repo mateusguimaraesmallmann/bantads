@@ -1,0 +1,83 @@
+.cliente-home {
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  background:
+    radial-gradient(900px 500px at 20% 15%, rgba(255, 255, 255, 0.18), transparent 60%),
+    linear-gradient(135deg, #0a6cf1 0%, #1678e8 35%, #156bdc 68%, #0b59cc 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-shell {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 1080px;
+  min-height: 460px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  background: #fff;
+}
+
+.pane {
+  padding: clamp(24px, 3vw, 40px);
+}
+
+.pane-logo {
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.pane-form {
+  background: #fff;
+  border-left: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.opcao-card {
+  background-color: #1678e8;
+  color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  border: none;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.opcao-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
+
+.btn-primary {
+  background-color: #1967ff;
+  border-color: #1967ff;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #1557d8;
+  border-color: #1557d8;
+}
+
+@media (max-width: 992px) {
+  .auth-shell {
+    grid-template-columns: 1fr;
+    max-width: 720px;
+  }
+  .pane-form {
+    border-left: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+  }
+}
+
+.opcao-card-link {
+  text-decoration: none;
+  color: inherit;
+}
