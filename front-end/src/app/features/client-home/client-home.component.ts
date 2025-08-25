@@ -1,16 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from '../../core/components/header/header.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-client-home',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule],
   templateUrl: './client-home.component.html',
   styleUrl: './client-home.component.css'
 })
 export class ClientHomeComponent {
   saldo: number = -150.75; //exemplo
+  nomeCliente: string = 'João';
+
+  private router = inject(Router);
 
   opcoes = [
     { nome: 'Alteração de Perfil' },
@@ -21,6 +24,14 @@ export class ClientHomeComponent {
   ];
 
   acao(opcao: any) {
-    alert(`Você clicou em: ${opcao.nome}`);
+    if (opcao.nome === 'Alteração de Perfil') {
+      this.router.navigate(['/update-profile']);
+    } else {
+      alert(`Você clicou em: ${opcao.nome}`);
+    }
+  }
+
+  logout() {
+    this.router.navigate(['/login']);
   }
 }
