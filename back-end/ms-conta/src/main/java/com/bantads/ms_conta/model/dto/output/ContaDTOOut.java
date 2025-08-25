@@ -3,6 +3,7 @@ package com.bantads.ms_conta.model.dto.output;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 @Schema(name = "ContaDTO", description = "Representa os dados de uma conta bancária")
 public final class ContaDTOOut {
 
