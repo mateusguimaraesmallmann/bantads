@@ -1,6 +1,6 @@
 import { Component, computed, inject } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
-import { ManagerService } from '../../core/services/manager.service';
+import { ManagerService } from '../../../core/services/manager.service';
 
 type LinhaDash = {
   id: number;

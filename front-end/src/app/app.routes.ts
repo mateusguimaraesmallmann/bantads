@@ -5,7 +5,8 @@ import { LoginComponent } from './features/login/login.component';
 import { RegisterComponent } from './features/register/register.component';
 import { ManagerHomeComponent } from './features/manager-home/manager-home.component';
 import {TransactionHistoryComponent} from './features/transaction-history/transaction-history.component';
-import {AdministratorHomeComponent} from './features/administrator-home/administrator-home.component';
+import {AdministratorHomeComponent} from './features/administrator/administrator-home/administrator-home.component';
+import {ListManagerComponent} from './features/administrator/list-manager/list-manager.component';
 
 export const routes: Routes = [
   
@@ -17,5 +18,6 @@ export const routes: Routes = [
   { path: 'manager-home', component: ManagerHomeComponent},
   { path: 'transaction-history', component: TransactionHistoryComponent },
   { path: 'administrator-home', component: AdministratorHomeComponent },
+  { path: 'list-manager', component: ListManagerComponent },
 
 ];
