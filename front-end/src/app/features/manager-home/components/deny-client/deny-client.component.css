@@ -1,0 +1,48 @@
+  .custom-modal-bg {
+    background-color: var(--dark-blue);
+    color: var(--off-white);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  .custom-modal-title {
+    font-weight: 600;
+  }
+
+  .custom-textarea {
+    background-color: var(--lightest-navy);
+    color: var(--off-white);
+    border: 1px solid var(--light-blue);
+    transition: all 0.3s ease-in-out;
+  }
+
+  .custom-textarea::placeholder {
+    color: rgba(204, 214, 246, 0.7);
+  }
+
+  .custom-textarea:focus {
+    background-color: var(--lightest-navy);
+    color: var(--off-white);
+    border-color: var(--light-blue);
+    box-shadow: 0 0 0 0.25rem rgba(62, 96, 154, 0.25);
+  }
+
+  .custom-modal-message {
+    font-size: 0.9rem;
+    color: rgba(0, 0, 0, 0.7);
+    margin-top: 0.5rem;
+  }
+
+  .btn .btn-primary .custom-btn-primary {
+    background-color: var(--light-blue);
+    border-color: var(--light-blue);
+    transition: all 1.0s ease-in-out;
+  }
+
+  .custom-btn-primary:hover,
+  .custom-btn-primary:active,
+  .custom-btn-primary:focus {
+    background-color: #007bff;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.5);
+  }

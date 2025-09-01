@@ -1,0 +1,19 @@
+<div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content custom-modal-bg">
+      <div class="modal-header border-0 pb-0">
+        <h5 class="modal-title custom-modal-title" id="feedbackModalLabel">Informar recusa ao cliente </h5>
+        <button type="button" class="btn-close" (click)="closeModal()" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pt-2">
+        <form>
+          <div class="mb-3">
+            <textarea class="form-control custom-textarea" id="message-text" rows="5" placeholder="Digite seu feedback aqui..."></textarea>
+          </div>
+          <p class="custom-modal-message">Será enviado um e-mail para o cliente informando que a conta não foi aprovada!</p>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary custom-btn-primary">Enviar</button>
+      </div>
+    </div>
+</div>
