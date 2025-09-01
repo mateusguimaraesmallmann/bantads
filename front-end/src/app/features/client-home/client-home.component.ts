@@ -24,12 +24,14 @@ export class ClientHomeComponent {
   ];
 
   acao(opcao: any) {
-    if (opcao.nome === 'Alteração de Perfil') {
-      this.router.navigate(['/update-profile']);
-    } else {
-      alert(`Você clicou em: ${opcao.nome}`);
-    }
+  if (opcao.nome === 'Alteração de Perfil') {
+    this.router.navigate(['/update-profile']);
+  } else if (opcao.nome === 'Depositar') {
+    this.router.navigate(['/deposit']);
+  } else {
+    alert(`Você clicou em: ${opcao.nome}`);
   }
+}
 
   logout() {
     this.router.navigate(['/login']);
