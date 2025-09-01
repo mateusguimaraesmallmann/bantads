@@ -3,10 +3,7 @@ package com.bantads.ms_conta.controller;
 import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
 import com.bantads.ms_conta.model.dto.input.DepositarSacarDTOIn;
 import com.bantads.ms_conta.model.dto.input.TransferirDTOIn;
-import com.bantads.ms_conta.model.dto.output.ContaDTOOut;
-import com.bantads.ms_conta.model.dto.output.DepositarSacarDTOOut;
-import com.bantads.ms_conta.model.dto.output.SaldoDTOOut;
-import com.bantads.ms_conta.model.dto.output.TransferirDTOOut;
+import com.bantads.ms_conta.model.dto.output.*;
 import com.bantads.ms_conta.service.ContaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -48,5 +45,12 @@ public class ContaController {
             @PathVariable String numero,
             @RequestBody TransferirDTOIn dto) {
         return ResponseEntity.ok(contaService.transferir(numero, dto));
+    }
+
+    @GetMapping("/{numero}/extrato")
+    public ResponseEntity<ExtratoDTOOut> gerarExtrato(
+            @PathVariable String numero
+    ) {
+        return ResponseEntity.ok(contaService.gerarExtrato(numero));
     }
 }

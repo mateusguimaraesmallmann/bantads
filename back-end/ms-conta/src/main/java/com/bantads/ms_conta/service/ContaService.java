@@ -3,10 +3,7 @@ package com.bantads.ms_conta.service;
 import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
 import com.bantads.ms_conta.model.dto.input.DepositarSacarDTOIn;
 import com.bantads.ms_conta.model.dto.input.TransferirDTOIn;
-import com.bantads.ms_conta.model.dto.output.ContaDTOOut;
-import com.bantads.ms_conta.model.dto.output.DepositarSacarDTOOut;
-import com.bantads.ms_conta.model.dto.output.SaldoDTOOut;
-import com.bantads.ms_conta.model.dto.output.TransferirDTOOut;
+import com.bantads.ms_conta.model.dto.output.*;
 import com.bantads.ms_conta.model.entity.Conta;
 import com.bantads.ms_conta.model.entity.Movimentacao;
 import com.bantads.ms_conta.model.enums.TipoMovimentacao;
@@ -21,7 +18,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +31,9 @@ public class ContaService {
     private final ModelMapper modelMapper;
 
     public ContaDTOOut criarConta(CriarContaDTOIn contaDTOIn) {
-        boolean existe = contaRepository.existsByNumero(contaDTOIn.getNumero());
+        boolean existe = contaRepository.existsByIdCliente(contaDTOIn.getIdCliente());
         if (existe) {
-            throw new EntityExistsException("Conta já cadastrada no banco de dados");
+            throw new EntityExistsException("Conta já cadastrada no banco de dados para esse cliente");
         }
 
         String numero;
@@ -64,7 +63,7 @@ public class ContaService {
                 .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
 
         return new SaldoDTOOut(
-                conta.getSaldo().toString(),
+                conta.getNumero(),
                 conta.getSaldo(),
                 conta.getIdCliente());
     }
@@ -131,9 +130,6 @@ public class ContaService {
             throw new IllegalArgumentException("Saldo insuficiente na conta de origem");
         }
 
-        origem.setSaldo(origem.getSaldo().subtract(transferirDTOIn.getValor()));
-        destino.setSaldo(destino.getSaldo().add(transferirDTOIn.getValor()));
-
         criarMovimentacao(
                 destino,
                 origem.getNumero(),
@@ -148,14 +144,16 @@ public class ContaService {
                 transferirDTOIn.getValor(),
                 TipoMovimentacao.TRANSFERENCIA);
 
-        contaRepository.save(origem);
-        contaRepository.save(destino);
+        DepositarSacarDTOIn depositarSacarDTOIn = new DepositarSacarDTOIn(transferirDTOIn.getValor());
+
+        DepositarSacarDTOOut depositarSacarDTOOut = sacar(origem.getNumero(), depositarSacarDTOIn);
+        depositar(destino.getNumero(), depositarSacarDTOIn);
 
         return new TransferirDTOOut(
                 movimentacaoOrigem.getContaOrigem(),
                 movimentacaoOrigem.getData(),
                 movimentacaoOrigem.getContaDestino(),
-                origem.getSaldo(),
+                depositarSacarDTOOut.getSaldo(),
                 movimentacaoOrigem.getValor()
         );
     }
@@ -180,6 +178,30 @@ public class ContaService {
         contaRepository.save(conta);
 
         return movimentacao;
+    }
+
+    public ExtratoDTOOut gerarExtrato(String numeroConta) {
+        Conta conta = contaRepository.findByNumero(numeroConta)
+                .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
+
+        List<MovimentacaoDTOOut> movimentacoes = movimentacaoRepository
+                .findByContaId(conta.getId())
+                .stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+
+        return new ExtratoDTOOut(conta.getNumero(), conta.getSaldo(), movimentacoes);
+
+    }
+
+    private MovimentacaoDTOOut mapToDTO(Movimentacao movimentacao) {
+        return new MovimentacaoDTOOut(
+                movimentacao.getData(),
+                movimentacao.getTipo().name(),
+                movimentacao.getValor(),
+                movimentacao.getContaOrigem(),
+                movimentacao.getContaDestino()
+        );
     }
 
 }

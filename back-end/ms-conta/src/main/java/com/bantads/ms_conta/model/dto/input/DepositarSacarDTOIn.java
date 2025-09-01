@@ -1,11 +1,13 @@
 package com.bantads.ms_conta.model.dto.input;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Getter
+@AllArgsConstructor
 @Schema(name = "DepositarSacarDTOIn", description = "Representa o valor que será depositado ou sacado")
 public final class DepositarSacarDTOIn {
 

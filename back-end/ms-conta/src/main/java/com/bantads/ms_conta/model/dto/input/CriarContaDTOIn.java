@@ -9,9 +9,6 @@ import java.math.BigDecimal;
 @Schema(name = "CriarContaDTOIn", description = "Representa os dados de criação de uma conta bancária")
 public final class CriarContaDTOIn {
 
-    @Schema(description = "Número único da conta", example = "12345")
-    private String numero;
-
     @Schema(description = "Saldo inicial da conta", example = "1000.00")
     private BigDecimal saldoInicial;
 
