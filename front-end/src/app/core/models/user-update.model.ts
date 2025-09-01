@@ -8,3 +8,5 @@ export interface UserUpdate {
   cidade: string;
   estado: string;
 }
+
+

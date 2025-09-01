@@ -1,0 +1,70 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h3 class="card-title">Consulta de Clientes</h3>
+      <p class="card-subtitle text-muted">Visualize e pesquise todos os clientes da sua carteira.</p>
+    </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <label for="buscaCliente" class="form-label">Pesquisar por Nome ou CPF</label>
+        <input
+          type="text"
+          id="buscaCliente"
+          class="form-control"
+          placeholder="Digite o nome ou CPF do cliente..."
+          [(ngModel)]="termoBusca"
+          (input)="ordenarEFiltrarClientes()"
+        >
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th scope="col">Nome</th>
+              <th scope="col">CPF</th>
+              <th scope="col">E-mail</th>
+              <th scope="col">Telefone</th>
+              <th scope="col">Cidade</th>
+              <th scope="col">Estado</th>
+              <th scope="col" class="text-end">Saldo (R$)</th>
+              <th scope="col" class="text-end">Limite (R$)</th>
+              <th scope="col" class="text-center">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let cliente of listaClientesFiltrados">
+              <td>{{ cliente.nome }}</td>
+              <td>{{ cliente.cpf }}</td>
+              <td>{{ cliente.email }}</td>
+              <td>{{ cliente.telefone }}</td>
+              <td>{{ cliente.cidade }}</td>
+              <td>{{ cliente.estado }}</td>
+              <td class="text-end" [ngClass]="{'text-danger': cliente.saldo < 0}">
+                {{ cliente.saldo }}
+              </td>
+              <td class="text-end">
+                {{ cliente.limite }}
+              </td>
+              <td class="text-center">
+                <a
+                  href="javascript:void(0)"
+                  (click)="verDetalhesCliente(cliente.cpf)"
+                  class="btn btn-sm btn-outline-primary"
+                  title="Ver detalhes de {{ cliente.nome }}"
+                >
+                  Detalhes
+                </a>
+              </td>
+            </tr>
+            <tr *ngIf="listaClientesFiltrados.length === 0">
+              <td colspan="9" class="text-center text-muted">
+                Nenhum cliente encontrado com o termo "{{ termoBusca }}".
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
