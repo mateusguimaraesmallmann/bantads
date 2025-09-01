@@ -3,7 +3,8 @@ import { CommonModule } from '@angular/common';
 import { NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { HeaderComponent } from '../../core/components/header/header.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { AproveClientComponent } from './components/aprove-client/aprove-client.component';
+import { AproveClientComponent } from './components/aprove-client/aprove-client/aprove-client.component';
+import { DenyClientComponent } from './components/deny-client/deny-client.component';
 
 @Component({
   selector: 'app-manager-home',
@@ -26,13 +27,14 @@ export class ManagerHomeComponent {
       {cpf: '12345678910', nome: "Tiago Salles", salario: 1500}
     ]
 
+    numPedidos: number = this.solicitacoes.length;
 
-    //TODO: Definir função para reprovar ou aprovar a conta
+    //TODO: Com os modais implementados, falta deixar a retirada das contas e alteração no card de pedidos dinâmica
     responseManager(id: String){
         if (id === "aproveButton"){
           this.bsModalRef = this.modalService.show(AproveClientComponent);
         }else{
-          alert("Cliente reprovado!");
+          this.bsModalRef = this.modalService.show(DenyClientComponent);
         }
     }
 }
