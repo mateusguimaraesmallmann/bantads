@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -36,6 +38,6 @@ public class Cliente {
     private Endereco endereco;
 
     @Column(nullable = false, precision = 10, scale = 2)
-    private String salario;
+    private BigDecimal salario;
 
 }

@@ -1,7 +1,11 @@
 package com.bantads.ms_cliente.service;
 
+import com.bantads.ms_cliente.feign.ContaClient;
+import com.bantads.ms_cliente.feign.dto.ContaCriadaDTOOut;
+import com.bantads.ms_cliente.feign.dto.CriarContaDTOIn;
 import com.bantads.ms_cliente.model.dto.input.CriarClienteDTOIn;
 import com.bantads.ms_cliente.model.dto.input.EditarClienteDTOIn;
+import com.bantads.ms_cliente.model.dto.output.ClienteAprovadoDTOOut;
 import com.bantads.ms_cliente.model.dto.output.ClienteDTOOut;
 import com.bantads.ms_cliente.model.entity.Cliente;
 import com.bantads.ms_cliente.model.enums.StatusCliente;
@@ -12,8 +16,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +27,7 @@ public class ClienteService {
 
     private final ClienteRepository clienteRepository;
     private final ModelMapper modelMapper;
+    private final ContaClient contaClient;
 
     public ClienteDTOOut criarCliente(CriarClienteDTOIn clienteDTO) {
         boolean existe = clienteRepository.existsByCpf(clienteDTO.getCpf());
@@ -58,7 +64,7 @@ public class ClienteService {
         return modelMapper.map(atualizado, ClienteDTOOut.class);
     }
 
-    public Object aprovarCliente(String cpf) {
+    public ClienteAprovadoDTOOut aprovarCliente(String cpf) {
         Cliente cliente = clienteRepository.findByCpf(cpf)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
 
@@ -66,10 +72,31 @@ public class ClienteService {
             throw new RuntimeException("Cliente não está em análise de aprovação");
         }
 
-        // TODO: Adicionar criação de conta (MS Conta)
+        BigDecimal limite = calcularLimite(cliente.getSalario());
+
+        // TODO: Obter id do gerente pela sessão ativa que aprovou o cliente
+        Long idGerente =  new Random().nextLong();
+
+        CriarContaDTOIn criarContaDTOIn = new CriarContaDTOIn(BigDecimal.valueOf(0), limite, cliente.getId(), idGerente);
+        ContaCriadaDTOOut contaDTOOut = contaClient.criarConta(criarContaDTOIn);
 
         cliente.setStatus(StatusCliente.APROVADO);
-        return modelMapper.map(cliente, ClienteDTOOut.class);
+        clienteRepository.save(cliente);
+
+        return new ClienteAprovadoDTOOut(
+                cliente.getId(),
+                contaDTOOut.getNumero(),
+                contaDTOOut.getSaldo(),
+                contaDTOOut.getLimite(),
+                contaDTOOut.getIdGerente(),
+                contaDTOOut.getDataCriacao()
+                );
+    }
+
+    private BigDecimal calcularLimite(BigDecimal salario) {
+        return salario.compareTo(BigDecimal.valueOf(2000.00)) >= 0
+                        ? salario.divide(BigDecimal.valueOf(2))
+                        : BigDecimal.ZERO;
     }
 
     public Object rejeitarCliente(String cpf) {

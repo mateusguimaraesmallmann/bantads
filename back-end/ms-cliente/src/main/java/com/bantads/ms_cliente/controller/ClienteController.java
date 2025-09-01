@@ -2,6 +2,7 @@ package com.bantads.ms_cliente.controller;
 
 import com.bantads.ms_cliente.model.dto.input.CriarClienteDTOIn;
 import com.bantads.ms_cliente.model.dto.input.EditarClienteDTOIn;
+import com.bantads.ms_cliente.model.dto.output.ClienteAprovadoDTOOut;
 import com.bantads.ms_cliente.model.dto.output.ClienteDTOOut;
 import com.bantads.ms_cliente.service.ClienteService;
 import jakarta.validation.Valid;
@@ -46,8 +47,8 @@ public class ClienteController {
     }
 
     @PostMapping("/{cpf}/aprovar")
-    public ResponseEntity<Object> aprovarCliente(@PathVariable String cpf) {
-        Object dto = clienteService.aprovarCliente(cpf);
+    public ResponseEntity<ClienteAprovadoDTOOut> aprovarCliente(@PathVariable String cpf) {
+        ClienteAprovadoDTOOut dto = clienteService.aprovarCliente(cpf);
         return ResponseEntity.ok(dto);
     }
 
