@@ -2,10 +2,7 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
-
-  background:
-    radial-gradient(900px 500px at 20% 15%, rgba(255,255,255,0.18), transparent 60%),
-    linear-gradient(135deg, #0a6cf1 0%, #1678e8 35%, #156bdc 68%, #0b59cc 100%);
+  background:black;
 }
 
 .auth-shell {

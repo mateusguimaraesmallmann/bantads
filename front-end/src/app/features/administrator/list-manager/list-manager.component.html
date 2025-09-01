@@ -1,0 +1,109 @@
+<app-header></app-header>
+
+<div class="main-content page-with-navbar">
+    <div class="container mt-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2 class="h5 mb-0">Gerentes</h2>
+            <button class="btn btn-primary" (click)="openInsert()">Inserir Gerente</button>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-sm align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nome</th>
+                        <th>CPF</th>
+                        <th>E-mail</th>
+                        <th>Telefone</th>
+                        <th class="text-end">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Agora usando managers tipado (sem signal) -->
+                    <tr *ngFor="let m of managers; let i = index; trackBy: trackByIndex">
+                        <td>{{ m.nome }}</td>
+                        <td>{{ m.cpf }}</td>
+                        <td>{{ m.email }}</td>
+                        <td>{{ m.telefone }}</td>
+                        <td class="text-end">
+                            <button class="btn btn-outline-secondary btn-sm me-2" (click)="openEdit(i)">Editar</button>
+                            <button class="btn btn-outline-danger btn-sm" (click)="delete(i)">Excluir</button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="managers.length === 0">
+                        <td colspan="5" class="text-center text-muted">Nenhum gerente cadastrado.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal “leve” -->
+<div class="modal-backdrop-custom" *ngIf="modalOpen"></div>
+<div class="modal-custom" *ngIf="modalOpen" role="dialog" aria-modal="true">
+    <div class="card shadow-sm" style="max-width: 640px; width: 100%;">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <strong class="mb-0">{{ editingIndex === null ? 'Inserir Gerente' : 'Editar Gerente' }}</strong>
+            <button type="button" class="btn-close" aria-label="Fechar" (click)="closeModal()"></button>
+        </div>
+        <div class="card-body">
+            <form [formGroup]="form" (ngSubmit)="save()" novalidate>
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label class="form-label" for="nome">Nome</label>
+                        <input id="nome" class="form-control" formControlName="nome" />
+                        <div class="invalid-feedback d-block" *ngIf="f.nome.touched && f.nome.invalid">
+                            Informe um nome válido (mín. 3 caracteres).
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label" for="cpf">CPF</label>
+                        <input id="cpf" class="form-control" formControlName="cpf" placeholder="000.000.000-00" />
+                        <div class="invalid-feedback d-block" *ngIf="f.cpf.touched && f.cpf.invalid">
+                            CPF é obrigatório.
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="form-label" for="telefone">Telefone</label>
+                        <input id="telefone" class="form-control" formControlName="telefone"
+                            placeholder="(00) 00000-0000" />
+                        <div class="invalid-feedback d-block" *ngIf="f.telefone.touched && f.telefone.invalid">
+                            Telefone é obrigatório.
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label" for="email">E-mail</label>
+                        <input id="email" type="email" class="form-control" formControlName="email"
+                            placeholder="email@exemplo.com" />
+                        <div class="invalid-feedback d-block" *ngIf="f.email.touched && f.email.errors?.['required']">
+                            E-mail é obrigatório.
+                        </div>
+                        <div class="invalid-feedback d-block" *ngIf="f.email.touched && f.email.errors?.['email']">
+                            Informe um e-mail válido.
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <label class="form-label" for="senha">Senha</label>
+                        <input id="senha" type="password" class="form-control" formControlName="senha"
+                            placeholder="••••" />
+                        <div class="invalid-feedback d-block"
+                            *ngIf="f.senha.touched && f.senha.invalid && editingIndex === null">
+                            Senha é obrigatória (mín. 4 caracteres).
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

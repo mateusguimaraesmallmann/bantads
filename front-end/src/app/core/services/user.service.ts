@@ -13,9 +13,15 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
+  consultarUsuario(cpf:string):Observable<UserUpdate>{
+    const url = `${this.apiUrl}/${cpf}`;
+    return this.http.get<UserUpdate>(url);
+  }
 
-  updateUser(user: UserUpdate): Observable<UserUpdate> {
-    console.log(user);
+  atualizarUsuario(user: UserUpdate, cpf:string): Observable<UserUpdate> {
+    const url = `${this.apiUrl}/${cpf}`;
+    let resposta = this.http.put<UserUpdate>(url, user);
+    console.log(resposta)
     return of(user); 
   }
 }

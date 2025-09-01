@@ -1,18 +1,13 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom navbar-custom">
+<nav class="navbar navbar-expand-lg navbar-light border-bottom navbar-custom">
   <div class="container-fluid">
-    <a href="/client-home"><img src="assets/logo.png" alt="BANTADS" class="brand-img"></a>
+    <a class="brand-fixed"><img src="assets/logo.png" alt="BANTADS" class="brand-img"></a>
     
-    <div ngbDropdown class="d-flex ms-auto">
+    <div ngbDropdown class="d-flex ms-auto user-fixed">
       <a ngbDropdownToggle class="d-flex align-items-center text-decoration-none" id="dropdownUser1">
-        <img src="https://github.com/mdo.png" 
-          alt="mdo" 
-          width="32" 
-          height="32" 
-          class="rounded-circle me-2">
-        <strong class="d-none d-sm-inline-block">Usuário</strong>
+        <img src="../../../../assets/user-icon.png" alt="mdo" width="32" height="32" class="rounded-circle me-2">
+        <strong class="d-sm-inline-block user-custom">Usuário</strong>
       </a>
       <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser1">
-        <a ngbDropdownItem class="dropdown-item" href="#">Configurações</a>
         <a ngbDropdownItem class="dropdown-item" href="#">Perfil</a>
         <hr class="dropdown-divider">
         <a ngbDropdownItem class="dropdown-item" href="/login">Sair</a>

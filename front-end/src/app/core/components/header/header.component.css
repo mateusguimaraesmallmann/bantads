@@ -1,40 +1,71 @@
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-        }
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
 
-        /* A navbar não ocupa todo o tamanho da tela  */
-        body{
-            display: flex;
-            flex-direction: column;
-        }
-        
-        main.content {
-            flex: 1;
-            padding: 1.5rem !important;
-        }
+body {
+    display: flex;
+    flex-direction: column;
+    padding-top: 6rem;
+}
 
-        .card.p-3.mb-4.shadow-sm {
-            border-left: 5px solid #0d6efd;
-        }
+.main-content {
+  flex: 1;
+  padding: 1.5rem;
+  margin-top: 6rem;
+}
 
-        .pane {
-        padding: clamp(24px, 3vw, 40px);
-        }
+.card.p-3.mb-4.shadow-sm {
+    border-left: 5px solid #0d6efd;
+}
 
-        .pane-logo {
-        background: #ffffff;
-        display: flex;
-        }
+.pane {
+    padding: clamp(24px, 3vw, 40px);
+}
 
-        .brand-img {
-        height: 8rem !important;  
-        width: auto !important;
-        object-fit: contain;
-        }
+.pane-logo {
+    background: #ffffff;
+    display: flex;
+}
 
-        /* Define o tamanho  da navbar separadamente do tamanho da logo*/
-        .navbar-custom{
-            height: 4rem;
-        }
+.brand-img {
+    height: 14rem;  
+    width: auto;
+    object-fit: contain;
+}
+
+.navbar-custom {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    height: 6rem;
+    background: #000000;
+    z-index: 1030;
+}
+
+.brand-fixed{
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+}
+
+.user-fixed{
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  display: inline-flex;
+  align-items: center;
+}
+
+.navbar-custom .container-fluid { 
+    position: relative; 
+    height: 100%; 
+}
+
+.user-custom {
+    color: white;
+}
