@@ -30,7 +30,7 @@ public class ContaService {
     private final MovimentacaoRepository movimentacaoRepository;
     private final ModelMapper modelMapper;
 
-    public ContaDTOOut criarConta(CriarContaDTOIn contaDTOIn) {
+    public ContaCriadaDTOOut criarConta(CriarContaDTOIn contaDTOIn) {
         boolean existe = contaRepository.existsByIdCliente(contaDTOIn.getIdCliente());
         if (existe) {
             throw new EntityExistsException("Conta já cadastrada no banco de dados para esse cliente");
@@ -50,7 +50,7 @@ public class ContaService {
         conta.setDataCriacao(LocalDateTime.now());
         Conta salvo = contaRepository.save(conta);
 
-        return modelMapper.map(salvo, ContaDTOOut.class);
+        return modelMapper.map(salvo, ContaCriadaDTOOut.class);
     }
 
     public String gerarNumeroConta() {

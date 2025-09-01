@@ -17,7 +17,7 @@ public class ContaController {
     private final ContaService contaService;
 
     @PostMapping("/criar")
-    public ResponseEntity<ContaDTOOut> criarConta(@RequestBody CriarContaDTOIn dto) {
+    public ResponseEntity<ContaCriadaDTOOut> criarConta(@RequestBody CriarContaDTOIn dto) {
         return ResponseEntity.ok(contaService.criarConta(dto));
     }
 
