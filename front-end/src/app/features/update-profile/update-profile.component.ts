@@ -26,6 +26,7 @@ export class UpdateProfileComponent implements OnInit{
   
   updateUserForm!: FormGroup;
   updateStatus: 'idle' | 'loading' | 'success' | 'error' = 'idle';
+  cpfUsuario:string = "00000000000";
 
   testUser = {
     nome: "Crysthôncio",
@@ -47,6 +48,23 @@ export class UpdateProfileComponent implements OnInit{
     cidade: [this.testUser.cidade],
     estado: [this.testUser.estado]
     });
+
+
+  }
+  consultarUsuarioPorCpf(){
+    this.updateStatus = 'loading'; 
+
+    this.userService.consultarUsuario(this.cpfUsuario)
+      .subscribe({
+        next: (response) => {
+          console.log('Dados recebidos com sucesso:', response);
+          this.handleSuccess(response);
+        },
+        error: (err) => {
+          console.error('Erro ao consultar usuário:', err);
+          this.handleError(err);
+        }
+      });
   }
 
   updateUser(): void {
@@ -59,6 +77,7 @@ export class UpdateProfileComponent implements OnInit{
 
     const userUpdate: UserUpdate = {
       nome:formValues.nome,
+      cpf:this.cpfUsuario,
       email:formValues.email,
       salario:formValues.salario,
       endereco:formValues.endereco,
@@ -69,7 +88,7 @@ export class UpdateProfileComponent implements OnInit{
 
     this.updateStatus = 'loading';
 
-    this.userService.updateUser(userUpdate).subscribe({
+    this.userService.atualizarUsuario(userUpdate, userUpdate.cpf).subscribe({
       next: (response) => this.handleSuccess(response),
       error: (err) => this.handleError(err)
     });
@@ -77,7 +96,7 @@ export class UpdateProfileComponent implements OnInit{
 
   handleSuccess(response: UserUpdate): void {
     this.updateStatus = 'success';
-    this.testUser = response; 
+    //this.testUser = response; 
   }
 
   handleError(error: any): void {
