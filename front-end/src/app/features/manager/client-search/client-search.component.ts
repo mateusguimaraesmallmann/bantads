@@ -2,14 +2,18 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import{ ClientDetailsCpf } from '../../../core/models/client-details.model';
+import { HeaderComponent } from '../../../core/components/header/header.component';
+import { NAVITEMS } from '../navItems';
 
 @Component({
   selector: 'app-client-search',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './client-search.component.html',
   styleUrl: './client-search.component.css'
 })
 export class ClientSearchComponent {
+  navItems = NAVITEMS;
+
   public cpfPesquisa: string = '';
   public clienteEncontrado: ClientDetailsCpf | null = null;
   public mensagem: string = '';
