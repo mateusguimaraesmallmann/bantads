@@ -11,7 +11,7 @@ import {ListManagerComponent} from './features/administrator/list-manager/list-m
 import { TransferComponent } from './features/transfer/transfer.component';
 import {ListaClientesComponent} from './features/manager/client-list/client-list.component';
 import { TopClientsComponent } from './features/manager/top-clients/top-clients.component';
-import { ClientSearchComponent } from './features/client-search/client-search.component';
+import { ClientSearchComponent } from './features/manager/client-search/client-search.component';
 
 export const routes: Routes = [
 

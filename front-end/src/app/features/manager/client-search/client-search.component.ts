@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import{ ClientDetailsCpf } from '../../core/models/client-details.model';
+import{ ClientDetailsCpf } from '../../../core/models/client-details.model';
 
 @Component({
   selector: 'app-client-search',
