@@ -9,6 +9,7 @@ import {TransactionHistoryComponent} from './features/transaction-history/transa
 import {AdministratorHomeComponent} from './features/administrator/administrator-home/administrator-home.component';
 import {ListManagerComponent} from './features/administrator/list-manager/list-manager.component';
 import {ListaClientesComponent} from './features/client-list/client-list.component';
+import { TransferComponent } from './features/transfer/transfer.component';
 
 export const routes: Routes = [
 
@@ -17,6 +18,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'client-home', component: ClientHomeComponent },
   { path: 'deposit', component: DepositComponent },
+  { path: 'transfer', component: TransferComponent },
   { path: 'update-profile', component: UpdateProfileComponent },
   { path: 'manager-home', component: ManagerHomeComponent},
   { path: 'transaction-history', component: TransactionHistoryComponent },
