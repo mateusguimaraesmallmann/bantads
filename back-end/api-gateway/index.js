@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const logger = require("morgan");
 const helmet = require("helmet");
+const axios = require('axios');
 
 const app = express();
 
@@ -28,7 +29,7 @@ const BASE_URL_GERENTE = "http://gerentes:8083"
 
 
 const authServiceProxy = httpProxy(BASE_URL_AUTH);
-const cclientesServiceProxy = httpProxy(BASE_URL_CLIENTE);
+const clientesServiceProxy = httpProxy(BASE_URL_CLIENTE);
 const contasServiceProxy = httpProxy(BASE_URL_CONTA);
 const gerentesServiceProxy = httpProxy(BASE_URL_GERENTE);
 
@@ -39,34 +40,90 @@ const JWT_SECRET = Buffer.from(process.env.JWT_SECRET, 'base64');
 // server.listen(3000);
 
 function verifyJWT(req, res, next) {
-  const token = req.headers["x-access-token"];
+  const token = req.headers["x-access-token"] || (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]);
   if (!token)
     return res
       .status(401)
       .json({ auth: false, message: "Token não fornecido." });
-  jwt.verify(token, process.env.SECRET, function (err, decoded) {
-    if (err)
-      return res
-        .status(500)
-        .json({ auth: false, message: "Falha ao autenticar o token." });
-    // se tudo estiver ok, salva no request para uso posterior
+
+
+    jwt.verify(token, JWT_SECRET, function (err, decoded) {
+        if (err) {
+            console.log('Erro na verificação do token:', err.message);
+            return res.status(401).json({ auth: false, message: 'Token inválido ou expirado.' });
+        }
 
     req.user = decoded;
     next();
   });
 }
 
-app.post("/login", urlencodedParser, (req, res, next) => {
-  // Esse teste deve ser feito invocando um serviço apropriado
-  if (req.body.user === "admin" && req.body.password === "admin") {
-    // auth ok
-    const id = 1; // esse id viria do serviço de autenticação
-    const token = jwt.sign({ id }, process.env.SECRET, {
-      expiresIn: 300, // expira em 5min
-    });
-    return res.json({ auth: true, token: token });
-  }
-  res.status(500).json({ message: "Login inválido!" });
+// app.get('/reboot', verifyJWT, (req, res, next) => {
+//     clientsServiceProxy(req, res, next);
+// });
+
+app.post('/login', async (req, res) => {
+    try {
+        console.log(req.body)
+        const authBody = {
+            login: req.body.login || req.body.email,  
+            senha: req.body.senha || req.body.password, 
+        };
+        console.log(authBody)
+        // Direcionar ao serviço
+        const authResponse = await axios.post(`${BASE_URL_AUTH}/login`, authBody);
+        console.log(authResponse)
+        const authData = authResponse.data;
+
+        // Verificação de id
+        if (!authData.usuario.id) {
+            return res.status(401).json({ message: 'Login inválido!' });
+        }
+
+        let usuarioResponse;
+        let tipo = authData.tipo;
+        let cpf = authData.usuario.cpf
+        let access_token = authData.access_token
+        let token_type = authData.token_type
+
+        if (tipo === 'CLIENTE') {
+            usuarioResponse = await axios.get(`${BASE_URL_CLIENTE}/clientes/${cpf}`);
+        } else if (tipo === 'GERENTE') {
+            usuarioResponse = await axios.get(`${BASE_URL_GERENTE}/gerentes/${cpf}`);
+        } else {
+            return res.status(500).json({ message: 'Tipo de usuário não existente.' });
+        }
+
+        // Monta resposta final
+        return res.status(200).json({
+            access_token,
+            token_type,
+            tipo,
+            usuario: usuarioResponse.data
+        });
+
+    } catch (error) {
+        if (error.response) {
+            return res.status(error.response.status).json(error.response.data);
+        }
+        return res.status(500).json({ message: 'Erro ao efetuar login.', error: error.message });
+    }
+});
+
+app.get('/clientes', verifyJWT, (req, res, next) => {
+    clientesServiceProxy(req, res, next);
+});
+
+app.get('/clientes/:cpfCliente', verifyJWT, (req, res, next) => {
+    clientesServiceProxy(req, res, next);
+});
+
+app.get('/gerentes', verifyJWT, (req, res, next) => {
+    gerentesServiceProxy(req, res, next);
+});
+
+app.get('/gerentes/:cpfGerente', verifyJWT, (req, res, next) => {
+    gerentesServiceProxy(req, res, next);    
 });
 
 app.post('/logout', function(req, res) {
