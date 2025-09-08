@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgxMaskPipe, provideNgxMask } from 'ngx-mask';
-import { HeaderComponent } from '../../core/components/header/header.component';
+import { HeaderComponent } from '../../../core/components/header/header.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AproveClientComponent } from './components/aprove-client/aprove-client/aprove-client.component';
 import { DenyClientComponent } from './components/deny-client/deny-client.component';

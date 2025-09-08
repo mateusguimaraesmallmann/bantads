@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ClientDetails } from '../../core/models/client-details.model';
+import { ClientDetails } from '../../../core/models/client-details.model';
 
 @Component({
   selector: 'app-client-list',
