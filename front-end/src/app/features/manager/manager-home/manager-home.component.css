@@ -35,6 +35,11 @@ p
     justify-content: left;
 }
 
+.numPedidos
+{
+    font-size:x-large;
+}
+
 .card:hover
 {
     box-shadow: 0 12px 28px #4da8f7;
@@ -46,9 +51,9 @@ p
     font-family: 'Inter', sans-serif;
     color: #ffffff;
     padding: 10px;
-    align-items: left;
-    justify-content: left;
-    text-align: left;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .table
