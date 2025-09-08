@@ -27,6 +27,12 @@ export class ManagerHomeComponent {
       {cpf: '12345678910', nome: "Tiago Salles", salario: 1500}
     ]
 
+    navItems = [
+      {link: '/manager-home', label: 'Página Inicial', icon: 'bi bi-house'},
+      {link: '/client-list', label: 'Lista de Clientes', icon: 'bi bi-card-list'},
+      {link: '/top-clients', label: 'Melhores Clientes', icon: 'bi bi-3-circle'}
+    ]
+
     numPedidos: number = this.solicitacoes.length;
 
     //TODO: Com os modais implementados, falta deixar a retirada das contas e alteração no card de pedidos dinâmica

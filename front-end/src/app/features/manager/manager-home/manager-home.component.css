@@ -25,7 +25,7 @@ p
 
 .card
 {
-    background: linear-gradient(135deg, #1a72df, #0d47a1);
+    background: linear-gradient(135deg, #00BFFF, #0000FF);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     border-radius: 20px;
