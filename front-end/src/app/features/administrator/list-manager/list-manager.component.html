@@ -20,7 +20,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Agora usando managers tipado (sem signal) -->
                     <tr *ngFor="let m of managers; let i = index; trackBy: trackByIndex">
                         <td>{{ m.nome }}</td>
                         <td>{{ m.cpf }}</td>
@@ -40,7 +39,6 @@
     </div>
 </div>
 
-<!-- Modal “leve” -->
 <div class="modal-backdrop-custom" *ngIf="modalOpen"></div>
 <div class="modal-custom" *ngIf="modalOpen" role="dialog" aria-modal="true">
     <div class="card shadow-sm" style="max-width: 640px; width: 100%;">

@@ -1,30 +1,81 @@
 <div class="admin-home">
   <header class="mb-3">
     <h1 class="titulo">Dashboard — Administrador</h1>
-    <p class="sub">Resumo por gerente (ordenado por saldo positivo)</p>
+    <p class="sub">Resumo por gerente (ordenado por {{ ordenarPor() | titlecase }})</p>
+
+    <div class="toolbar">
+      <input
+        type="search"
+        class="input"
+        placeholder="Buscar gerente por nome…"
+        [value]="filtroNome()"
+        (input)="filtroNome.set(($event.target as HTMLInputElement).value)"
+        aria-label="Buscar gerente por nome"
+      />
+
+      <select
+        class="select"
+        [value]="ordenarPor()"
+        (change)="ordenarPor.set(($event.target as HTMLSelectElement).value as any)"
+        aria-label="Ordenar por"
+      >
+        <option value="somaPositivos">Saldo positivo (desc)</option>
+        <option value="somaNegativos">Saldo negativo (asc)</option>
+        <option value="qtdClientes">Qtde clientes (desc)</option>
+        <option value="nome">Nome (A–Z)</option>
+      </select>
+
+      <label class="check">
+        <input type="checkbox" [checked]="apenasNegativos()" (change)="apenasNegativos.set($event.target.checked)" />
+        Mostrar apenas quem tem saldo negativo
+      </label>
+    </div>
+
+    <section class="totals" aria-label="Totais gerais">
+      <div class="kpi">
+        <span class="kpi-label">Total de gerentes</span>
+        <span class="kpi-value">{{ linhasFiltradas().length }}</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Total de clientes</span>
+        <span class="kpi-value">{{ totais().qtdClientes }}</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Soma positivos</span>
+        <span class="kpi-value positivo">{{ asCurrency(totais().somaPositivos) }}</span>
+      </div>
+      <div class="kpi">
+        <span class="kpi-label">Soma negativos</span>
+        <span class="kpi-value negativo">{{ asCurrency(totais().somaNegativos) }}</span>
+      </div>
+    </section>
   </header>
 
-    <section class="cards">
-    @for (l of linhas(); track l.id) {
+  <section class="cards" aria-live="polite">
+    @if (linhasFiltradas().length === 0) {
+      <div class="empty">
+        Nenhum gerente encontrado para os filtros atuais.
+      </div>
+    } @else {
+      @for (l of linhasFiltradas(); track l.id) {
         <article class="card">
-        <div class="card-header">
-            <h2>{{ l.nome }}</h2>
-        </div>
-        <div class="card-body">
+          <div class="card-header">
+            <h2 class="nome">{{ l.nome }}</h2>
+            <span class="badge" aria-label="Quantidade de clientes">{{ l.qtdClientes }} clientes</span>
+          </div>
+
+          <div class="card-body">
             <div class="metric">
-            <span class="label">Clientes</span>
-            <span class="value">{{ l.qtdClientes }}</span>
+              <span class="label">Soma saldos (≥ 0)</span>
+              <span class="value positivo">{{ asCurrency(l.somaPositivos) }}</span>
             </div>
             <div class="metric">
-            <span class="label">Soma saldos (≥ 0)</span>
-            <span class="value positivo">{{ asCurrency(l.somaPositivos) }}</span>
+              <span class="label">Soma saldos (&lt; 0)</span>
+              <span class="value negativo">{{ asCurrency(l.somaNegativos) }}</span>
             </div>
-            <div class="metric">
-            <span class="label">Soma saldos (&lt; 0)</span>
-            <span class="value negativo">{{ asCurrency(l.somaNegativos) }}</span>
-            </div>
-        </div>
+          </div>
         </article>
+      }
     }
-    </section>
+  </section>
 </div>
