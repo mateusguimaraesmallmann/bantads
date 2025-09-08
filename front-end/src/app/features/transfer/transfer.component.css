@@ -1,0 +1,42 @@
+.transfer-page {
+  min-height: 100vh;
+  padding: 4rem 2rem;
+  background: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-shell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 600px;
+  min-height: 300px;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  background: #fff;
+}
+
+.pane-form {
+  padding: clamp(24px, 3vw, 40px);
+  width: 100%;
+}
+
+.btn-primary {
+  background-color: #1967ff;
+  border-color: #1967ff;
+  font-weight: 500;
+}
+
+.btn-primary:hover {
+  background-color: #1557d8;
+  border-color: #1557d8;
+}
+
+@media (max-width: 768px) {
+  .auth-shell {
+    max-width: 90%;
+  }
+}

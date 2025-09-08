@@ -28,6 +28,8 @@ export class ClientHomeComponent {
     this.router.navigate(['/update-profile']);
   } else if (opcao.nome === 'Depositar') {
     this.router.navigate(['/deposit']);
+  } else if (opcao.nome === 'Transferência') {
+    this.router.navigate(['/transfer']);
   } else {
     alert(`Você clicou em: ${opcao.nome}`);
   }
