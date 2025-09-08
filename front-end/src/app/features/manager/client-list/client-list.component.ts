@@ -1,17 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-
+import { HeaderComponent } from '../../../core/components/header/header.component';
+import { NAVITEMS } from '../navItems';
 import { ClientDetails } from '../../../core/models/client-details.model';
 
 @Component({
   selector: 'app-client-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './client-list.component.html',
   styleUrls: ['./client-list.component.css']
 })
 export class ListaClientesComponent implements OnInit {
+  navItems = NAVITEMS;
 
   public termoBusca: string = '';
 

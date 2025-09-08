@@ -5,6 +5,7 @@ import { HeaderComponent } from '../../../core/components/header/header.componen
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { AproveClientComponent } from './components/aprove-client/aprove-client/aprove-client.component';
 import { DenyClientComponent } from './components/deny-client/deny-client.component';
+import { NAVITEMS } from '../navItems';
 
 @Component({
   selector: 'app-manager-home',
@@ -21,17 +22,12 @@ export class ManagerHomeComponent {
     constructor(private modalService: BsModalService){}
     bsModalRef?: BsModalRef;
 
+    navItems = NAVITEMS;
+
     solicitacoes = [
       {cpf: '12345678910', nome: "Tiago Salles", salario: 1500},
       {cpf: '12345678910', nome: "Tiago Salles", salario: 1500},
       {cpf: '12345678910', nome: "Tiago Salles", salario: 1500}
-    ]
-
-    navItems = [
-      {link: '/manager-home', label: 'Página Inicial', icon: 'bi bi-house'},
-      {link: '/client-list', label: 'Lista de Clientes', icon: 'bi bi-card-list'},
-      {link: '/search-client', label: 'Buscar Cliente', icon: 'bi bi-search'},
-      {link: '/top-clients', label: 'Melhores Clientes', icon: 'bi bi-3-circle'}
     ]
 
     numPedidos: number = this.solicitacoes.length;
