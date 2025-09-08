@@ -1,0 +1,78 @@
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-dark text-white">
+      <h4 class="mb-0">Consultar Cliente por CPF</h4>
+    </div>
+    <div class="card-body">
+      <div class="row g-3 align-items-center">
+        <div class="col-auto">
+          <label for="cpfInput" class="col-form-label">CPF do Cliente:</label>
+        </div>
+        <div class="col">
+          <input
+            type="text"
+            id="cpfInput"
+            class="form-control"
+            placeholder="Digite o CPF..."
+            [(ngModel)]="cpfPesquisa"
+            (keyup.enter)="buscarCliente()"
+          />
+        </div>
+        <div class="col-auto">
+          <button class="btn btn-primary" (click)="buscarCliente()">
+            <i class="bi bi-search me-2"></i>Buscar
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <div *ngIf="!buscaRealizada" class="text-center text-muted">
+      <p>Digite um CPF e clique em "Buscar" para ver os dados do cliente.</p>
+    </div>
+
+    <div *ngIf="buscaRealizada && !clienteEncontrado" class="alert alert-warning" role="alert">
+      {{ mensagem }}
+    </div>
+
+    <div *ngIf="clienteEncontrado" class="card shadow-sm slide-in">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0">Dados do Cliente Encontrado</h5>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <div class="col-md-6">
+            <h5>Dados Pessoais</h5>
+            <dl class="dl-horizontal">
+              <dt>Nome Completo</dt><dd>{{ clienteEncontrado.nome }}</dd>
+              <dt>CPF</dt><dd>{{ clienteEncontrado.cpf }}</dd>
+              <dt>E-mail</dt><dd>{{ clienteEncontrado.email }}</dd>
+              <dt>Telefone</dt><dd>{{ clienteEncontrado.telefone }}</dd>
+              <dt>Endereço</dt><dd>{{ clienteEncontrado.endereco }}, {{ clienteEncontrado.cidade }} - {{ clienteEncontrado.estado }}</dd>
+            </dl>
+            <hr>
+            <h5>Dados Financeiros</h5>
+            <dl class="dl-horizontal">
+              <dt>Salário Declarado</dt><dd>{{ clienteEncontrado.salario | currency:'BRL':'symbol':'1.2-2' }}</dd>
+            </dl>
+          </div>
+          <div class="col-md-6">
+            <h5>Dados da Conta</h5>
+            <dl class="dl-horizontal">
+              <dt>Número da Conta</dt><dd>{{ clienteEncontrado.conta }}</dd>
+              <dt>Saldo Atual</dt><dd [ngClass]="{'text-danger': clienteEncontrado.saldo < 0}">{{ clienteEncontrado.saldo | currency:'BRL':'symbol':'1.2-2' }}</dd>
+              <dt>Limite Cheque Especial</dt><dd>{{ clienteEncontrado.limite | currency:'BRL':'symbol':'1.2-2' }}</dd>
+            </dl>
+            <hr>
+            <h5>Gerente Responsável</h5>
+            <dl class="dl-horizontal">
+              <dt>Nome do Gerente</dt><dd>{{ clienteEncontrado.gerente_nome }}</dd>
+              <dt>E-mail do Gerente</dt><dd>{{ clienteEncontrado.gerente_email }}</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

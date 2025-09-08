@@ -11,6 +11,7 @@ import {ListManagerComponent} from './features/administrator/list-manager/list-m
 import { TransferComponent } from './features/transfer/transfer.component';
 import {ListaClientesComponent} from './features/manager/client-list/client-list.component';
 import { TopClientsComponent } from './features/manager/top-clients/top-clients.component';
+import { ClientSearchComponent } from './features/client-search/client-search.component';
 
 export const routes: Routes = [
 
@@ -26,6 +27,6 @@ export const routes: Routes = [
   { path: 'administrator-home', component: AdministratorHomeComponent },
   { path: 'list-manager', component: ListManagerComponent },
   {path: 'client-list',component:ListaClientesComponent},
-  {path: 'top-clients', component:TopClientsComponent}
-
+  {path: 'top-clients', component:TopClientsComponent},
+  {path:'search-client', component:ClientSearchComponent},
 ];
