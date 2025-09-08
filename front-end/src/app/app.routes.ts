@@ -8,7 +8,6 @@ import { ManagerHomeComponent } from './features/manager/manager-home/manager-ho
 import {TransactionHistoryComponent} from './features/transaction-history/transaction-history.component';
 import {AdministratorHomeComponent} from './features/administrator/administrator-home/administrator-home.component';
 import {ListManagerComponent} from './features/administrator/list-manager/list-manager.component';
-import {ListaClientesComponent} from './features/client-list/client-list.component';
 import { TransferComponent } from './features/transfer/transfer.component';
 import {ListaClientesComponent} from './features/manager/client-list/client-list.component';
 import { TopClientsComponent } from './features/manager/top-clients/top-clients.component';
