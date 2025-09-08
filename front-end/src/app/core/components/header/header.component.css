@@ -69,3 +69,8 @@ body {
 .user-custom {
     color: white;
 }
+
+.rounded-circle:hover, .d-sm-inline-block:hover, .me-2:hover
+{
+    cursor:pointer;
+}
