@@ -1,0 +1,22 @@
+.main-content
+{
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+.msg-top-clients
+{
+    justify-content: left;
+    font-family: 'Inter', sans-serif;
+}
+
+.top-clients
+{
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.card
+{
+    box-shadow: 0 12px 12px rgba(0, 0, 0, 0.4);
+}
