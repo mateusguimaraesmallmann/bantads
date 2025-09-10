@@ -4,8 +4,8 @@
         <p>Olá, usuário! 👋</p>
         <p>Estas são as novas solicitações de aprovação de hoje.</p>
     </div>
-    <div class="container">
-        <div class="card">
+    <div class="card-container">
+        <div class="card-top">
             <div class="card-content">
                 <p>Pedidos pendentes</p>
                 <p class="numPedidos">{{numPedidos}}</p>
@@ -13,20 +13,42 @@
         </div>
     </div>
 
-    <div class="table">
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item">CPF</li>
-            <li class="list-group-item">Nome Completo</li>
-            <li class="list-group-item">Salário</li>
-            <li class="list-group-item">Aprovar</li>
-            <li class="list-group-item">Reprovar</li>
-        </ul>
-        <ul class="list-group list-group-horizontal" *ngFor="let solicitacao of solicitacoes">
-            <li class="list-group-item">{{solicitacao.cpf | mask: "000.000.000-00"}}</li>
-            <li class="list-group-item">{{solicitacao.nome}}</li>
-            <li class="list-group-item">{{solicitacao.salario | currency: 'BRL'}}</li>
-            <li class="list-group-item"><button id="aproveButton" type="button" class="btn btn-success" (click)="responseManager('aproveButton')">Aprovar</button></li>
-            <li class="list-group-item"><button id="denyButton" type="button" class="btn btn-danger" (click)="responseManager('denyButton')">Reprovar</button></li>
-        </ul>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0 text-center">Solicitações Pendentes</h5>
+                    </div>
+                    <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped table-hover text-center align-middle mx-auto">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">CPF</th>
+                                            <th scope="col">Nome Completo</th>
+                                            <th scope="col">Salário</th>
+                                            <th scope="col">Ação</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let solicitacao of solicitacoes">
+                                            <td>{{solicitacao.cpf | mask: "000.000.000-00"}}</td>
+                                            <td>{{solicitacao.nome}}</td>
+                                            <td>{{solicitacao.salario | currency: 'BRL'}}</td>
+                                            <td>
+                                                <div class="d-flex justify-content-center">
+                                                    <button type="button" class="btn btn-success me-2" (click)="responseManager('aproveButton')">👍</button>
+                                                    <button type="button" class="btn btn-danger" (click)="responseManager('denyButton')">👎</button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

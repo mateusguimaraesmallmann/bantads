@@ -15,7 +15,7 @@ p
     font-family: 'Inter', sans-serif;
 }
 
-.container
+.card-container
 {
     display:flex;
     justify-content: left;
@@ -23,7 +23,7 @@ p
     padding-top:20px;
 }
 
-.card
+.card-top
 {
     background: linear-gradient(135deg, #00BFFF, #0000FF);
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
@@ -32,7 +32,7 @@ p
     width: 260px;
     height: 120px;
     display: flex;
-    justify-content: left;
+    justify-content: center;
 }
 
 .numPedidos
@@ -40,13 +40,13 @@ p
     font-size:x-large;
 }
 
-.card:hover
+.card-top:hover
 {
     box-shadow: 0 12px 28px #4da8f7;
     transform: scale(1.07);
 }
 
-.card .card-content
+.card-top .card-content
 {
     font-family: 'Inter', sans-serif;
     color: #ffffff;
@@ -56,14 +56,12 @@ p
     text-align: center;
 }
 
-.table
+.card-container .text-center .mt-5
 {
-    justify-content: center;
     padding-top: 50px;
 }
 
-.list-group-horizontal .list-group-item {
-    flex-basis: 0;
-    flex-grow: 1;
-    text-align: center;
+.card
+{
+    box-shadow: 0 12px 12px rgba(0, 0, 0, 0.4);
 }

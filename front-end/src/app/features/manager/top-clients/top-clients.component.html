@@ -1,1 +1,45 @@
 <app-header [navItems]="navItems"></app-header>
+<div class="main-content page-with-navbar">
+    <div class="msg-top-clients">
+        <p class="top-clients">Top Clientes</p>
+        <p>Os 3 clientes com maior saldo em conta.</p>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-9">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0 text-center">Top 3 Clientes Por Saldo</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover text-center align-middle mx-auto">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">Ranking</th>
+                                        <th scope="col">CPF</th>
+                                        <th scope="col">Nome</th>
+                                        <th scope="col">Cidade</th>
+                                        <th scope="col">Estado</th>
+                                        <th scope="col">Saldo da Conta</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let client of topClients; let i=index">
+                                        <td>#{{i + 1}}</td>
+                                        <td>{{client.cpf | mask: "000.000.000-00"}}</td>
+                                        <td>{{client.nome}}</td>
+                                        <td>{{client.cidade}}</td>
+                                        <td>{{client.estado}}</td>
+                                        <td>{{client.saldo | currency: 'BRL'}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
