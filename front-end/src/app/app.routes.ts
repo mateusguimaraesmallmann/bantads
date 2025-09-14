@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { ClientHomeComponent } from './features/client-home/client-home.component';
 import { DepositComponent } from './features/deposit/deposit.component';
+import { WithdrawComponent } from './features/withdraw/withdraw.component';
 import { UpdateProfileComponent } from './features/update-profile/update-profile.component';
 import { LoginComponent } from './features/login/login.component';
 import { RegisterComponent } from './features/register/register.component';
@@ -20,6 +21,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'client-home', component: ClientHomeComponent },
   { path: 'deposit', component: DepositComponent },
+  { path: 'withdraw', component: WithdrawComponent },
   { path: 'transfer', component: TransferComponent },
   { path: 'update-profile', component: UpdateProfileComponent },
   { path: 'manager-home', component: ManagerHomeComponent},
