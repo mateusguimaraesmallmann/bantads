@@ -6,13 +6,13 @@ import { NAVITEMS } from '../navItems';
 import { ClientDetails } from '../../../core/models/client-details.model';
 
 @Component({
-  selector: 'app-client-list',
+  selector: 'app-manager-client-list',
   standalone: true,
   imports: [CommonModule, FormsModule, HeaderComponent],
-  templateUrl: './client-list.component.html',
-  styleUrls: ['./client-list.component.css']
+  templateUrl: './manager-client-list.component.html',
+  styleUrls: ['./manager-client-list.component.css']
 })
-export class ListaClientesComponent implements OnInit {
+export class ManagerListaClientesComponent implements OnInit {
   navItems = NAVITEMS;
 
   public termoBusca: string = '';

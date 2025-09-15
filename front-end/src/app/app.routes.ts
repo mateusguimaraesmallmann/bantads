@@ -10,9 +10,10 @@ import {TransactionHistoryComponent} from './features/transaction-history/transa
 import {AdministratorHomeComponent} from './features/administrator/administrator-home/administrator-home.component';
 import {ListManagerComponent} from './features/administrator/list-manager/list-manager.component';
 import { TransferComponent } from './features/transfer/transfer.component';
-import {ListaClientesComponent} from './features/manager/client-list/client-list.component';
+import {ManagerListaClientesComponent} from './features/manager/manager-client-list/manager-client-list.component';
 import { TopClientsComponent } from './features/manager/top-clients/top-clients.component';
 import { ClientSearchComponent } from './features/manager/client-search/client-search.component';
+import { AdministratorListaClientesComponent} from './features/administrator/administrator-client-list/administrator-client-list.component';
 
 export const routes: Routes = [
 
@@ -28,7 +29,8 @@ export const routes: Routes = [
   { path: 'transaction-history', component: TransactionHistoryComponent },
   { path: 'administrator-home', component: AdministratorHomeComponent },
   { path: 'list-manager', component: ListManagerComponent },
-  {path: 'client-list',component:ListaClientesComponent},
+  {path: 'manager-client-list',component:ManagerListaClientesComponent},
   {path: 'top-clients', component:TopClientsComponent},
   {path:'search-client', component:ClientSearchComponent},
+  {path: 'administrator-client-list',component:AdministratorListaClientesComponent},  
 ];
