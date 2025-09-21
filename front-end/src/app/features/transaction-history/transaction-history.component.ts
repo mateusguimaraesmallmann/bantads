@@ -16,6 +16,7 @@ import {ItemExtratoResponse,ExtratoResponse,Transacoes,TodasTransacoes} from '..
 export class TransactionHistoryComponent implements OnInit{
   public dataInicial: string = '';
   public dataFinal: string = '';
+  public dadosCarregados:boolean = false;
 
   public numeroDaConta: string | null = null;
   public balanco: number | null = null;
@@ -33,7 +34,6 @@ export class TransactionHistoryComponent implements OnInit{
     const hoje = new Date();
     const trintaDiasAtras = new Date();
     trintaDiasAtras.setDate(hoje.getDate() - 30);
-
     this.dataFinal = this.formatarDataParaInput(hoje);
     this.dataInicial = this.formatarDataParaInput(trintaDiasAtras);
   }
@@ -46,7 +46,7 @@ export class TransactionHistoryComponent implements OnInit{
     this.isLoading = true;
     this.hasSearched = true;
     this.listaDeTransacoes = []; 
-    const mockApiResponse: ExtratoResponse = {
+    const dados: ExtratoResponse = {
       conta: "8722",
       saldo: 1933.32,
       movimentacoes: [
@@ -56,17 +56,18 @@ export class TransactionHistoryComponent implements OnInit{
         { data: "2025-08-20T11:00:00Z", tipo: "TRANSFERENCIA", origem: "João Souza", destino: "8722", valor: 1733.32 },
       ]
     };
-    // this.transactionHistory.findTransactionHistory(userUpdate).subscribe({
-    // next: (response) => this.handleSuccess(response),
+    // this.transactionHistory.findTransactionHistory().subscribe({
+    // next: (response) => this.listarTransacoes(response),
     // error: (err) => this.handleError(err)
     // });   
-    this.handleSuccess(mockApiResponse);
+    this.listarTransacoes(dados);
     this.isLoading = false;
   }
 
-  private handleSuccess(response: ExtratoResponse): void {
+  private listarTransacoes(response: ExtratoResponse): void {
     this.numeroDaConta = response.conta;
     this.balanco = response.saldo;
+    this.dadosCarregados = true
 
     if (response.movimentacoes.length === 0) {
       this.listaDeTransacoes = [];
@@ -132,7 +133,7 @@ export class TransactionHistoryComponent implements OnInit{
     return null;
   }
 
-  handleError(error: any): void {
+  processarErro(error: any): void {
     console.log("erro ao processar solicitação")
   }
 }

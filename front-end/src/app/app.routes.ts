@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { ClientHomeComponent } from './features/client-home/client-home.component';
 import { DepositComponent } from './features/deposit/deposit.component';
 import { WithdrawComponent } from './features/withdraw/withdraw.component';
-import { UpdateProfileComponent } from './features/update-profile/update-profile.component';
+import { UpdateProfileComponent } from './features/client-update-profile/client-update-profile.component';
 import { LoginComponent } from './features/login/login.component';
 import { RegisterComponent } from './features/register/register.component';
 import { ManagerHomeComponent } from './features/manager/manager-home/manager-home.component';

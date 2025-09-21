@@ -1,4 +1,4 @@
-export interface UserUpdate {
+export interface ClientUpdate {
   nome: string;
   cpf:string;
   email: string;

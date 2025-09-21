@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  background-color: black;
+  min-height: 100vh;
+}
+
+.page-wrapper {
+  padding-bottom: 40px;
+}
+
+.page-with-navbar {
+  padding-top: 80px; 
+}
+
+.client-list-card {
+  background-color: #ffffff;
+  border: none;
+  border-radius: 16px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.client-list-card .card-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #e9ecef;
+  padding: 25px;
+}
+
+.client-list-card .card-body {
+  padding: 25px;
+}
