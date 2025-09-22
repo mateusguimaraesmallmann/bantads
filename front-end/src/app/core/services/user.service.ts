@@ -22,6 +22,6 @@ export class UserService {
     const url = `${this.apiUrl}/${cpf}`;
     let resposta = this.http.put<UserUpdate>(url, user);
     console.log(resposta)
-    return of(user); 
+    return of(user);
   }
 }

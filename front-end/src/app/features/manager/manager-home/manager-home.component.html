@@ -13,7 +13,7 @@
         </div>
     </div>
 
-    <div class="container mt-5">
+    <div class="container mt-5" *ngIf="solicitacoes && solicitacoes.length > 0">
         <div class="row justify-content-center">
             <div class="col-lg-9">
                 <div class="card">
@@ -38,8 +38,8 @@
                                             <td>{{solicitacao.salario | currency: 'BRL'}}</td>
                                             <td>
                                                 <div class="d-flex justify-content-center">
-                                                    <button type="button" class="btn btn-success me-2" (click)="responseManager('aproveButton')">👍</button>
-                                                    <button type="button" class="btn btn-danger" (click)="responseManager('denyButton')">👎</button>
+                                                    <button type="button" class="btn btn-success me-2" (click)="responseManager('aproveButton', solicitacao.cpf)">👍</button>
+                                                    <button type="button" class="btn btn-danger" (click)="responseManager('denyButton', solicitacao.cpf)">👎</button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -51,4 +51,11 @@
             </div>
         </div>
     </div>
+
+    <div *ngIf="solicitacoes && solicitacoes.length === 0">
+      <div class="semSolicitacoes">
+        <h3>Nenhuma Solicitação De Conta No Momento</h3>
+      </div>
+    </div>
+
 </div>

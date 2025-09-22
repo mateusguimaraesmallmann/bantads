@@ -1,4 +1,5 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { ManagerService } from '../../../core/services/manager.service';
 
 type LinhaDash = {
@@ -14,7 +15,7 @@ type OrdenarPor = 'somaPositivos' | 'somaNegativos' | 'qtdClientes' | 'nome';
 @Component({
   selector: 'app-administrator-home',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './administrator-home.component.html',
   styleUrl: './administrator-home.component.css',
 })
@@ -84,5 +85,19 @@ export class AdministratorHomeComponent {
   asCurrency(v: number) {
     return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(v);
   }
-  
+
+  onFiltroChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.filtroNome.set(target.value);
+  }
+
+  onOrdenarChange(event: Event): void {
+    const target = event.target as HTMLSelectElement;
+    this.ordenarPor.set(target.value as OrdenarPor);
+  }
+
+  onApenasNegativosChange(event: Event): void {
+    const target = event.target as HTMLInputElement;
+    this.apenasNegativos.set(target.checked);
+  }
 }

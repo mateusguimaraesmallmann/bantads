@@ -1,14 +1,14 @@
 {
   "admins": [
     {
-      "id": 9001,
+      "id": "9001",
       "name": "Admin Principal",
       "email": "admin@bantads.com.br"
     }
   ],
   "managers": [
     {
-      "id": 1,
+      "id": "1",
       "cpf": "037.111.222-10",
       "name": "Ana Lima",
       "email": "ana.lima@bantads.com.br",
@@ -16,7 +16,7 @@
       "active": true
     },
     {
-      "id": 2,
+      "id": "2",
       "cpf": "148.222.333-20",
       "name": "Bruno Souza",
       "email": "bruno.souza@bantads.com.br",
@@ -24,7 +24,7 @@
       "active": true
     },
     {
-      "id": 3,
+      "id": "3",
       "cpf": "259.333.444-30",
       "name": "Carla Mendes",
       "email": "carla.mendes@bantads.com.br",
@@ -34,7 +34,7 @@
   ],
   "clients": [
     {
-      "id": 101,
+      "id": "101",
       "cpf": "123.456.789-09",
       "name": "Paulo Silva",
       "email": "paulo.silva@example.com",
@@ -43,14 +43,14 @@
         "city": "Curitiba",
         "state": "PR"
       },
-      "salary": 4000.0,
+      "salary": 4000,
       "status": "APPROVED",
       "managerId": 1,
       "createdAt": "2025-09-05T10:00:00-03:00",
       "updatedAt": "2025-09-13T17:00:00-03:00"
     },
     {
-      "id": 102,
+      "id": "102",
       "cpf": "987.654.321-00",
       "name": "Maria Oliveira",
       "email": "maria.oliveira@example.com",
@@ -59,14 +59,14 @@
         "city": "São Paulo",
         "state": "SP"
       },
-      "salary": 2000.0,
+      "salary": 2000,
       "status": "APPROVED",
       "managerId": 1,
       "createdAt": "2025-09-06T09:30:00-03:00",
       "updatedAt": "2025-09-13T17:10:00-03:00"
     },
     {
-      "id": 103,
+      "id": "103",
       "cpf": "111.222.333-44",
       "name": "João Pereira",
       "email": "joao.pereira@example.com",
@@ -75,119 +75,135 @@
         "city": "Florianópolis",
         "state": "SC"
       },
-      "salary": 3500.0,
+      "salary": 3500,
       "status": "APPROVED",
       "managerId": 2,
       "createdAt": "2025-09-07T11:15:00-03:00",
       "updatedAt": "2025-09-13T16:50:00-03:00"
+    },
+    {
+      "id": "8947",
+      "nome": "tiago teste",
+      "email": "tiago.teste@gmail.com",
+      "cpf": "11111111111",
+      "salario": 120,
+      "cep": "81010330",
+      "logradouro": "Rua Serafim França",
+      "bairro": "Novo Mundo",
+      "numero": "149",
+      "complemento": "casa",
+      "cidade": "Curitiba",
+      "estado": "PR",
+      "status": "PENDENT",
+      "role": "CLIENT"
     }
   ],
   "accounts": [
     {
-      "id": 5001,
+      "id": "5001",
       "clientId": 101,
       "managerId": 1,
       "number": "7001",
-      "balance": 2450.0,
-      "limit": 2000.0
+      "balance": 2450,
+      "limit": 2000
     },
     {
-      "id": 5002,
+      "id": "5002",
       "clientId": 102,
       "managerId": 1,
       "number": "7002",
-      "balance": -500.0,
-      "limit": 1000.0
+      "balance": -500,
+      "limit": 1000
     },
     {
-      "id": 5003,
+      "id": "5003",
       "clientId": 103,
       "managerId": 2,
       "number": "7003",
-      "balance": -150.0,
-      "limit": 1750.0
+      "balance": -150,
+      "limit": 1750
     }
   ],
   "transactions": [
     {
-      "id": 8001,
+      "id": "8001",
       "accountId": 5001,
       "occurredAt": "2025-09-10T10:00:00-03:00",
       "type": "DEPOSIT",
       "direction": "IN",
-      "amount": 3000.0,
+      "amount": 3000,
       "description": "Depósito em dinheiro"
     },
     {
-      "id": 8002,
+      "id": "8002",
       "accountId": 5001,
       "occurredAt": "2025-09-11T09:30:00-03:00",
       "type": "WITHDRAWAL",
       "direction": "OUT",
-      "amount": 500.0,
+      "amount": 500,
       "description": "Saque em caixa"
     },
     {
-      "id": 8003,
+      "id": "8003",
       "accountId": 5001,
       "occurredAt": "2025-09-12T14:15:00-03:00",
       "type": "TRANSFER",
       "direction": "OUT",
-      "amount": 200.0,
+      "amount": 200,
       "counterpartyAccount": "7002",
       "counterpartyName": "Maria Oliveira",
       "transferGroupId": "T1001",
       "description": "Transferência para 7002"
     },
     {
-      "id": 8004,
+      "id": "8004",
       "accountId": 5002,
       "occurredAt": "2025-09-12T14:15:00-03:00",
       "type": "TRANSFER",
       "direction": "IN",
-      "amount": 200.0,
+      "amount": 200,
       "counterpartyAccount": "7001",
       "counterpartyName": "Paulo Silva",
       "transferGroupId": "T1001",
       "description": "Transferência recebida de 7001"
     },
     {
-      "id": 8005,
+      "id": "8005",
       "accountId": 5003,
       "occurredAt": "2025-09-13T16:45:00-03:00",
       "type": "TRANSFER",
       "direction": "OUT",
-      "amount": 150.0,
+      "amount": 150,
       "counterpartyAccount": "7001",
       "counterpartyName": "Paulo Silva",
       "transferGroupId": "T1002",
       "description": "Transferência para 7001"
     },
     {
-      "id": 8006,
+      "id": "8006",
       "accountId": 5001,
       "occurredAt": "2025-09-13T16:45:00-03:00",
       "type": "TRANSFER",
       "direction": "IN",
-      "amount": 150.0,
+      "amount": 150,
       "counterpartyAccount": "7003",
       "counterpartyName": "João Pereira",
       "transferGroupId": "T1002",
       "description": "Transferência recebida de 7003"
     },
     {
-      "id": 8007,
+      "id": "8007",
       "accountId": 5002,
       "occurredAt": "2025-09-14T10:05:00-03:00",
       "type": "WITHDRAWAL",
       "direction": "OUT",
-      "amount": 700.0,
+      "amount": 700,
       "description": "Saque em caixa"
     }
   ],
   "registrations": [
     {
-      "id": 70001,
+      "id": "70001",
       "cpf": "555.666.777-88",
       "name": "Lucas Rocha",
       "email": "lucas.rocha@example.com",
@@ -196,13 +212,13 @@
         "city": "Rio de Janeiro",
         "state": "RJ"
       },
-      "salary": 1800.0,
+      "salary": 1800,
       "status": "PENDING",
       "requestedAt": "2025-09-15T09:00:00-03:00",
       "intendedManagerId": 3
     },
     {
-      "id": 70002,
+      "id": "70002",
       "cpf": "222.333.444-55",
       "name": "Sofia Alves",
       "email": "sofia.alves@example.com",
@@ -211,7 +227,7 @@
         "city": "Belo Horizonte",
         "state": "MG"
       },
-      "salary": 2500.0,
+      "salary": 2500,
       "status": "REJECTED",
       "requestedAt": "2025-09-08T08:30:00-03:00",
       "decidedAt": "2025-09-09T10:00:00-03:00",

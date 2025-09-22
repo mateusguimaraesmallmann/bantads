@@ -9,14 +9,14 @@
         class="input"
         placeholder="Buscar gerente por nome…"
         [value]="filtroNome()"
-        (input)="filtroNome.set(($event.target as HTMLInputElement).value)"
+        (input)="onFiltroChange($event)"
         aria-label="Buscar gerente por nome"
       />
 
       <select
         class="select"
         [value]="ordenarPor()"
-        (change)="ordenarPor.set(($event.target as HTMLSelectElement).value as any)"
+        (change)="onOrdenarChange($event)"
         aria-label="Ordenar por"
       >
         <option value="somaPositivos">Saldo positivo (desc)</option>
@@ -26,7 +26,7 @@
       </select>
 
       <label class="check">
-        <input type="checkbox" [checked]="apenasNegativos()" (change)="apenasNegativos.set($event.target.checked)" />
+        <input type="checkbox" [checked]="apenasNegativos()" (change)="onApenasNegativosChange($event)" />
         Mostrar apenas quem tem saldo negativo
       </label>
     </div>
