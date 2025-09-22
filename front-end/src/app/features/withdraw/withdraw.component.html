@@ -15,6 +15,9 @@
             <input type="text" id="valor"
                    (input)="formatarValor($event)"
                    class="form-control" required>
+                   <div *ngIf="mensagem" class="text-danger mt-1">
+                    {{ mensagem }}
+                  </div>
           </div>
 
           <button type="submit" class="btn btn-danger w-100">Sacar</button>
@@ -24,26 +27,42 @@
   </div>
 </div>
 
-<!-- Modal de confirmação -->
-<div class="modal fade" id="withdrawModal" tabindex="-1" aria-labelledby="withdrawModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmWithdrawModal" tabindex="-1" aria-labelledby="confirmWithdrawModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="withdrawModalLabel">Saque Realizado</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-      </div>
-      <div class="modal-body text-center">
-        <p class="fw-semibold">Saque de {{ valorSaque | money }} realizado com sucesso!</p>
-      </div>
-      <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-danger"
-          data-bs-dismiss="modal"
-          (click)="voltar()">
-          OK
-        </button>
-      </div>
+       <div class="modal-header">
+         <h5 class="modal-title" id="confirmWithdrawModalLabel">Confirmar Saque</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body text-center">
+          <p class="fw-semibold">Você confirma o saque de {{ valorSaque | money }}?</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="confirmarSaque()">Confirmar</button>
+        </div>
     </div>
   </div>
+</div>
+
+<div class="modal fade" id="successWithdrawModal" tabindex="-1" aria-labelledby="successWithdrawModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="successWithdrawModalLabel">Saque Realizado</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+            <div class="modal-body text-center">
+               <p class="fw-semibold">Saque de {{ valorSaque | money }} realizado com sucesso!</p>
+            </div>
+            <div class="modal-footer">
+                <button
+                type="button"
+                class="btn btn-danger"
+                data-bs-dismiss="modal"
+                (click)="voltar()">
+                OK </button>
+              </div>
+        </div>
+    </div>
 </div>

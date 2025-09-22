@@ -20,29 +20,38 @@ export class DepositComponent {
   constructor(private router: Router) {}
 
   onSubmit(): void {
-    if (this.valorDeposito > 0) {
+     if (this.valorDeposito <= 0 || isNaN(this.valorDeposito)) {
+      this.mensagem = 'Por favor, insira um valor válido.';
+      return;
+      }
+
+      this.mensagem = '';
       this.valorFormatado = this.valorDeposito.toLocaleString('pt-BR', {
         style: 'currency',
         currency: 'BRL'
       });
 
-      const modalElement = document.getElementById('depositModal');
-      if (modalElement) {
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
+      const confirmModalEl = document.getElementById('confirmDepositModal');
+        if (confirmModalEl) {
+        const confirmModal = new bootstrap.Modal(confirmModalEl);
+        confirmModal.show();
       }
 
-      console.log('Depósito de:', this.valorDeposito);
-    } else {
-      this.mensagem = 'Por favor, insira um valor válido para o depósito.';
-    }
+      console.log('Depósito de:', this.valorFormatado);
   }
 
   confirmarDeposito(): void {
-    console.log(`Depósito confirmado: ${this.valorFormatado}`);
+    const confirmModalEl = document.getElementById('confirmDepositModal');
+    if (confirmModalEl) {
+      const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
+      confirmModal?.hide();
+    }
 
-    this.valorDeposito = 0;
-    this.valorFormatado = '';
+    const successModalEl = document.getElementById('depositModal');
+    if (successModalEl) {
+      const successModal = new bootstrap.Modal(successModalEl);
+      successModal.show();
+    }
   }
 
   formatarValor(event: any): void {
@@ -55,10 +64,12 @@ export class DepositComponent {
     });
 
     this.valorDeposito = numero;
+    this.valorFormatado = event.target.value;
   }
 
   voltar(): void {
     this.router.navigate(['/client-home']);
   }
 }
+
 

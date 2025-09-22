@@ -19,9 +19,22 @@ export class TransferComponent {
   valorFormatado: string = '';
   dataHora: Date = new Date();
 
+  mensagemValor: string = '';
+
   constructor(private router: Router) {}
 
-  onSubmit(): void {
+  onSubmit(form: any): void {
+    if (!form.valid) {
+    return;
+    }
+
+    if (this.valorTransferencia <= 0 || isNaN(this.valorTransferencia)) {
+      this.mensagemValor = 'Por favor, insira um valor válido.';
+      return;
+    }
+
+    this.mensagemValor = '';
+
     if (this.valorTransferencia !== null) {
       this.valorFormatado = this.valorTransferencia.toLocaleString('pt-BR', {
         style: 'currency',
@@ -35,6 +48,12 @@ export class TransferComponent {
         modal.show();
       }
 
+      const confirmModalEl = document.getElementById('confirmTransferModal');
+      if (confirmModalEl) {
+        const confirmModal = new bootstrap.Modal(confirmModalEl);
+        confirmModal.show();
+      }
+
       console.log(
         `Transferência de ${this.valorTransferencia} para conta ${this.contaDestino}`
       );
@@ -46,9 +65,18 @@ export class TransferComponent {
       `Transferência confirmada: ${this.valorFormatado} para conta ${this.contaDestino} em ${this.dataHora}`
     );
 
-    this.contaDestino = '';
-    this.valorTransferencia = 0;
-    this.valorFormatado = '';
+    const confirmModalEl = document.getElementById('confirmTransferModal');
+    if (confirmModalEl) {
+        const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
+        confirmModal?.hide();
+    }
+
+    const successModalEl = document.getElementById('successTransferModal');
+    if (successModalEl) {
+        const successModal = new bootstrap.Modal(successModalEl);
+        successModal.show();
+    }
+
   }
 
   formatarValor(event: any): void {
@@ -64,6 +92,9 @@ export class TransferComponent {
   }
 
   voltar(): void {
+    this.contaDestino = '';
+    this.valorTransferencia = 0;
+    this.valorFormatado = '';
     this.router.navigate(['/client-home']);
   }
 }

@@ -9,13 +9,20 @@
       <div class="pane pane-form w-100">
         <h3 class="h4 text-center mb-4 fw-semibold">Realizar Transferência</h3>
 
-        <form (ngSubmit)="onSubmit()">
+        <form #form="ngForm" (ngSubmit)="onSubmit(form)">
           <div class="mb-3">
             <label for="contaDestino" class="form-label fw-semibold">Conta Destino</label>
             <input type="text" id="contaDestino"
                    [(ngModel)]="contaDestino" name="contaDestino"
                    class="form-control" placeholder="Número da conta"
-                   required>
+                   required minlength="4"
+                   maxlength="4"
+                   pattern="[0-9]{4}"
+                   #contaDestinoCtrl="ngModel">
+            <div *ngIf="contaDestinoCtrl.invalid && (contaDestinoCtrl.dirty || contaDestinoCtrl.touched || form.submitted)"       class="text-danger mt-1">
+                  A conta deve ter 4 números.
+            </div>
+
           </div>
 
           <div class="mb-3">
@@ -23,6 +30,9 @@
             <input type="text" id="valor"
                   (input)="formatarValor($event)"
                   class="form-control" required>
+                  <div *ngIf="mensagemValor" class="text-danger mt-1">
+                    {{ mensagemValor }}
+                  </div>
           </div>
 
           <button type="submit" class="btn btn-primary w-100">Transferir</button>
@@ -33,27 +43,46 @@
 </div>
 
 <!-- Modal de confirmação -->
-<div class="modal fade" id="transferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
+<div class="modal fade" id="confirmTransferModal" tabindex="-1" aria-labelledby="transferModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="transferModalLabel">Transferência Realizada</h5>
+        <h5 class="modal-title" id="confirmTransferModalLabel">Confirmar Transferência</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
       </div>
       <div class="modal-body text-center">
         <p class="fw-semibold">
-          Transferência de {{ valorTransferencia | money }} para a conta {{ contaDestino }} realizada com sucesso!
+          Você confirma a transferência de {{ valorTransferencia | money }} para a conta {{ contaDestino }}?
         </p>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-dismiss="modal"
-          (click)="voltar()">
-          OK
-        </button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="confirmarTransferencia()">Confirmar</button>
       </div>
     </div>
   </div>
 </div>
+
+<!-- Modal de sucesso -->
+<div class="modal fade" id="successTransferModal" tabindex="-1" aria-labelledby="successTransferModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+     <div class="modal-content">
+       <div class="modal-header">
+         <h5 class="modal-title" id="successTransferModalLabel">Transferência Realizada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+            <div class="modal-body text-center">
+               <p class="fw-semibold">Transferência de {{ valorTransferencia | money }} para a conta {{ contaDestino }} realizada com sucesso!</p>
+            </div>
+            <div class="modal-footer">
+                <button
+                type="button"
+                class="btn btn-danger"
+                data-bs-dismiss="modal"
+                (click)="voltar()">
+                OK </button>
+              </div>
+        </div>
+    </div>
+</div>
+
