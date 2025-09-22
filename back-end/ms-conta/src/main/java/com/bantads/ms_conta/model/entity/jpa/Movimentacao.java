@@ -1,4 +1,4 @@
-package com.bantads.ms_conta.model.entity;
+package com.bantads.ms_conta.model.entity.jpa;
 
 import com.bantads.ms_conta.model.enums.TipoMovimentacao;
 import jakarta.persistence.*;

@@ -14,7 +14,7 @@ import java.util.List;
 public final class ExtratoDTOOut {
 
     @Schema(description = "Número único da conta", example = "12345")
-    private String numero;
+    private Long numero;
 
     @Schema(description = "Saldo atual da conta", example = "1500.50")
     private BigDecimal saldo;

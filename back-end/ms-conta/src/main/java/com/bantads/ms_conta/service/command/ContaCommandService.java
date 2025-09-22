@@ -1,14 +1,18 @@
-package com.bantads.ms_conta.service;
+package com.bantads.ms_conta.service.command;
 
 import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
 import com.bantads.ms_conta.model.dto.input.DepositarSacarDTOIn;
+import com.bantads.ms_conta.model.dto.input.SalvarContaMongoDTOIn;
 import com.bantads.ms_conta.model.dto.input.TransferirDTOIn;
-import com.bantads.ms_conta.model.dto.output.*;
-import com.bantads.ms_conta.model.entity.Conta;
-import com.bantads.ms_conta.model.entity.Movimentacao;
+import com.bantads.ms_conta.model.dto.output.ContaCriadaDTOOut;
+import com.bantads.ms_conta.model.dto.output.DepositarSacarDTOOut;
+import com.bantads.ms_conta.model.dto.output.TransferirDTOOut;
+import com.bantads.ms_conta.model.entity.jpa.Conta;
+import com.bantads.ms_conta.model.entity.jpa.Movimentacao;
 import com.bantads.ms_conta.model.enums.TipoMovimentacao;
-import com.bantads.ms_conta.repository.ContaRepository;
-import com.bantads.ms_conta.repository.MovimentacaoRepository;
+import com.bantads.ms_conta.queue.producer.ContaProducer;
+import com.bantads.ms_conta.repository.jpa.ContaJpaRepository;
+import com.bantads.ms_conta.repository.jpa.MovimentacaoJpaRepository;
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -18,20 +22,19 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class ContaService {
+public class ContaCommandService {
 
-    private final ContaRepository contaRepository;
-    private final MovimentacaoRepository movimentacaoRepository;
+    private final ContaJpaRepository contaJpaRepository;
+    private final MovimentacaoJpaRepository movimentacaoJpaRepository;
+    private final ContaProducer contaProducer;
     private final ModelMapper modelMapper;
 
     public ContaCriadaDTOOut criarConta(CriarContaDTOIn contaDTOIn) {
-        boolean existe = contaRepository.existsByIdCliente(contaDTOIn.getIdCliente());
+        boolean existe = contaJpaRepository.existsByIdCliente(contaDTOIn.getIdCliente());
         if (existe) {
             throw new EntityExistsException("Conta já cadastrada no banco de dados para esse cliente");
         }
@@ -39,18 +42,24 @@ public class ContaService {
         String numero;
         do {
             numero = gerarNumeroConta();
-        } while (contaRepository.existsByNumero(numero));
+        } while (contaJpaRepository.existsByNumero(numero));
 
-        Conta conta = new Conta();
-        conta.setLimite(contaDTOIn.getLimite());
-        conta.setIdGerente(contaDTOIn.getIdGerente());
-        conta.setIdCliente(contaDTOIn.getIdCliente());
-        conta.setSaldo(contaDTOIn.getSaldoInicial());
+        Conta conta = new Conta(contaDTOIn);
         conta.setNumero(numero);
-        conta.setDataCriacao(LocalDateTime.now());
-        Conta salvo = contaRepository.save(conta);
+
+        Conta salvo = contaJpaRepository.save(conta);
+
+        enviarContaParaFilaMongo(contaDTOIn, numero);
 
         return modelMapper.map(salvo, ContaCriadaDTOOut.class);
+    }
+
+    private void enviarContaParaFilaMongo(CriarContaDTOIn contaDTOIn, String numero) {
+        SalvarContaMongoDTOIn salvarContaMongoDTOIn = new SalvarContaMongoDTOIn(
+                contaDTOIn.getSaldoInicial(),
+                Long.parseLong(numero),
+                contaDTOIn.getIdCliente());
+        contaProducer.enviarConta(salvarContaMongoDTOIn);
     }
 
     public String gerarNumeroConta() {
@@ -58,19 +67,9 @@ public class ContaService {
         return String.valueOf(numero);
     }
 
-    public SaldoDTOOut buscarSaldo(String numeroConta) {
-        Conta conta = contaRepository.findByNumero(numeroConta)
-                .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
-
-        return new SaldoDTOOut(
-                conta.getNumero(),
-                conta.getSaldo(),
-                conta.getIdCliente());
-    }
-
     @Transactional
     public DepositarSacarDTOOut depositar(String numeroConta, DepositarSacarDTOIn depositarSacarDTOIn) {
-        Conta conta = contaRepository.findByNumero(numeroConta)
+        Conta conta = contaJpaRepository.findByNumero(numeroConta)
                 .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
 
         conta.setSaldo(conta.getSaldo().add(depositarSacarDTOIn.getValor()));
@@ -82,7 +81,7 @@ public class ContaService {
                 depositarSacarDTOIn.getValor(),
                 TipoMovimentacao.DEPOSITO);
 
-        contaRepository.save(conta);
+        contaJpaRepository.save(conta);
 
         return new DepositarSacarDTOOut(
                 conta.getNumero(),
@@ -93,7 +92,7 @@ public class ContaService {
 
     @Transactional
     public DepositarSacarDTOOut sacar(String numeroConta, DepositarSacarDTOIn depositarSacarDTOIn) {
-        Conta conta = contaRepository.findByNumero(numeroConta)
+        Conta conta = contaJpaRepository.findByNumero(numeroConta)
                 .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
 
         if (conta.getSaldo().compareTo(depositarSacarDTOIn.getValor()) < 0) {
@@ -109,7 +108,7 @@ public class ContaService {
                 depositarSacarDTOIn.getValor(),
                 TipoMovimentacao.SAQUE);
 
-        contaRepository.save(conta);
+        contaJpaRepository.save(conta);
 
         return new DepositarSacarDTOOut(
                 conta.getNumero(),
@@ -120,10 +119,10 @@ public class ContaService {
 
     @Transactional
     public TransferirDTOOut transferir(String numeroConta, TransferirDTOIn transferirDTOIn) {
-        Conta origem = contaRepository.findByNumero(numeroConta)
+        Conta origem = contaJpaRepository.findByNumero(numeroConta)
                 .orElseThrow(() -> new EntityNotFoundException("Conta de origem não encontrada"));
 
-        Conta destino = contaRepository.findByNumero(numeroConta)
+        Conta destino = contaJpaRepository.findByNumero(numeroConta)
                 .orElseThrow(() -> new EntityNotFoundException("Conta de destino não encontrada"));
 
         if (origem.getSaldo().compareTo(transferirDTOIn.getValor()) < 0) {
@@ -173,35 +172,11 @@ public class ContaService {
         movimentacao.setContaOrigem(numeroContaOrigem);
         movimentacao.setContaDestino(numeroContaDestino);
 
-        movimentacaoRepository.save(movimentacao);
+        movimentacaoJpaRepository.save(movimentacao);
         conta.getMovimentacoes().add(movimentacao);
-        contaRepository.save(conta);
+        contaJpaRepository.save(conta);
 
         return movimentacao;
-    }
-
-    public ExtratoDTOOut gerarExtrato(String numeroConta) {
-        Conta conta = contaRepository.findByNumero(numeroConta)
-                .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
-
-        List<MovimentacaoDTOOut> movimentacoes = movimentacaoRepository
-                .findByContaId(conta.getId())
-                .stream()
-                .map(this::mapToDTO)
-                .collect(Collectors.toList());
-
-        return new ExtratoDTOOut(conta.getNumero(), conta.getSaldo(), movimentacoes);
-
-    }
-
-    private MovimentacaoDTOOut mapToDTO(Movimentacao movimentacao) {
-        return new MovimentacaoDTOOut(
-                movimentacao.getData(),
-                movimentacao.getTipo().name(),
-                movimentacao.getValor(),
-                movimentacao.getContaOrigem(),
-                movimentacao.getContaDestino()
-        );
     }
 
 }

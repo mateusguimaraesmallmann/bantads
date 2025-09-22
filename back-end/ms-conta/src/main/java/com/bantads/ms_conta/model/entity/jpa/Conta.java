@@ -1,5 +1,6 @@
-package com.bantads.ms_conta.model.entity;
+package com.bantads.ms_conta.model.entity.jpa;
 
+import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -43,4 +44,12 @@ public class Conta {
 
     @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Movimentacao> movimentacoes = new ArrayList<>();
+
+    public Conta(CriarContaDTOIn dto) {
+        this.saldo = dto.getSaldoInicial();
+        this.limite = dto.getLimite();
+        this.idCliente = dto.getIdCliente();
+        this.idGerente = dto.getIdGerente();
+        this.dataCriacao = LocalDateTime.now();
+    }
 }

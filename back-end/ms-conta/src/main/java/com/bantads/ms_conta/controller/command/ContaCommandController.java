@@ -1,10 +1,10 @@
-package com.bantads.ms_conta.controller;
+package com.bantads.ms_conta.controller.command;
 
 import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
 import com.bantads.ms_conta.model.dto.input.DepositarSacarDTOIn;
 import com.bantads.ms_conta.model.dto.input.TransferirDTOIn;
 import com.bantads.ms_conta.model.dto.output.*;
-import com.bantads.ms_conta.service.ContaService;
+import com.bantads.ms_conta.service.command.ContaCommandService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,18 +12,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/contas")
 @RequiredArgsConstructor
-public class ContaController {
+public class ContaCommandController {
 
-    private final ContaService contaService;
+    private final ContaCommandService contaService;
 
     @PostMapping("/criar")
     public ResponseEntity<ContaCriadaDTOOut> criarConta(@RequestBody CriarContaDTOIn dto) {
         return ResponseEntity.ok(contaService.criarConta(dto));
-    }
-
-    @GetMapping("/{numero}/saldo")
-    public ResponseEntity<SaldoDTOOut> buscarSaldo(@PathVariable String numero) {
-        return ResponseEntity.ok(contaService.buscarSaldo(numero));
     }
 
     @PostMapping("/{numero}/depositar")
@@ -47,10 +42,4 @@ public class ContaController {
         return ResponseEntity.ok(contaService.transferir(numero, dto));
     }
 
-    @GetMapping("/{numero}/extrato")
-    public ResponseEntity<ExtratoDTOOut> gerarExtrato(
-            @PathVariable String numero
-    ) {
-        return ResponseEntity.ok(contaService.gerarExtrato(numero));
-    }
 }
