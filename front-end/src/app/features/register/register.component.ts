@@ -2,9 +2,11 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ViacepService } from '../../../app/core/services/viacep.service';
+import { RegisterService } from '../../core/services/authentication/register.service';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap, catchError, of } from 'rxjs';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router } from '@angular/router';
+import { NewUser } from '../../core/models/new-client.model';
 
 @Component({
   selector: 'app-register',
@@ -17,7 +19,7 @@ export class RegisterComponent {
   loadingCep = false;
   cepNotFound = false;
 
-  constructor(private fb: FormBuilder, private viaCep: ViacepService) {
+  constructor(private fb: FormBuilder, private viaCep: ViacepService, private registerService: RegisterService, private router:Router) {
     this.form.get('cep')!.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),
@@ -36,7 +38,7 @@ export class RegisterComponent {
 
     logradouro: [''],
     bairro: [''],
-    numero: [''],
+    numero: ['', [Validators.required]],
     complemento: [''],
     cidade: [''],
     estado: [''],
@@ -82,7 +84,25 @@ export class RegisterComponent {
     const onlyNumbers = salarioStr.replace(/[^\d]/g, '');
     const salario = Number(onlyNumbers) / 100;
 
-    console.log('signup payload', payload);
+    const newUserPayload: NewUser = {
+      ...payload,
+      salario: salario,
+      status: "PENDENT",
+      role: "CLIENT"
+    }
+
+    this.registerService.registerClient(newUserPayload).subscribe({
+      next: (response) =>{
+        console.log('Cliente cadastrado com sucesso!', response);
+        alert('Cadastro enviado para análise. Quando aprovado, sua senha será encaminhada no seu e-mail.');
+        this.router.navigate(['/login']);
+      },
+      error: (err) => {
+        console.error('Erro no cadastro: ', err);
+        alert(err.message)
+      }
+    })
+
   }
 
 }

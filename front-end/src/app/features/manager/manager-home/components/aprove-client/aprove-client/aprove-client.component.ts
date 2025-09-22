@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal' 
+import { Component, OnInit } from '@angular/core';
+import { BsModalRef } from 'ngx-bootstrap/modal'
+import { SolicitacoesService } from '../../../../../../core/services/solicitacoes.service';
 
 @Component({
   selector: 'app-aprove-client',
@@ -7,11 +8,25 @@ import { BsModalRef } from 'ngx-bootstrap/modal'
   templateUrl: './aprove-client.component.html',
   styleUrl: './aprove-client.component.css'
 })
-export class AproveClientComponent {
+export class AproveClientComponent{
 
-  constructor(public bsModalRef: BsModalRef) {}
+  cpfCliente: string = '';
+
+  constructor(public bsModalRef: BsModalRef, private solicitacoesService: SolicitacoesService) {}
 
   closeModal(){
+    this.bsModalRef.hide();
+  }
+
+  approveRequest(){
+    this.solicitacoesService.approveRequest(this.cpfCliente).subscribe({
+      next: (response) => {
+        this.bsModalRef.hide();
+      },
+      error: (err) =>{
+        console.error('Erro');
+      }
+    });
     this.bsModalRef.hide();
   }
 }

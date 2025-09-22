@@ -30,7 +30,7 @@ export class LoginComponent {
     return this.form.controls;
   }
 
-  submit(): void {
+  submit(): any {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
