@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.context.ApplicationContext;
 
-import com.bantads.ms_auth.dtos.LoginDTO;
+import com.bantads.ms_auth.dtos.LoginRequestDTO;
 import com.bantads.ms_auth.dtos.TokenDTO;
 import com.bantads.ms_auth.models.User;
 import com.bantads.ms_auth.repositorys.UserRepository;
@@ -40,13 +40,13 @@ public class AuthorizationService implements UserDetailsService {
         } catch(UsernameNotFoundException e){
             logger.error(e.getMessage());
             throw new UsernameNotFoundException("Usuario não encontrado: " + username);
-        }    
+        } 
     }
 
-    public TokenDTO login(LoginDTO loginDTO) {
+    public TokenDTO login(LoginRequestDTO loginRequestDTO) {
         
         manager = context.getBean(AuthenticationManager.class);
-        var authenticationToken = new UsernamePasswordAuthenticationToken(loginDTO.login(), loginDTO.password());
+        var authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.email(), loginRequestDTO.senha());
         var authentication = this.manager.authenticate(authenticationToken);
         var tokenJWT = tokenService.generateToken((User) authentication.getPrincipal());
         return new TokenDTO(tokenJWT);

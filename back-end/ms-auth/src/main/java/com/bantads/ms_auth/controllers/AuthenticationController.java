@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.security.authentication.BadCredentialsException;
 
-import com.bantads.ms_auth.dtos.LoginDTO;
+import com.bantads.ms_auth.dtos.LoginRequestDTO;
 import com.bantads.ms_auth.dtos.TokenDTO;
 import com.bantads.ms_auth.services.AuthorizationService;
 
@@ -27,9 +27,9 @@ public class AuthenticationController {
     private AuthorizationService authorizationService;
 
     @PostMapping("/login")
-    public ResponseEntity<Object> login(@RequestBody @Validated LoginDTO loginDTO) {
+    public ResponseEntity<Object> login(@RequestBody @Validated LoginRequestDTO loginRequestDTO) {
         try {
-            TokenDTO token = authorizationService.login(loginDTO);
+            TokenDTO token = authorizationService.login(loginRequestDTO);
             return ResponseEntity.status(HttpStatus.OK).body(token);
         } catch (BadCredentialsException e) {
             logger.error(e.getMessage());

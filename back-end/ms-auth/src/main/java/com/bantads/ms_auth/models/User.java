@@ -10,18 +10,14 @@ import java.util.Collection;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
 
 import com.bantads.ms_auth.enums.Tipo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -32,14 +28,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @AllArgsConstructor
 @Table(name = "users")
 @Entity(name = "users")
-public class User implements UserDetailsService {
+public class User implements UserDetails {
 
-       @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(nullable = false)
-    private String name;
     
     @Column(nullable = false, unique = true)
     private String email;
