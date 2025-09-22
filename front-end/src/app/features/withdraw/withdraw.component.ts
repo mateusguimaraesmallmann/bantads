@@ -20,29 +20,41 @@ export class WithdrawComponent {
   constructor(private router: Router) {}
 
   onSubmit(): void {
-    if (this.valorSaque > 0) {
-      this.valorFormatado = this.valorSaque.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-      });
-
-      const modalElement = document.getElementById('withdrawModal');
-      if (modalElement) {
-        const modal = new bootstrap.Modal(modalElement);
-        modal.show();
-      }
-
-      console.log('Saque de:', this.valorSaque);
-    } else {
-      this.mensagem = 'Por favor, insira um valor válido para o saque.';
+    if (this.valorSaque <= 0 || isNaN(this.valorSaque)) {
+      this.mensagem = 'Por favor, insira um valor válido.';
+      return;
     }
+
+    this.mensagem = '';
+    this.valorFormatado = this.valorSaque.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
+
+    const confirmModalEl = document.getElementById('confirmWithdrawModal');
+    if (confirmModalEl) {
+      const confirmModal = new bootstrap.Modal(confirmModalEl);
+      confirmModal.show();
+    }
+
+    console.log('Saque de:', this.valorFormatado);
   }
 
   confirmarSaque(): void {
     console.log(`Saque confirmado: ${this.valorFormatado}`);
 
-    this.valorSaque = 0;
-    this.valorFormatado = '';
+    const confirmModalEl = document.getElementById('confirmWithdrawModal');
+    if (confirmModalEl) {
+      const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
+      confirmModal?.hide();
+    }
+
+    const successModalEl = document.getElementById('successWithdrawModal');
+    if (successModalEl) {
+      const successModal = new bootstrap.Modal(successModalEl);
+      successModal.show();
+    }
+
   }
 
   formatarValor(event: any): void {
@@ -58,6 +70,9 @@ export class WithdrawComponent {
   }
 
   voltar(): void {
+    this.valorSaque = 0;
+    this.valorFormatado = '';
     this.router.navigate(['/client-home']);
   }
 }
+

@@ -10,28 +10,24 @@ import { Router } from '@angular/router';
   styleUrl: './client-home.component.css'
 })
 export class ClientHomeComponent {
-  saldo: number = -150.75; //exemplo
+  saldo: number = 1150.75; //exemplo
   nomeCliente: string = 'João';
 
   private router = inject(Router);
 
-  opcoes = [
-    { nome: 'Alteração de Perfil' },
-    { nome: 'Depositar' },
-    { nome: 'Saque' },
-    { nome: 'Transferência' },
-    { nome: 'Consulta de Extrato' }
-  ];
+  options = [
+  { name: 'Alteração de Perfil', route: '/update-profile' },
+  { name: 'Depositar', route: '/deposit' },
+  { name: 'Saque', route: '/withdraw' },
+  { name: 'Transferência', route: '/transfer' },
+  { name: 'Consulta de Extrato', route: '/transaction-history' }
+];
 
-  acao(opcao: any) {
-  if (opcao.nome === 'Alteração de Perfil') {
-    this.router.navigate(['/update-profile']);
-  } else if (opcao.nome === 'Depositar') {
-    this.router.navigate(['/deposit']);
-  } else if (opcao.nome === 'Transferência') {
-    this.router.navigate(['/transfer']);
+action(option: any) {
+  if (option.route) {
+    this.router.navigate([option.route]);
   } else {
-    alert(`Você clicou em: ${opcao.nome}`);
+    alert(`Você clicou em: ${option.name}`);
   }
 }
 

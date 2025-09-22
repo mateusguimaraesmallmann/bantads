@@ -16,14 +16,14 @@
       </div>
 
       <div class="pane pane-form">
-        <h3 class="h4 text-center mb-4 fw-semibold">Opções de Serviço</h3>
+        <h3 class="h4 text-center mb-4 fw-semibold">Serviços:</h3>
 
         <div class="row row-cols-1 row-cols-md-2 g-3 opcoes-grid">
-          <div class="col" *ngFor="let opcao of opcoes">
-            <a class="opcao-card-link" (click)="acao(opcao)">
+          <div class="col" *ngFor="let option of options">
+            <a class="opcao-card-link" (click)="action(option)">
               <div class="opcao-card card h-100">
                 <div class="card-body d-flex justify-content-between align-items-center">
-                  <span class="fw-bold">{{ opcao.nome }}</span>
+                  <span class="fw-bold">{{ option.name }}</span>
                   </div>
               </div>
             </a>
