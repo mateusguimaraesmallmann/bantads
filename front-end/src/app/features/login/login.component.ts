@@ -31,23 +31,31 @@ export class LoginComponent {
   }
 
   submit(): any {
-    if (this.form.invalid) {
-      this.form.markAllAsTouched();
-      return;
-    }
-
-      this.authService.doLogin(this.login).subscribe({
-        next: (response) => {
-
-
-        },
-        error: (err) => {
-          this.hasError = true
-        }
-      })
-      const payload = this.form.getRawValue();
-      console.log('login payload', payload);
-    }
-  
+  if (this.form.invalid) {
+    this.form.markAllAsTouched();
+    return;
   }
 
+  const payload = this.form.getRawValue() as Login;
+  console.log('login payload', payload);
+
+  this.authService.doLogin(payload).subscribe({
+    next: (user) => {
+      if (user) {
+        if (user.role === 'ADMIN') {
+          window.location.href = '/administrator-home';
+        } else if (user.role === 'MANAGER') {
+          window.location.href = '/manager-home';
+        } else if (user.role === 'CLIENT') {
+          window.location.href = '/client-home';
+        }
+      } else {
+        this.hasError = true;
+      }
+    },
+    error: () => {
+      this.hasError = true;
+    }
+  });
+  }
+}
