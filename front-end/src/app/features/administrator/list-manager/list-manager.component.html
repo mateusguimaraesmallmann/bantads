@@ -1,4 +1,4 @@
-<app-header></app-header>
+<app-header [navItems]="navItems"></app-header>
 
 <div class="main-content page-with-navbar">
     <div class="container mt-4">
@@ -22,9 +22,9 @@
                 <tbody>
                     <tr *ngFor="let m of managers; let i = index; trackBy: trackByIndex">
                         <td>{{ m.nome }}</td>
-                        <td>{{ m.cpf }}</td>
+                        <td>{{ m.cpf | mask: "000.000.000-00"}}</td>
                         <td>{{ m.email }}</td>
-                        <td>{{ m.telefone }}</td>
+                        <td>{{ m.telefone | mask: '(00) 00000-0000'}}</td>
                         <td class="text-end">
                             <button class="btn btn-outline-secondary btn-sm me-2" (click)="openEdit(i)">Editar</button>
                             <button class="btn btn-outline-danger btn-sm" (click)="delete(i)">Excluir</button>
@@ -59,7 +59,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label" for="cpf">CPF</label>
-                        <input id="cpf" class="form-control" formControlName="cpf" placeholder="000.000.000-00" />
+                        <input id="cpf" class="form-control" formControlName="cpf" placeholder="000.000.000-00" mask="000.000.000-00" />
                         <div class="invalid-feedback d-block" *ngIf="f.cpf.touched && f.cpf.invalid">
                             CPF é obrigatório.
                         </div>
@@ -68,7 +68,7 @@
                     <div class="col-md-6">
                         <label class="form-label" for="telefone">Telefone</label>
                         <input id="telefone" class="form-control" formControlName="telefone"
-                            placeholder="(00) 00000-0000" />
+                            placeholder="(00) 00000-0000" mask="(00)00000-0000"/>
                         <div class="invalid-feedback d-block" *ngIf="f.telefone.touched && f.telefone.invalid">
                             Telefone é obrigatório.
                         </div>

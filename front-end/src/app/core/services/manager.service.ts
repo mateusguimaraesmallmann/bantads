@@ -1,8 +1,19 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { GerenteComClientes } from '../models/manager';
+import { GerenteComClientes, ManagerDto } from '../models/manager';
+import { Manager } from '../models/manager';
+import { User } from '../models/user.model';
+import { HttpClient } from '@angular/common/http';
+import { map, Observable, switchMap, throwError } from 'rxjs';
+
+const MANAGER_URL = 'http://localhost:3000/managers';
+const USER_URL = 'http://localhost:3000/users'
 
 @Injectable({ providedIn: 'root' })
 export class ManagerService {
+
+  constructor(private http: HttpClient){
+
+  }
 
   private readonly _gerentes = signal<GerenteComClientes[]>([
     {
@@ -31,5 +42,53 @@ export class ManagerService {
   ]);
 
   readonly gerentes = computed(() => this._gerentes());
-  
+
+  //#region Cria Gerente
+  addManager(manager: ManagerDto): Observable<Manager>{
+      return this.http.get<User[]>(`${USER_URL}?cpf=${manager.cpf}`).pipe(
+        switchMap(existingManagers => {
+            if (existingManagers.length > 0){
+              return throwError(() => new Error ("CPF já cadastrado no sistema."));
+            }
+
+            //Cria o DTO para carregar os dados de usuário
+            const newUser = {
+              name: manager.nome,
+              email: manager.email,
+              cpf: manager.cpf,
+              password: manager.senha,
+              role: "MANAGER"
+            }
+
+            return this.http.post<User> (USER_URL, newUser);
+        }),
+        switchMap(createdUser => {
+
+          //Cria o DTO para carregar os dados do gerente
+          const newManagerPayload = {
+            name: manager.nome,
+            email: manager.email,
+            cpf: manager.cpf,
+            phone: manager.telefone
+          };
+          return this.http.post<Manager>(MANAGER_URL, newManagerPayload);
+        })
+      )
+  }
+
+  //#region Lista os Gerentes
+  listManagers(): Observable<Manager[]> {
+    return this.http.get<any[]>(MANAGER_URL).pipe(
+      map(apiPayload =>
+        apiPayload.map(apiGerente => ({
+          id: apiGerente.id,
+          nome: apiGerente.name,
+          email: apiGerente.email,
+          cpf: apiGerente.cpf,
+          telefone: apiGerente.phone
+        }))
+      )
+    );
+  }
+
 }

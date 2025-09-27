@@ -1,4 +1,14 @@
 {
+  "users": [
+    {
+      "id": "fc96",
+      "name": "Tiago Teste",
+      "email": "tiago.teste@gmail.com",
+      "cpf": "11111111111",
+      "password": "1234",
+      "role": "MANAGER"
+    }
+  ],
   "admins": [
     {
       "id": "9001",
@@ -30,6 +40,13 @@
       "email": "carla.mendes@bantads.com.br",
       "phone": "(41) 98888-0003",
       "active": true
+    },
+    {
+      "id": "6c4f",
+      "name": "Tiago Teste",
+      "email": "tiago.teste@gmail.com",
+      "cpf": "11111111111",
+      "phone": "11111111111"
     }
   ],
   "clients": [
@@ -94,7 +111,7 @@
       "complemento": "casa",
       "cidade": "Curitiba",
       "estado": "PR",
-      "status": "PENDENT",
+      "status": "APPROVED",
       "role": "CLIENT"
     }
   ],

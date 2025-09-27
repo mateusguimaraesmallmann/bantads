@@ -3,15 +3,18 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../../core/components/header/header.component';
 import { ClientDetails } from '../../../core/models/client-details.model';
+import { NAVITEMS } from '../navItemsAdm';
 
 @Component({
   selector: 'app-administrator-client-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, HeaderComponent],
   templateUrl: './administrator-client-list.component.html',
   styleUrls: ['./administrator-client-list.component.css']
 })
 export class AdministratorListaClientesComponent implements OnInit {
+  navItems = NAVITEMS;
+
   listaTodosClientes: ClientDetails[] = [];
   constructor() { }
 
@@ -20,7 +23,6 @@ export class AdministratorListaClientesComponent implements OnInit {
   }
 
   private carregarClientes(): void {
-
 
     const dadosDaApi: ClientDetails[] = [
       {

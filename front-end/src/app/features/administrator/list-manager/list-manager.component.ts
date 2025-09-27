@@ -1,15 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HeaderComponent } from '../../../core/components/header/header.component';
-
-interface Manager {
-  nome: string;
-  cpf: string;
-  email: string;
-  telefone: string;
-  senha?: string;
-}
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { ManagerService } from '../../../core/services/manager.service';
+import { Manager } from '../../../core/models/manager';
+import { NAVITEMS } from '../navItemsAdm';
 
 // 👉 Tipagem dos controles do form
 type ManagerForm = {
@@ -22,26 +18,20 @@ type ManagerForm = {
 
 @Component({
   selector: 'app-list-manager',
-  imports: [CommonModule, HeaderComponent, ReactiveFormsModule],
+  imports: [CommonModule, HeaderComponent, ReactiveFormsModule, NgxMaskDirective, NgxMaskPipe],
+  providers: [
+    provideNgxMask(),
+  ],
   templateUrl: './list-manager.component.html',
   styleUrl: './list-manager.component.css'
 })
 
-export class ListManagerComponent {
+export class ListManagerComponent implements OnInit{
 
-  // Lista mockada (tipada corretamente)
-  managers: Manager[] = [
-    { nome: 'Ana Souza', cpf: '111.222.333-44', email: 'ana@banco.com', telefone: '(41) 99999-0001' },
-    { nome: 'Bruno Lima', cpf: '555.666.777-88', email: 'bruno@banco.com', telefone: '(41) 99999-0002' },
-    { nome: 'Carla Dias', cpf: '123.456.789-00', email: 'carla@banco.com', telefone: '(41) 99999-0003' },
-  ];
+  navItems = NAVITEMS;
+  managers: Manager[] = [];
 
-  // 👉 FormGroup fortemente tipado
-  form: FormGroup<ManagerForm>;
-  modalOpen = false;
-  editingIndex: number | null = null;
-
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private managerService: ManagerService) {
     // use nonNullable para evitar null/undefined nos controles
     this.form = this.fb.nonNullable.group({
       nome: this.fb.nonNullable.control('', [Validators.required, Validators.minLength(3)]),
@@ -52,6 +42,24 @@ export class ListManagerComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.managerService.listManagers().subscribe({
+        next: (data) =>{
+          this.managers = data;
+          console.log(data)
+        },
+        error: (err) =>{
+          console.error("Erro ao listar os gerentes.");
+        }
+    });
+  }
+
+  // 👉 FormGroup fortemente tipado
+  form: FormGroup<ManagerForm>;
+  modalOpen = false;
+  editingIndex: number | null = null;
+
+  //#region Abre o modal
   openInsert(): void {
     this.editingIndex = null;
     this.form.reset();
@@ -60,6 +68,7 @@ export class ListManagerComponent {
     this.modalOpen = true;
   }
 
+  //#region Editar Usuário
   openEdit(index: number): void {
     this.editingIndex = index;
     const m = this.managers[index];
@@ -75,30 +84,30 @@ export class ListManagerComponent {
     this.modalOpen = true;
   }
 
+  //#region Deleta o usuário
   delete(index: number): void {
     const copia = [...this.managers];
     copia.splice(index, 1);
     this.managers = copia; // reatribui para disparar CD
   }
 
+  //#region Cria o usuário
   save(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
 
-    const { nome, cpf, email, telefone } = this.form.value as Manager;
+    const payload = this.form.getRawValue();
 
-    if (this.editingIndex === null) {
-      // inserção
-      const novo: Manager = { nome, cpf, email, telefone };
-      this.managers = [novo, ...this.managers];
-    } else {
-      // edição
-      const copia = [...this.managers];
-      copia[this.editingIndex] = { ...copia[this.editingIndex], nome, cpf, email, telefone };
-      this.managers = copia;
-    }
+    this.managerService.addManager(payload).subscribe({
+      next: (response) =>{
+        console.log("Gerente cadastrado com sucesso!");
+      },
+      error: (err) =>{
+        console.error("Erro ao registrar gerente. Verificar se o usuário ainda está ativo ou se ");
+      }
+    })
 
     this.closeModal();
   }
