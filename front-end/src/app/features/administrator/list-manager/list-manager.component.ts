@@ -87,8 +87,20 @@ export class ListManagerComponent implements OnInit{
   //#region Deleta o usuário
   delete(index: number): void {
     const copia = [...this.managers];
-    copia.splice(index, 1);
-    this.managers = copia; // reatribui para disparar CD
+    const managerToDelete = this.managers.at(index);
+    if (managerToDelete != null){
+      this.managerService.disableManager(managerToDelete.cpf).subscribe({
+        next: (data) => {
+          copia.splice(index, 1);
+          this.managers = copia; // reatribui para disparar CD
+          console.log(data);
+        },
+        error: (err) => {
+          console.error("Erro: ", err)
+        }
+      })
+    }
+
   }
 
   //#region Cria o usuário
@@ -100,14 +112,46 @@ export class ListManagerComponent implements OnInit{
 
     const payload = this.form.getRawValue();
 
-    this.managerService.addManager(payload).subscribe({
-      next: (response) =>{
-        console.log("Gerente cadastrado com sucesso!");
-      },
-      error: (err) =>{
-        console.error("Erro ao registrar gerente. Verificar se o usuário ainda está ativo ou se ");
-      }
-    })
+    //Flag para controlar se vai atualizar ou criar o gerente
+    const findUser = this.managers.find(manager => manager.cpf === payload.cpf)
+
+    //Condição de controle da criação e edição de gerentes
+    if (!findUser){
+      this.managerService.addManager(payload).subscribe({
+        next: (response) =>{
+          console.log("Gerente cadastrado com sucesso!");
+          const newManager: Manager = {
+            id: 0,
+            nome: payload.nome,
+            email: payload.email,
+            cpf: payload.cpf,
+            telefone: payload.telefone
+          }
+          this.managers.push(newManager)
+        },
+        error: (err) =>{
+          console.error("Erro ao registrar gerente. Verificar se o usuário ainda está ativo.");
+          console.log(err);
+        }
+      })
+    } else{
+      this.managerService.updateManager(payload).subscribe({
+        next: (response) => {
+          console.log("Gerente atualizado com sucesso!");
+          const newManager: Manager = {
+            id: 0,
+            nome: payload.nome,
+            email: payload.email,
+            cpf: payload.cpf,
+            telefone: payload.telefone
+          }
+          this.managers[this.managers.indexOf(findUser)] = newManager
+        },
+        error: (err) => {
+          console.error("Erro: ", err);
+        }
+      })
+    }
 
     this.closeModal();
   }
