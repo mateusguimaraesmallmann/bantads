@@ -4,6 +4,7 @@ export class User {
     email: string,
     cpf: string,
     password: string,
-    role: string
+    role: string,
+    status: "ACTIVE" | "DISABLED"
   ){}
 }

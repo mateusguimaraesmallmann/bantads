@@ -3,7 +3,7 @@ import { GerenteComClientes, ManagerDto } from '../models/manager';
 import { Manager } from '../models/manager';
 import { User } from '../models/user.model';
 import { HttpClient } from '@angular/common/http';
-import { map, Observable, switchMap, throwError } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
 
 const MANAGER_URL = 'http://localhost:3000/managers';
 const USER_URL = 'http://localhost:3000/users'
@@ -52,12 +52,13 @@ export class ManagerService {
             }
 
             //Cria o DTO para carregar os dados de usuário
-            const newUser = {
+            const newUser : User = {
               name: manager.nome,
               email: manager.email,
               cpf: manager.cpf,
               password: manager.senha,
-              role: "MANAGER"
+              role: "MANAGER",
+              status: "ACTIVE"
             }
 
             return this.http.post<User> (USER_URL, newUser);
@@ -78,17 +79,86 @@ export class ManagerService {
 
   //#region Lista os Gerentes
   listManagers(): Observable<Manager[]> {
-    return this.http.get<any[]>(MANAGER_URL).pipe(
-      map(apiPayload =>
-        apiPayload.map(apiGerente => ({
-          id: apiGerente.id,
-          nome: apiGerente.name,
-          email: apiGerente.email,
-          cpf: apiGerente.cpf,
-          telefone: apiGerente.phone
-        }))
-      )
+    return this.http.get<Manager[]>(`${USER_URL}?role=MANAGER&&status=ACTIVE`).pipe(
+      switchMap(activeUsers =>{
+        if (!activeUsers || activeUsers.length === 0){
+          return of([]);
+        }
+        const activeManagersCpf = activeUsers.map(user => user.cpf)
+
+        return this.http.get<any[]>(MANAGER_URL).pipe(
+          map(allManagers =>{
+            return allManagers.filter(manager => activeManagersCpf.includes(manager.cpf))
+            .map(apiGerente => ({
+                id: apiGerente.id,
+                nome: apiGerente.name,
+                email: apiGerente.email,
+                cpf: apiGerente.cpf,
+                telefone: apiGerente.phone
+              }))
+            })
+        )
+      })
     );
+  }
+
+  //#region Desabilita um Gerente
+  disableManager(cpf: string): Observable<any>{
+    return this.http.get<any[]>(`${USER_URL}?cpf=${cpf}`).pipe(
+      switchMap(managers =>{
+        if (managers.length === 0){
+          return of({error: 'Gerente não encontrado.'});
+        }
+
+        const manager = managers[0];
+        const idManager = manager.id;
+
+        return this.http.patch(`${USER_URL}/${idManager}`, {status: 'DISABLED'});
+        console.log("Usuário desligado com sucesso!");
+      })
+    )
+  }
+
+  //#region Atualiza o Gerente
+  updateManager(manager: ManagerDto): Observable<any>{
+    const findUser = this.http.get<any[]>(`${USER_URL}?cpf=${manager.cpf}`);
+    const findManager = this.http.get<any[]>(`${MANAGER_URL}?cpf=${manager.cpf}`);
+
+    return forkJoin([findUser, findManager]).pipe(
+      switchMap(([users, managers]) =>{
+        if (!users || users.length === 0){
+          return of ({error: "Usuário com CPF especificado não foi encontrado."});
+        }
+        if (!managers || managers.length === 0){
+          return of ({error: "Gerente com CPF especificado não foi encontrado."});
+        }
+        const userToUpdate = users[0];
+        const managerToUpdate = managers[0];
+        console.log(userToUpdate, managerToUpdate)
+
+        const userPayload = {
+          name: manager.nome,
+          cpf: manager.cpf,
+          email: manager.email,
+          password: manager.senha
+        }
+
+        const managerPayload = {
+          name: manager.nome,
+          cpf: manager.cpf,
+          email: manager.email,
+          phone: manager.telefone,
+        }
+
+        console.log(userPayload, managerPayload)
+
+        const updateUser = this.http.patch(`${USER_URL}/${userToUpdate.id}`, userPayload);
+        const updateManager = this.http.patch(`${MANAGER_URL}/${managerToUpdate.id}`, managerPayload)
+
+        return forkJoin([updateUser, updateManager]);
+      }
+    )
+  )
   }
 
 }
