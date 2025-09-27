@@ -1,4 +1,5 @@
 .admin-home {
+  padding-top: 75px;
   display: grid;
   gap: 1rem;
 }

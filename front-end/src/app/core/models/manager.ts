@@ -6,6 +6,14 @@ export interface Manager {
   telefone: string;
 }
 
+export interface ManagerDto{
+  nome: string,
+  cpf: string,
+  email: string,
+  telefone: string,
+  senha: string
+}
+
 export interface Cliente {
   id: number;
   nome: string;

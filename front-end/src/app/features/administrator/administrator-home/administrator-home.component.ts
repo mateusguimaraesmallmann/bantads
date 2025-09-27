@@ -1,6 +1,8 @@
 import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ManagerService } from '../../../core/services/manager.service';
+import { HeaderComponent } from '../../../core/components/header/header.component';
+import { NAVITEMS } from '../navItemsAdm';
 
 type LinhaDash = {
   id: number;
@@ -15,11 +17,13 @@ type OrdenarPor = 'somaPositivos' | 'somaNegativos' | 'qtdClientes' | 'nome';
 @Component({
   selector: 'app-administrator-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './administrator-home.component.html',
   styleUrl: './administrator-home.component.css',
 })
 export class AdministratorHomeComponent {
+  navItems = NAVITEMS;
+
   private readonly service = inject(ManagerService);
 
   filtroNome = signal<string>('');
