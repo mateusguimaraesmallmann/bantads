@@ -1,17 +1,18 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { MoneyPipe } from '../../../shared/pipes/pipe-money';
 
 @Component({
   selector: 'app-client-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MoneyPipe],
   templateUrl: './client-home.component.html',
   styleUrl: './client-home.component.css'
 })
 export class ClientHomeComponent {
   saldo: number = 1150.75; //exemplo
-  nomeCliente: string = 'João';
+  nomeCliente: string = 'Paulo';
 
   private router = inject(Router);
 

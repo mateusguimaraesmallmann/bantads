@@ -11,7 +11,7 @@
         <h3 class="fw-semibold">Saldo Atual</h3>
         <h4 class="fw-bold fs-1"
             [ngClass]="{ 'text-success': saldo >= 0, 'text-danger': saldo < 0 }">
-          {{ saldo | currency:'BRL' }}
+          {{ saldo | money }}
         </h4>
       </div>
 

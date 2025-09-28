@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { MoneyPipe } from "../../shared/pipes/pipe-money";
+import { MoneyPipe } from "../../../shared/pipes/pipe-money";
 
 declare var bootstrap: any;
 
