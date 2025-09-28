@@ -72,6 +72,7 @@ export class RegisterComponent {
     });
   }
 
+  //#region Submit
   submit() {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -88,7 +89,7 @@ export class RegisterComponent {
       ...payload,
       salario: salario,
       status: "PENDENT",
-      role: "CLIENT"
+      role: "CLIENT",
     }
 
     this.registerService.registerClient(newUserPayload).subscribe({
