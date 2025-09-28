@@ -9,7 +9,7 @@ import { ClientUpdate } from '../models/client-update.model';
 
 export class UserService {
 
-  private apiUrl = '';
+  private apiUrl = 'http://localhost:3000/clients';
 
   constructor(private http: HttpClient) { }
 
@@ -20,7 +20,7 @@ export class UserService {
 
   atualizarUsuario(user: ClientUpdate, cpf:string): Observable<ClientUpdate> {
     const url = `${this.apiUrl}/${cpf}`;
-    let resposta = this.http.put<ClientUpdate>(url, user);
+    let resposta = this.http.patch<ClientUpdate>(url, user);
     console.log(resposta)
     return of(user);
   }

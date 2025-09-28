@@ -49,6 +49,9 @@ export class AuthService {
       map(users => {
         if (users && users.length > 0){
           const user = users[0];
+          if (user.status != "ACTIVE"){
+            return alert("Usuário desativado ou ainda não foi aprovado.");
+          }
           localStorage.setItem('user', JSON.stringify(user));
           return user;
         }
