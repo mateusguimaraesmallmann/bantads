@@ -1,6 +1,10 @@
 <div class="extrato-wrapper">
   <div class="container mt-4">
-    
+
+    <div class="text-end mb-4">
+      <button class="btn btn-outline-light" (click)="voltar()">Voltar</button>
+    </div>
+
     <div class="card filter-card mb-4">
       <div class="card-header">
         <h3 class="mb-0">Consulta de Extrato Bancário</h3>
@@ -31,7 +35,7 @@
         <div *ngIf="numeroDaConta" class="account-info-box">
           <div class="d-flex justify-content-between flex-wrap">
             <span><strong>Conta:</strong> {{ numeroDaConta }}</span>
-            <span><strong>Saldo Final do Período:</strong> {{ balanco | currency:'BRL' }}</span>
+            <span><strong>Saldo Final do Período:</strong> {{ balanco | money }}</span>
           </div>
         </div>
 
@@ -52,7 +56,7 @@
           <div *ngFor="let day of listaDeTransacoes" class="transaction-day-group mb-4">
             <div class="transaction-day-header d-flex justify-content-between align-items-center">
               <h5 class="mb-0">{{ day.data }}</h5>
-              <span class="fw-bold">Saldo do dia: {{ day.saldoConsolidado | currency:'BRL' }}</span>
+              <span class="fw-bold">Saldo do dia: {{ day.saldoConsolidado | money }}</span>
             </div>
             <div class="table-responsive">
               <table class="table table-striped table-hover mb-0">
@@ -69,7 +73,7 @@
                     <td>{{ transaction.dataHora }}</td>
                     <td>{{ transaction.operacao }}</td>
                     <td>{{ transaction.cliente || 'N/A' }}</td>
-                    <td class="fw-bold">{{ transaction.valor | currency:'BRL' }}</td>
+                    <td class="fw-bold">{{ transaction.valor | money }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -77,6 +81,6 @@
           </div>
         </div>
       </div>
-    </div> 
+    </div>
   </div>
 </div>
