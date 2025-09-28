@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ViacepService } from '../../../app/core/services/viacep.service';
 import { RegisterService } from '../../core/services/authentication/register.service';
+import { AccountService } from '../../core/services/account.service';
 import { debounceTime, distinctUntilChanged, filter, switchMap, tap, catchError, of } from 'rxjs';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { RouterLink, Router } from '@angular/router';
@@ -19,7 +20,7 @@ export class RegisterComponent {
   loadingCep = false;
   cepNotFound = false;
 
-  constructor(private fb: FormBuilder, private viaCep: ViacepService, private registerService: RegisterService, private router:Router) {
+  constructor(private fb: FormBuilder, private viaCep: ViacepService, private registerService: RegisterService, private router:Router, accountService: AccountService) {
     this.form.get('cep')!.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),

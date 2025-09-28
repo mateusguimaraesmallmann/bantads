@@ -1,10 +1,12 @@
+import { Observable } from "rxjs";
+
 export interface Account {
   number: number;
-  clientId: string;
-  clientName: string;
+  clientCpf: string | null;
+  clientName: string | null;
   balance: number;
   limit: number;
-  managerId: string;
-  managerName: string;
+  managerCpf: string | null;
+  managerName: string | null;
   createdAt: Date;
 }

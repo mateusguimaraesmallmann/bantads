@@ -6,12 +6,12 @@
       <button class="btn btn-outline-light" (click)="logout()">Sair</button>
     </div>
 
-    <div class="auth-shell mx-auto">
+    <div class="auth-shell mx-auto" *ngIf="currentAccount != null">
       <div class="pane pane-logo d-flex flex-column align-items-center justify-content-center text-center">
-        <h3 class="fw-semibold">Saldo Atual</h3>
+        <h3 class="fw-semibold">Saldo da Conta</h3>
         <h4 class="fw-bold fs-1"
-            [ngClass]="{ 'text-success': saldo >= 0, 'text-danger': saldo < 0 }">
-          {{ saldo | money }}
+            [ngClass]="{ 'text-success': currentAccount.balance >= 0, 'text-danger': currentAccount.balance < 0 }">
+          {{ currentAccount.balance | money }}
         </h4>
       </div>
 
