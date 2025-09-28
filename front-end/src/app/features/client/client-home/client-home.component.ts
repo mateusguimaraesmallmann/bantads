@@ -13,7 +13,7 @@ import { MoneyPipe } from '../../../shared/pipes/pipe-money';
   styleUrl: './client-home.component.css'
 })
 export class ClientHomeComponent implements OnInit {
-  saldo: number = 1150.75; //exemplo
+  saldo: number = 0;
   currentUser: User | null = null;
 
   constructor (private authService: AuthService){
@@ -22,6 +22,10 @@ export class ClientHomeComponent implements OnInit {
 
   ngOnInit(): void{
     this.currentUser = this.authService.getCurrentUser();
+
+    if (this.currentUser) {
+      this.saldo = this.currentUser.balance ?? 0;
+    }
   }
 
   private router = inject(Router);
