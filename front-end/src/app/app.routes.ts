@@ -27,12 +27,12 @@ export const routes: Routes = [
   { path: 'withdraw', component: WithdrawComponent, canActivate: [AuthGuard], data: { roles: ['CLIENT'] } },
   { path: 'transfer', component: TransferComponent, canActivate: [AuthGuard], data: { roles: ['CLIENT'] } },
   { path: 'update-profile', component: UpdateProfileComponent, canActivate: [AuthGuard], data: { roles: ['CLIENT'] } },
-  { path: 'manager-home', component: ManagerHomeComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'manager-home', component: ManagerHomeComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] }},
   { path: 'transaction-history', component: TransactionHistoryComponent, canActivate: [AuthGuard], data: { roles: ['CLIENT'] } },
-  { path: 'administrator-home', component: AdministratorHomeComponent/*, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } */},
-  { path: 'list-manager', component: ListManagerComponent/*, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } */},
+  { path: 'administrator-home', component: AdministratorHomeComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] }},
+  { path: 'list-manager', component: ListManagerComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } },
   { path: 'manager-client-list', component: ManagerListaClientesComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'top-clients', component: TopClientsComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
-  { path: 'search-client', component: ClientSearchComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
-  { path: 'administrator-client-list', component: AdministratorListaClientesComponent/*, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } */}
+  { path: 'search-client', component: ClientSearchComponent,canActivate: [AuthGuard], data: { roles: ['MANAGER'] }},
+  { path: 'administrator-client-list', component: AdministratorListaClientesComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] }}
 ];

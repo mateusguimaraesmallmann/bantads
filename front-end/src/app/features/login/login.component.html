@@ -7,7 +7,7 @@
       </div>
 
       <div class="pane pane-form">
-        <h1 class="h4 text-center mb-4 fw-semibold">Sign In</h1>
+        <h1 class="h4 text-center mb-4 fw-semibold">Log In</h1>
 
         <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
           <div class="mb-3">
@@ -38,9 +38,6 @@
 
             <div class="invalid-feedback d-block" *ngIf="f.password.touched && f.password.errors?.['required']">
               Senha é obrigatória.
-            </div>
-            <div class="invalid-feedback d-block" *ngIf="f.password.touched && f.password.errors?.['minlength']">
-              Mínimo de 6 caracteres.
             </div>
           </div>
 

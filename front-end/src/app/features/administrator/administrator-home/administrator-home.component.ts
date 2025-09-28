@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ManagerService } from '../../../core/services/manager.service';
 import { HeaderComponent } from '../../../core/components/header/header.component';
 import { NAVITEMS } from '../navItemsAdm';
+import { AuthService } from '../../../core/services/authentication/auth.service';
 
 type LinhaDash = {
   id: number;
@@ -23,6 +24,11 @@ type OrdenarPor = 'somaPositivos' | 'somaNegativos' | 'qtdClientes' | 'nome';
 })
 export class AdministratorHomeComponent {
   navItems = NAVITEMS;
+  userName: string = "";
+
+  constructor(authService: AuthService){
+     this.userName = authService.getCurrentUser.toString();
+  }
 
   private readonly service = inject(ManagerService);
 
