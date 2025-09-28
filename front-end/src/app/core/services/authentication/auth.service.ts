@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
-import { catchError, map, Observable, of, throwError } from 'rxjs';
+import { BehaviorSubject, map, Observable, of, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { Login } from '../models/login.model';
-//const BASE_URL = "http://localhost:3000/login"
+import { Login } from '../../models/login.model';
+import { User } from '../../models/user.model';
+
+const BASE_URL = "http://localhost:3000/users"
 
 
 @Injectable({
@@ -22,7 +24,7 @@ export class AuthService {
     { email: 'paulo.silva@example.com', password: '123456', role: 'CLIENT' },
   ];
 
-  //constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) { }
 
   //doLogin(login: Login) : Observable<any>{
   //console.log(login)
@@ -43,20 +45,24 @@ export class AuthService {
   //}
 
   doLogin(login: Login): Observable<any> {
-    const user = this.users.find(u => u.email === login.email && u.password === login.password);
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-      return of(user);
-    } else {
-      return throwError(() => new Error('Usuário ou senha inválidos'));
-    }
+    return this.http.get<User[]>(`${BASE_URL}?email=${login.email}&password=${login.password}`).pipe(
+      map(users => {
+        if (users && users.length > 0){
+          const user = users[0];
+          localStorage.setItem('user', JSON.stringify(user));
+          return user;
+        }
+        alert("Usuário ou senha inválidos!")
+        return throwError(() => new Error('Usuário ou senha inválidos'));
+      })
+    )
   }
 
   logout() {
     localStorage.removeItem('user');
   }
 
-  getCurrentUser() {
+  getCurrentUser() : User | null{
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
   }

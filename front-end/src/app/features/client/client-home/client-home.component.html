@@ -1,7 +1,7 @@
 <div class="cliente-home">
   <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-5">
-      <h2 class="text-white">Bem-vindo(a), {{ nomeCliente }}</h2>
+    <div class="d-flex justify-content-between align-items-center mb-5" *ngIf="currentUser != null">
+      <h2 class="text-white">Bem-vindo(a), {{ currentUser.name }}</h2>
 
       <button class="btn btn-outline-light" (click)="logout()">Sair</button>
     </div>

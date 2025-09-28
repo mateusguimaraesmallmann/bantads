@@ -1,6 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { User } from '../../../core/models/user.model';
+import { AuthService } from '../../../core/services/authentication/auth.service';
 import { MoneyPipe } from '../../../shared/pipes/pipe-money';
 
 @Component({
@@ -10,9 +12,17 @@ import { MoneyPipe } from '../../../shared/pipes/pipe-money';
   templateUrl: './client-home.component.html',
   styleUrl: './client-home.component.css'
 })
-export class ClientHomeComponent {
+export class ClientHomeComponent implements OnInit {
   saldo: number = 1150.75; //exemplo
-  nomeCliente: string = 'Paulo';
+  currentUser: User | null = null;
+
+  constructor (private authService: AuthService){
+
+  }
+
+  ngOnInit(): void{
+    this.currentUser = this.authService.getCurrentUser();
+  }
 
   private router = inject(Router);
 
@@ -33,6 +43,7 @@ action(option: any) {
 }
 
   logout() {
+    this.authService.logout();
     this.router.navigate(['/login']);
   }
 }

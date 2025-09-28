@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService } from '../../core/services/authentication/auth.service';
 import { Login } from '../../core/models/login.model';
 
 @Component({
@@ -18,7 +18,7 @@ export class LoginComponent {
 
   form = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]],
+    password: ['', [Validators.required]],
   });
 
   login: Login = new Login();
@@ -51,10 +51,12 @@ export class LoginComponent {
         }
       } else {
         this.hasError = true;
+        console.log("Usuário ou senha incorretos!")
       }
     },
-    error: () => {
+    error: (err) => {
       this.hasError = true;
+      console.error("Erro:", err);
     }
   });
   }

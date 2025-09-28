@@ -8,6 +8,8 @@ import { DenyClientComponent } from './components/deny-client/deny-client.compon
 import { NAVITEMS } from '../navItems';
 import { ClientDetailsCpf } from '../../../core/models/client-details.model';
 import { SolicitacoesService } from '../../../core/services/solicitacoes.service';
+import { AuthService } from '../../../core/services/authentication/auth.service';
+import { User } from '../../../core/models/user.model';
 
 @Component({
   selector: 'app-manager-home',
@@ -20,8 +22,9 @@ import { SolicitacoesService } from '../../../core/services/solicitacoes.service
   styleUrl: './manager-home.component.css'
 })
 export class ManagerHomeComponent implements OnInit {
+    currentUser: User | null = null;
 
-    constructor(private modalService: BsModalService, private solicitacoesService: SolicitacoesService){}
+    constructor(private modalService: BsModalService, private solicitacoesService: SolicitacoesService, private authService: AuthService){}
     bsModalRef?: BsModalRef;
 
     navItems = NAVITEMS;
@@ -31,6 +34,7 @@ export class ManagerHomeComponent implements OnInit {
     numPedidos: number = 0;
 
     ngOnInit(): void{
+      this.currentUser = this.authService.getCurrentUser();
       this.solicitacoesService.listRequests().subscribe({
         next: (data) =>{
           this.solicitacoes = data;
@@ -41,8 +45,6 @@ export class ManagerHomeComponent implements OnInit {
         }
       });
     }
-
-    //TODO: Com os modais implementados, falta deixar a retirada das contas e alteração no card de pedidos dinâmica
 
     responseManager(id: String, cpfCliente: string){
 

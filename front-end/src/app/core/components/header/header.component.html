@@ -1,7 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light border-bottom navbar-custom">
   <div class="container-fluid">
     <a class="brand-fixed"><img src="assets/logo.png" alt="BANTADS" class="brand-img"></a>
-    
+
     <div class="d-flex justify-content-center flex-grow-1">
         <ul *ngFor="let item of navItems" class="nav-item">
           <a class="nav-link" routerLink="{{item.link}}">
@@ -10,16 +10,16 @@
           </a>
         </ul>
     </div>
-    
-    <div ngbDropdown class="d-flex ms-auto user-fixed">
+
+    <div ngbDropdown class="d-flex ms-auto user-fixed" *ngIf="currentUser != null">
       <a ngbDropdownToggle class="d-flex align-items-center text-decoration-none" id="dropdownUser1">
         <img src="../../../../assets/user-icon.png" alt="mdo" width="32" height="32" class="rounded-circle me-2">
-        <strong class="d-sm-inline-block user-custom">{{userName}}</strong>
+        <strong class="d-sm-inline-block user-custom">{{currentUser.name}}</strong>
       </a>
       <div ngbDropdownMenu class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser1">
-        <a ngbDropdownItem class="dropdown-item" href="/update-profile">Atualizar Perfil</a>
+        <a ngbDropdownItem class="dropdown-item" *ngIf= "currentUser.role === 'CLIENT'" href="/update-profile">Atualizar Perfil</a>
         <hr class="dropdown-divider">
-        <a ngbDropdownItem class="dropdown-item" href="/login">Sair</a>
+        <a ngbDropdownItem class="dropdown-item" (click)="onLogout()" href="/login">Sair</a>
       </div>
     </div>
   </div>
