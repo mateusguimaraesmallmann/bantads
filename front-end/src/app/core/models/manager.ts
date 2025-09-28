@@ -20,6 +20,13 @@ export interface Cliente {
   saldo: number;
 }
 
-export interface GerenteComClientes extends Manager {
+export interface GerenteComClientes {
+  id: number;
+  nome: string;
+  cpf: string;
+  email: string;
+  telefone: string;
   clientes: Cliente[];
 }
+
+

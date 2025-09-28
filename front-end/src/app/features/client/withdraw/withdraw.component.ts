@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MoneyPipe } from '../../../shared/pipes/pipe-money';
+import { AuthService } from '../../../core/services/authentication/auth.service';
 
 declare var bootstrap: any;
 
@@ -17,11 +18,17 @@ export class WithdrawComponent {
   valorFormatado: string = '';
   mensagem: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   onSubmit(): void {
     if (this.valorSaque <= 0 || isNaN(this.valorSaque)) {
       this.mensagem = 'Por favor, insira um valor válido.';
+      return;
+    }
+
+    const currentUser = this.authService.getCurrentUser();
+    if (!currentUser || (currentUser.balance ?? 0) < this.valorSaque) {
+      this.mensagem = 'Saldo insuficiente.';
       return;
     }
 
@@ -41,7 +48,11 @@ export class WithdrawComponent {
   }
 
   confirmarSaque(): void {
-    console.log(`Saque confirmado: ${this.valorFormatado}`);
+    const currentUser = this.authService.getCurrentUser();
+    if (currentUser) {
+      currentUser.balance = (currentUser.balance ?? 0) - this.valorSaque;
+      localStorage.setItem('user', JSON.stringify(currentUser));
+    }
 
     const confirmModalEl = document.getElementById('confirmWithdrawModal');
     if (confirmModalEl) {
@@ -54,7 +65,6 @@ export class WithdrawComponent {
       const successModal = new bootstrap.Modal(successModalEl);
       successModal.show();
     }
-
   }
 
   formatarValor(event: any): void {
@@ -67,6 +77,7 @@ export class WithdrawComponent {
     });
 
     this.valorSaque = numero;
+    this.valorFormatado = event.target.value;
   }
 
   voltar(): void {
@@ -75,4 +86,5 @@ export class WithdrawComponent {
     this.router.navigate(['/client-home']);
   }
 }
+
 

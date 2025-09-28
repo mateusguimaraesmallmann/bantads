@@ -35,7 +35,6 @@ export class ClientHomeComponent implements OnInit {
           console.error("Erro: ", err);
         }
       })
-    }
   }
 
   private router = inject(Router);
