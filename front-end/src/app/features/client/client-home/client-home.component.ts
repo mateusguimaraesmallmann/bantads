@@ -18,7 +18,7 @@ export class ClientHomeComponent implements OnInit {
   currentUser: User | null = null;
   currentAccount: Account | null = null;
 
-  constructor (private authService: AuthService, private accountService: AccountService){
+  constructor (private authService: AuthService, private accountService: AccountService, private router: Router){
 
   }
 
@@ -36,10 +36,9 @@ export class ClientHomeComponent implements OnInit {
         }
       })
   }
+}
 
-  private router = inject(Router);
-
-  options = [
+   options = [
   { name: 'Alteração de Perfil', route: '/update-profile' },
   { name: 'Depositar', route: '/deposit' },
   { name: 'Saque', route: '/withdraw' },
