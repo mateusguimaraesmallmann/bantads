@@ -13,3 +13,19 @@ export interface ManagerDto{
   telefone: string,
   senha: string
 }
+
+export interface Cliente {
+  id: number;
+  nome: string;
+  saldo: number;
+}
+
+export interface GerenteComClientes {
+  id: number;
+  nome: string;
+  cpf: string;
+  email: string;
+  telefone: string;
+  clientes: Cliente[];
+}
+

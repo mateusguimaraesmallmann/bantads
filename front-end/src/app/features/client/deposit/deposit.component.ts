@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { AuthService } from '../../../core/services/authentication/auth.service';
 
 declare var bootstrap: any;
 
@@ -17,7 +18,7 @@ export class DepositComponent {
   valorFormatado: string = '';
   mensagem: string = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   onSubmit(): void {
      if (this.valorDeposito <= 0 || isNaN(this.valorDeposito)) {
@@ -41,18 +42,25 @@ export class DepositComponent {
   }
 
   confirmarDeposito(): void {
-    const confirmModalEl = document.getElementById('confirmDepositModal');
-    if (confirmModalEl) {
-      const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
-      confirmModal?.hide();
-    }
-
-    const successModalEl = document.getElementById('depositModal');
-    if (successModalEl) {
-      const successModal = new bootstrap.Modal(successModalEl);
-      successModal.show();
-    }
+  const confirmModalEl = document.getElementById('confirmDepositModal');
+  if (confirmModalEl) {
+    const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
+    confirmModal?.hide();
   }
+
+  const currentUser = this.authService.getCurrentUser();
+  if (currentUser) {
+    currentUser.balance = (currentUser.balance ?? 0) + this.valorDeposito;
+
+    localStorage.setItem('user', JSON.stringify(currentUser));
+  }
+
+  const successModalEl = document.getElementById('depositModal');
+  if (successModalEl) {
+    const successModal = new bootstrap.Modal(successModalEl);
+    successModal.show();
+  }
+}
 
   formatarValor(event: any): void {
     let valor = event.target.value.replace(/\D/g, '');

@@ -40,11 +40,11 @@ export class AdministratorHomeComponent {
     const gerentes = this.service.gerentes();
     const linhas = gerentes.map((g) => {
       const somaPositivos = g.clientes
-        .filter((c) => c.saldo >= 0)
-        .reduce((acc, c) => acc + c.saldo, 0);
+        .filter((c: { saldo: number; }) => c.saldo >= 0)
+        .reduce((acc: any, c: { saldo: any; }) => acc + c.saldo, 0);
       const somaNegativos = g.clientes
-        .filter((c) => c.saldo < 0)
-        .reduce((acc, c) => acc + c.saldo, 0);
+        .filter((c: { saldo: number; }) => c.saldo < 0)
+        .reduce((acc: any, c: { saldo: any; }) => acc + c.saldo, 0);
       return {
         id: g.id,
         nome: g.nome,

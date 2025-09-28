@@ -4,5 +4,6 @@ export interface User {
     cpf: string,
     password: string,
     role: string,
-    status: "ACTIVE" | "DISABLED"
+    status: "ACTIVE" | "DISABLED",
+    balance?: number
 }
