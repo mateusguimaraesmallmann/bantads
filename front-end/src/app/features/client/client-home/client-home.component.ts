@@ -1,13 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { User } from '../../core/models/user.model';
-import { AuthService } from '../../core/services/authentication/auth.service';
+import { User } from '../../../core/models/user.model';
+import { AuthService } from '../../../core/services/authentication/auth.service';
+import { MoneyPipe } from '../../../shared/pipes/pipe-money';
 
 @Component({
   selector: 'app-client-home',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MoneyPipe],
   templateUrl: './client-home.component.html',
   styleUrl: './client-home.component.css'
 })

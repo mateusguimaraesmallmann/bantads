@@ -1,13 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule,DatePipe  } from '@angular/common';
-import { FormsModule } from '@angular/forms'; 
-import {ItemExtratoResponse,ExtratoResponse,Transacoes,TodasTransacoes} from '../../core/models/transaction-history.model';
+import { FormsModule } from '@angular/forms';
+import {ItemExtratoResponse,ExtratoResponse,Transacoes,TodasTransacoes} from '../../../core/models/transaction-history.model';
+import { Router } from '@angular/router';
+import { MoneyPipe } from '../../../shared/pipes/pipe-money';
 
 @Component({
   selector: 'app-transaction-history',
   imports: [
-    CommonModule, 
-    FormsModule],
+    CommonModule,
+    FormsModule,
+    MoneyPipe],
   providers: [DatePipe],
   templateUrl: './transaction-history.component.html',
   styleUrl: './transaction-history.component.css'
@@ -19,12 +22,12 @@ export class TransactionHistoryComponent implements OnInit{
   public dadosCarregados:boolean = false;
 
   public numeroDaConta: string | null = null;
-  public balanco: number | null = null;
+  public balanco: number = 0 ;
   public listaDeTransacoes: TodasTransacoes[] = [];
   public isLoading: boolean = false;
   public hasSearched: boolean = false;
 
-  constructor(private datePipe: DatePipe) {}
+  constructor(private datePipe: DatePipe, private router: Router) {}
 
   ngOnInit(): void {
     this.definirDatasPadrao();
@@ -45,7 +48,7 @@ export class TransactionHistoryComponent implements OnInit{
   public buscarExtratos(): void {
     this.isLoading = true;
     this.hasSearched = true;
-    this.listaDeTransacoes = []; 
+    this.listaDeTransacoes = [];
     const dados: ExtratoResponse = {
       conta: "8722",
       saldo: 1933.32,
@@ -59,7 +62,7 @@ export class TransactionHistoryComponent implements OnInit{
     // this.transactionHistory.findTransactionHistory().subscribe({
     // next: (response) => this.listarTransacoes(response),
     // error: (err) => this.handleError(err)
-    // });   
+    // });
     this.listarTransacoes(dados);
     this.isLoading = false;
   }
@@ -95,7 +98,7 @@ export class TransactionHistoryComponent implements OnInit{
 
       diaExistente.transacoes.push(transacao);
     }
-    
+
     const diasOrdenados = diasAgrupados.sort((a, b) => b.dataChave.localeCompare(a.dataChave));
     let saldoAtual = response.saldo;
     const extratosCalculados: TodasTransacoes[] = [];
@@ -107,23 +110,23 @@ export class TransactionHistoryComponent implements OnInit{
       extratosCalculados.push({
         data: this.datePipe.transform(dia.dataChave, 'dd/MM/yyyy', 'UTC') || '',
         saldoConsolidado: saldoAtual,
-        transacoes: transacoesDoDia.sort((a, b) => 
+        transacoes: transacoesDoDia.sort((a, b) =>
           new Date(b.dataHora.split(' ')[0].split('/').reverse().join('-') + 'T' + b.dataHora.split(' ')[1]).getTime() -
           new Date(a.dataHora.split(' ')[0].split('/').reverse().join('-') + 'T' + a.dataHora.split(' ')[1]).getTime()
         )
       });
       saldoAtual -= totalDoDia;
     }
-    
+
     this.listaDeTransacoes = extratosCalculados.reverse();
-    this.isLoading = false; 
+    this.isLoading = false;
   }
-  
+
   private formatarOperacao(movimentacao: ItemExtratoResponse): string {
     if (movimentacao.tipo === 'TRANSFERENCIA') {
       return movimentacao.valor > 0 ? 'Transferência Recebida' : 'Transferência Enviada';
     }
-    return movimentacao.tipo.charAt(0) + movimentacao.tipo.slice(1).toLowerCase(); 
+    return movimentacao.tipo.charAt(0) + movimentacao.tipo.slice(1).toLowerCase();
   }
 
   private formatarCliente(movimentacao: ItemExtratoResponse): string | null {
@@ -135,5 +138,9 @@ export class TransactionHistoryComponent implements OnInit{
 
   processarErro(error: any): void {
     console.log("erro ao processar solicitação")
+  }
+
+  voltar(): void {
+    this.router.navigate(['/client-home']);
   }
 }

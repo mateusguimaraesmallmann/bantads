@@ -2,56 +2,59 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { MoneyPipe } from "../../shared/pipes/pipe-money";
+import { MoneyPipe } from '../../../shared/pipes/pipe-money';
 
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-deposit',
+  selector: 'app-withdraw',
   imports: [FormsModule, CommonModule, MoneyPipe],
-  templateUrl: './deposit.component.html',
-  styleUrls: ['./deposit.component.css']
+  templateUrl: './withdraw.component.html',
+  styleUrls: ['./withdraw.component.css']
 })
-export class DepositComponent {
-  valorDeposito: number = 0;
+export class WithdrawComponent {
+  valorSaque: number = 0;
   valorFormatado: string = '';
   mensagem: string = '';
 
   constructor(private router: Router) {}
 
   onSubmit(): void {
-     if (this.valorDeposito <= 0 || isNaN(this.valorDeposito)) {
+    if (this.valorSaque <= 0 || isNaN(this.valorSaque)) {
       this.mensagem = 'Por favor, insira um valor válido.';
       return;
-      }
+    }
 
-      this.mensagem = '';
-      this.valorFormatado = this.valorDeposito.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-      });
+    this.mensagem = '';
+    this.valorFormatado = this.valorSaque.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
 
-      const confirmModalEl = document.getElementById('confirmDepositModal');
-        if (confirmModalEl) {
-        const confirmModal = new bootstrap.Modal(confirmModalEl);
-        confirmModal.show();
-      }
+    const confirmModalEl = document.getElementById('confirmWithdrawModal');
+    if (confirmModalEl) {
+      const confirmModal = new bootstrap.Modal(confirmModalEl);
+      confirmModal.show();
+    }
 
-      console.log('Depósito de:', this.valorFormatado);
+    console.log('Saque de:', this.valorFormatado);
   }
 
-  confirmarDeposito(): void {
-    const confirmModalEl = document.getElementById('confirmDepositModal');
+  confirmarSaque(): void {
+    console.log(`Saque confirmado: ${this.valorFormatado}`);
+
+    const confirmModalEl = document.getElementById('confirmWithdrawModal');
     if (confirmModalEl) {
       const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
       confirmModal?.hide();
     }
 
-    const successModalEl = document.getElementById('depositModal');
+    const successModalEl = document.getElementById('successWithdrawModal');
     if (successModalEl) {
       const successModal = new bootstrap.Modal(successModalEl);
       successModal.show();
     }
+
   }
 
   formatarValor(event: any): void {
@@ -63,13 +66,13 @@ export class DepositComponent {
       currency: 'BRL'
     });
 
-    this.valorDeposito = numero;
-    this.valorFormatado = event.target.value;
+    this.valorSaque = numero;
   }
 
   voltar(): void {
+    this.valorSaque = 0;
+    this.valorFormatado = '';
     this.router.navigate(['/client-home']);
   }
 }
-
 

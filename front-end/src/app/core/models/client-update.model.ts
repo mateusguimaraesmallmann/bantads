@@ -3,10 +3,11 @@ export interface ClientUpdate {
   cpf:string;
   email: string;
   salario: number;
-  endereco: string;
-  CEP: string;
+  cep: string;
+  logradouro: string;
+  numero: string;
+  complemento: string;
+  bairro: string;
   cidade: string;
   estado: string;
 }
-
-
