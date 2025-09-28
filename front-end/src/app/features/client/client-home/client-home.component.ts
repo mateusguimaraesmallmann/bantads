@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { User } from '../../../core/models/user.model';
 import { AuthService } from '../../../core/services/authentication/auth.service';
 import { MoneyPipe } from '../../../shared/pipes/pipe-money';
+import { AccountService } from '../../../core/services/account.service';
+import { Account } from '../../../core/models/account.model';
 
 @Component({
   selector: 'app-client-home',
@@ -13,19 +15,26 @@ import { MoneyPipe } from '../../../shared/pipes/pipe-money';
   styleUrl: './client-home.component.css'
 })
 export class ClientHomeComponent implements OnInit {
-  saldo: number = 0;
   currentUser: User | null = null;
+  currentAccount: Account | null = null;
 
-  constructor (private authService: AuthService){
+  constructor (private authService: AuthService, private accountService: AccountService){
 
   }
 
   ngOnInit(): void{
     this.currentUser = this.authService.getCurrentUser();
 
-    if (this.currentUser) {
-      this.saldo = this.currentUser.balance ?? 0;
-    }
+    if (this.currentUser && this.currentUser.cpf){
+      this.accountService.returnAccountData(this.currentUser.cpf).subscribe({
+        next: (response) => {
+          this.currentAccount = response;
+          console.log("Carregou os dados da conta!", response, this.currentAccount);
+        },
+        error: (err) => {
+          console.error("Erro: ", err);
+        }
+      })
   }
 
   private router = inject(Router);

@@ -29,3 +29,4 @@ export interface GerenteComClientes {
   clientes: Cliente[];
 }
 
+
