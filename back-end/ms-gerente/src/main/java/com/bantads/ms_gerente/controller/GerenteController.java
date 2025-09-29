@@ -1,7 +1,5 @@
 package com.bantads.ms_gerente.controller;
 
-// import com.bantads.ms_gerente.service.;
-// import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -24,7 +22,7 @@ public class GerenteController {
     private final GerenteService gerenteService;
 
     @PostMapping
-    public ResponseEntity<GerenteDTOOut> criarCliente(
+    public ResponseEntity<GerenteDTOOut> criarGerente(
             @Valid @RequestBody CriarGerenteDTOIn criarGerenteDTOIn) {
         GerenteDTOOut dto = gerenteService.criarGerente(criarGerenteDTOIn);
         return ResponseEntity.ok(dto);
@@ -43,7 +41,7 @@ public class GerenteController {
     }
 
     @PutMapping("/{cpf}")
-    public ResponseEntity<GerenteDTOOut> atualizarCliente(
+    public ResponseEntity<GerenteDTOOut> atualizarGerente(
             @PathVariable String cpf,
             @Valid @RequestBody EditarGerenteDTOIn editarGerenteDTOIn) {
         GerenteDTOOut dto = gerenteService.atualizarGerente(cpf, editarGerenteDTOIn);
