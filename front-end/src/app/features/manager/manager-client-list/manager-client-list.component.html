@@ -48,12 +48,9 @@
                 {{ cliente.limite }}
               </td>
               <td class="text-center">
-                <a
-                  href="javascript:void(0)"
-                  (click)="verDetalhesCliente(cliente.cpf)"
+                <a [routerLink]="['/manager-client-details', cliente.cpf]"
                   class="btn btn-sm btn-outline-primary"
-                  title="Ver detalhes de {{ cliente.nome }}"
-                >
+                  title="Ver detalhes de {{ cliente.nome }}">
                   Detalhes
                 </a>
               </td>

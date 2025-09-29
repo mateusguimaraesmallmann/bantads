@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../../core/components/header/header.component';
 import { NAVITEMS } from '../navItems';
 import { ClientDetails } from '../../../core/models/client-details.model';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-manager-client-list',
   standalone: true,
-  imports: [CommonModule, FormsModule, HeaderComponent],
+  imports: [CommonModule, FormsModule, HeaderComponent, RouterModule],
   templateUrl: './manager-client-list.component.html',
   styleUrls: ['./manager-client-list.component.css']
 })
@@ -82,9 +83,5 @@ export class ManagerListaClientesComponent implements OnInit {
     } else {
       this.listaClientesFiltrados = clientesOrdenados;
     }
-  }
-
-  public verDetalhesCliente(cpf: string): void {
-    alert(`Navegando para os detalhes do cliente com CPF: ${cpf}`);
   }
 }

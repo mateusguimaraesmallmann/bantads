@@ -15,6 +15,7 @@ import { TopClientsComponent } from './features/manager/top-clients/top-clients.
 import { ClientSearchComponent } from './features/manager/client-search/client-search.component';
 import { AdministratorListaClientesComponent} from './features/administrator/administrator-client-list/administrator-client-list.component';
 import { AuthGuard } from './core/services/authentication/auth.guard';
+import {ManagerClientDetailsComponent} from './features/manager/manager-client-details/manager-client-details.component';
 
 export const routes: Routes = [
 
@@ -32,6 +33,7 @@ export const routes: Routes = [
   { path: 'administrator-home', component: AdministratorHomeComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] }},
   { path: 'list-manager', component: ListManagerComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] } },
   { path: 'manager-client-list', component: ManagerListaClientesComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
+  { path: 'manager-client-details/:cpf', component: ManagerClientDetailsComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'top-clients', component: TopClientsComponent, canActivate: [AuthGuard], data: { roles: ['MANAGER'] } },
   { path: 'search-client', component: ClientSearchComponent,canActivate: [AuthGuard], data: { roles: ['MANAGER'] }},
   { path: 'administrator-client-list', component: AdministratorListaClientesComponent, canActivate: [AuthGuard], data: { roles: ['ADMIN'] }}

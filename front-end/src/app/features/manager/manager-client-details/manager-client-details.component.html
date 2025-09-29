@@ -1,0 +1,63 @@
+<app-header [navItems]="navItems"></app-header>
+<div class="page-wrapper">
+  <div class="container mt-4 page-with-navbar">
+    
+    <div *ngIf="isLoading" class="text-center loading-message">
+      <p>Carregando detalhes do cliente...</p>
+    </div>
+
+    <div *ngIf="!isLoading && !cliente" class="card details-card">
+      <div class="card-body text-center">
+        <h3 class="card-title">Cliente Não Encontrado</h3>
+        <p class="text-muted">O cliente com o CPF solicitado não foi encontrado.</p>
+        <button (click)="voltarParaLista()" class="btn btn-primary mt-3">Voltar para a Lista</button>
+      </div>
+    </div>
+    
+    <div *ngIf="!isLoading && cliente" class="card details-card">
+      <div class="card-header">
+        <div>
+          <h3 class="card-title mb-0">Detalhes de {{ cliente.nome }}</h3>
+          <p class="card-subtitle text-muted mb-0">CPF: {{ cliente.cpf }}</p>
+        </div>
+        <button (click)="voltarParaLista()" class="btn btn-outline-secondary">
+          &leftarrow; Voltar
+        </button>
+      </div>
+      
+      <div class="card-body">
+        <div class="detail-group">
+          <h4>Informações Pessoais</h4>
+          <dl class="detail-list">
+            <div><dt>Nome Completo</dt><dd>{{ cliente.nome }}</dd></div>
+            <div><dt>E-mail</dt><dd>{{ cliente.email }}</dd></div>
+            <div><dt>Telefone</dt><dd>{{ cliente.telefone }}</dd></div>
+          </dl>
+        </div>
+
+        <div class="detail-group">
+          <h4>Endereço</h4>
+          <dl class="detail-list">
+            <div><dt>Logradouro</dt><dd>{{ cliente.endereco }}</dd></div>
+            <div><dt>Cidade</dt><dd>{{ cliente.cidade }}</dd></div>
+            <div><dt>Estado</dt><dd>{{ cliente.estado }}</dd></div>
+          </dl>
+        </div>
+
+        <div class="detail-group">
+          <h4>Informações da Conta</h4>
+          <dl class="detail-list">
+            <div><dt>Conta</dt><dd>{{ cliente.conta }}</dd></div>
+            <div>
+              <dt>Saldo</dt>
+              <dd [ngClass]="{'text-danger': cliente.saldo < 0, 'text-success': cliente.saldo >= 0}">
+                {{ cliente.saldo | currency:'BRL' }}
+              </dd>
+            </div>
+            <div><dt>Limite</dt><dd>{{ cliente.limite | currency:'BRL' }}</dd></div>
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
