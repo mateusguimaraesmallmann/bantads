@@ -33,6 +33,7 @@ export class TransactionHistoryComponent implements OnInit{
     this.definirDatasPadrao();
   }
 
+  //inicializa valores das datas
   private definirDatasPadrao(): void {
     const hoje = new Date();
     const trintaDiasAtras = new Date();
@@ -41,10 +42,12 @@ export class TransactionHistoryComponent implements OnInit{
     this.dataInicial = this.formatarDataParaInput(trintaDiasAtras);
   }
 
+  //formatação para a vizualização
   private formatarDataParaInput(data: Date): string {
     return this.datePipe.transform(data, 'yyyy-MM-dd') || '';
   }
 
+  //gera dados de exemplo
   public buscarExtratos(): void {
     this.isLoading = true;
     this.hasSearched = true;
@@ -67,6 +70,9 @@ export class TransactionHistoryComponent implements OnInit{
     this.isLoading = false;
   }
 
+
+  // obtém as transações do usuário e as agrupa
+  // por dia
   private listarTransacoes(response: ExtratoResponse): void {
     this.numeroDaConta = response.conta;
     this.balanco = response.saldo;
@@ -122,6 +128,8 @@ export class TransactionHistoryComponent implements OnInit{
     this.isLoading = false;
   }
 
+  //identifica o tipo da operação e retorna
+  //qual o sentido em caso de transferência
   private formatarOperacao(movimentacao: ItemExtratoResponse): string {
     if (movimentacao.tipo === 'TRANSFERENCIA') {
       return movimentacao.valor > 0 ? 'Transferência Recebida' : 'Transferência Enviada';
@@ -129,6 +137,8 @@ export class TransactionHistoryComponent implements OnInit{
     return movimentacao.tipo.charAt(0) + movimentacao.tipo.slice(1).toLowerCase();
   }
 
+  //identifica o cliente da operação e retorna
+  //se ele é originário ou destinatário em caso de transferência
   private formatarCliente(movimentacao: ItemExtratoResponse): string | null {
     if (movimentacao.tipo === 'TRANSFERENCIA') {
       return movimentacao.valor > 0 ? movimentacao.origem : movimentacao.destino;
@@ -140,6 +150,7 @@ export class TransactionHistoryComponent implements OnInit{
     console.log("erro ao processar solicitação")
   }
 
+  //retorna o cliente para sua tela inicial
   voltar(): void {
     this.router.navigate(['/client-home']);
   }
