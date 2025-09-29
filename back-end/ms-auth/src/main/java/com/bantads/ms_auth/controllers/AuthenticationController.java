@@ -18,7 +18,6 @@ import com.bantads.ms_auth.dtos.TokenDTO;
 import com.bantads.ms_auth.services.AuthorizationService;
 
 @RestController
-@RequestMapping("/auth")
 public class AuthenticationController {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
