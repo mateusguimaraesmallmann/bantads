@@ -36,8 +36,8 @@ const gerentesServiceProxy = httpProxy(BASE_URL_GERENTE);
 const JWT_SECRET = Buffer.from(process.env.JWT_SECRET, 'base64');
 
 // Cria o servidor na porta 3000
-// var server = http.createServer(app);
-// server.listen(3000);
+var server = http.createServer(app);
+server.listen(3000);
 
 function verifyJWT(req, res, next) {
   const token = req.headers["x-access-token"] || (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]);
@@ -66,7 +66,7 @@ app.post('/login', async (req, res) => {
     try {
         console.log(req.body)
         const authBody = {
-            login: req.body.login || req.body.email,  
+            login: req.body.login || req.body.login || req.body.email,  
             senha: req.body.senha || req.body.password, 
         };
         console.log(authBody)
@@ -125,6 +125,27 @@ app.get('/gerentes', verifyJWT, (req, res, next) => {
 app.get('/gerentes/:cpfGerente', verifyJWT, (req, res, next) => {
     gerentesServiceProxy(req, res, next);    
 });
+
+app.post('/gerentes', verifyJWT, (req, res, next) => {
+    gerentesServiceProxy(req, res, next);
+});
+
+app.put('/gerentes', verifyJWT, (req, res, next) => {
+    gerentesServiceProxy(req, res, next);
+});
+
+app.delete('/gerentes', verifyJWT, (req, res, next) => {
+    gerentesServiceProxy(req, res, next);
+});
+
+app.post('/clientes', verifyJWT, (req, res, next) => {
+    gerentesServiceProxy(req, res, next);
+});
+
+app.put('/clientes', verifyJWT, (req, res, next) => {
+    gerentesServiceProxy(req, res, next);
+});
+
 
 app.post('/logout', function(req, res) {
 res.json({ auth: false, token: null });
