@@ -5,6 +5,8 @@ import { HeaderComponent } from '../../../core/components/header/header.componen
 import { NAVITEMS } from '../navItems';
 import { ClientDetails } from '../../../core/models/client-details.model';
 import { RouterModule } from '@angular/router';
+import { ManagerService } from '../../../core/services/manager.service'; 
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-manager-client-list',
@@ -15,13 +17,14 @@ import { RouterModule } from '@angular/router';
 })
 export class ManagerListaClientesComponent implements OnInit {
   navItems = NAVITEMS;
+  loading : boolean = false;
 
   public termoBusca: string = '';
 
   private listaTodosClientes: ClientDetails[] = [];
   public listaClientesFiltrados: ClientDetails[] = [];
 
-  constructor() { }
+  constructor(private managerService: ManagerService) { }
 
   ngOnInit(): void {
     this.carregarClientes();
@@ -67,8 +70,20 @@ export class ManagerListaClientesComponent implements OnInit {
         limite: 1500.00
       }
     ];
+    // this.listaTodosClientes = dadosDaApi;
+    // this.loading=true;
+    // const subscription= this.managerService.listarTodosOsClientesManager().subscribe({
+    //   next: (response) => this.processarSucesso(() => this.listarTodosClientes(response, subscription)),
+    //   error: (err) => this.processarErro(err, subscription)
+    // });
+  }
 
-    this.listaTodosClientes = dadosDaApi;
+  public listarTodosClientes(clientes : ClientDetails[], subscription:Subscription){
+    if(clientes != null && clientes.length > 0){
+      this.listaTodosClientes = clientes;
+    }
+    this.loading = false;
+    subscription.unsubscribe()
   }
 
   public ordenarEFiltrarClientes(): void {
@@ -83,5 +98,15 @@ export class ManagerListaClientesComponent implements OnInit {
     } else {
       this.listaClientesFiltrados = clientesOrdenados;
     }
+  }
+
+  processarSucesso(callback: () => void) {
+    console.log("deu boa");
+    callback();
+  }
+
+  processarErro(error:any, subscription:Subscription){
+    console.log("deu ruim" + error);
+    subscription.unsubscribe();
   }
 }

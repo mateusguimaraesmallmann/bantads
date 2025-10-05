@@ -4,7 +4,9 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router'; 
 import { HeaderComponent } from '../../../core/components/header/header.component';
 import { NAVITEMS } from '../navItems';
-import { ClientDetails } from '../../../core/models/client-details.model';
+import { ClientDetails, ClientDetailsCpf } from '../../../core/models/client-details.model';
+import { UserService } from '../../../core/services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-manager-client-details',
@@ -26,11 +28,12 @@ export class ManagerClientDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router 
+    private router: Router,
+    private userService:UserService,
   ) { }
 
   ngOnInit(): void {
-    const cpf = this.route.snapshot.paramMap.get('cpf');
+    const cpf = this.route.snapshot.paramMap.get('cpf')!;
     
     if (cpf) {
       this.cliente = this.todosClientes.find(c => c.cpf === cpf);
@@ -39,9 +42,36 @@ export class ManagerClientDetailsComponent implements OnInit {
       this.isLoading = false;
       console.error('CPF não encontrado na URL');
     }
+    // this.carregarDadosCliente(cpf)
   }
+
+  carregarDadosCliente(cpf:string){
+    this.isLoading=true;
+    const subscription= this.userService.listarDetalhesCliente(cpf).subscribe({
+      next: (response) => this.processarSucesso(() => this.listarDetalhesCliente(response, subscription)),
+      error: (err) => this.processarErro(err, subscription)
+    });
+  }
+  
+  listarDetalhesCliente(cliente : ClientDetails, subscription:Subscription){
+    if(cliente != null && cliente != undefined){
+      this.cliente = cliente;
+    }
+    this.isLoading = false;
+    subscription.unsubscribe()
+  }  
 
   voltarParaLista(): void {
     this.router.navigate(['/manager-client-list']); 
   }
+
+  processarSucesso(callback: () => void) {
+    console.log("deu boa");
+    callback();
+  }
+
+  processarErro(error:any, subscription:Subscription){
+    console.log("deu ruim" + error);
+    subscription.unsubscribe();
+  }  
 }

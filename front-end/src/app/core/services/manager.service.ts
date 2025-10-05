@@ -2,6 +2,7 @@ import { Injectable, signal, computed } from '@angular/core';
 import { GerenteComClientes, ManagerDto } from '../models/manager';
 import { Manager } from '../models/manager';
 import { User } from '../models/user.model';
+import { ClientDetails } from '../models/client-details.model';
 import { HttpClient } from '@angular/common/http';
 import { forkJoin, map, Observable, of, switchMap, throwError } from 'rxjs';
 
@@ -159,6 +160,10 @@ export class ManagerService {
       }
     )
   )
+  }
+  listarTodosOsClientesManager(): Observable<ClientDetails[]>{
+      const url = MANAGER_URL + "/clientes";
+      return this.http.get<ClientDetails[]>(url);  
   }
 
 }

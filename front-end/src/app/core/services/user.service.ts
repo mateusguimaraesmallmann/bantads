@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs'; // Importa Observable
 import { ClientUpdate } from '../models/client-update.model';
+import {ClientDetails} from '../models/client-details.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,5 +24,10 @@ export class UserService {
     let resposta = this.http.patch<ClientUpdate>(url, user);
     console.log(resposta)
     return of(user);
+  }
+
+  listarDetalhesCliente(cpf:string) : Observable<ClientDetails>{
+    const url = this.apiUrl + "/" + cpf;
+    return this.http.get<ClientDetails>(url); 
   }
 }
