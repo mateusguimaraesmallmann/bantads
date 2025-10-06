@@ -1,6 +1,6 @@
 :host {
   display: block;
-  background-color: black;
+  background-color: white;
   min-height: 100vh;
 }
 
@@ -9,7 +9,7 @@
 }
 
 .page-with-navbar {
-  padding-top: 80px; 
+  padding-top: 80px;
 }
 
 .client-list-card {

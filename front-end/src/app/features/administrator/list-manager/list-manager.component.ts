@@ -103,6 +103,41 @@ export class ListManagerComponent implements OnInit{
 
   }
 
+  confirmDeleteOpen = false;
+  managerToDelete: Manager | null = null;
+  deleteIndex: number | null = null;
+
+  openConfirmDelete(index: number): void {
+    this.managerToDelete = this.managers[index];
+    this.deleteIndex = index;
+    this.confirmDeleteOpen = true;
+  }
+
+  confirmDelete(): void {
+    if (this.deleteIndex == null || this.managerToDelete == null) return;
+
+    const index = this.deleteIndex;
+    const managerToDelete = this.managerToDelete;
+
+    this.managerService.disableManager(managerToDelete.cpf).subscribe({
+      next: () => {
+        this.managers.splice(index, 1);
+        this.managers = [...this.managers];
+        this.closeConfirmDelete();
+      },
+      error: (err) => {
+        console.error('Erro ao excluir gerente:', err);
+        this.closeConfirmDelete();
+      }
+    });
+  }
+
+  closeConfirmDelete(): void {
+    this.confirmDeleteOpen = false;
+    this.managerToDelete = null;
+    this.deleteIndex = null;
+  }
+
   //#region Cria o usuário
   save(): void {
     if (this.form.invalid) {

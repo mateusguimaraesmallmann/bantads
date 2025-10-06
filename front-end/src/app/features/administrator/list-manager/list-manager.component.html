@@ -27,7 +27,7 @@
                         <td>{{ m.telefone | mask: '(00) 00000-0000'}}</td>
                         <td class="text-end">
                             <button class="btn btn-outline-secondary btn-sm me-2" (click)="openEdit(i)">Editar</button>
-                            <button class="btn btn-outline-danger btn-sm" (click)="delete(i)">Excluir</button>
+                            <button class="btn btn-outline-danger btn-sm" (click)="openConfirmDelete(i)">Excluir</button>
                         </td>
                     </tr>
                     <tr *ngIf="managers.length === 0">
@@ -105,3 +105,21 @@
         </div>
     </div>
 </div>
+
+  <!-- Modal de Confirmação de Exclusão -->
+  <div class="modal-backdrop-custom" *ngIf="confirmDeleteOpen"></div>
+  <div class="modal-custom" *ngIf="confirmDeleteOpen" role="dialog" aria-modal="true">
+    <div class="card shadow-sm" style="max-width: 420px; width: 100%;">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <strong>Confirmar exclusão</strong>
+        <button type="button" class="btn-close" aria-label="Fechar" (click)="closeConfirmDelete()"></button>
+      </div>
+      <div class="card-body">
+        <p>Tem certeza que deseja excluir o gerente <strong>{{ managerToDelete?.nome }}</strong>?</p>
+        <div class="d-flex justify-content-end gap-2 mt-3">
+          <button type="button" class="btn btn-outline-secondary" (click)="closeConfirmDelete()">Cancelar</button>
+          <button type="button" class="btn btn-danger" (click)="confirmDelete()">Excluir</button>
+        </div>
+      </div>
+    </div>
+  </div>
