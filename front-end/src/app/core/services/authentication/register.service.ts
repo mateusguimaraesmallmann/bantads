@@ -14,7 +14,7 @@ export class RegisterService {
   constructor(private http: HttpClient) { }
 
   registerClient (client: NewUser) : Observable<any>{
-    return this.http.get<NewUser[]>(`${BASE_URL}?cpf=${client.cpf}`).pipe(
+    return this.http.get<NewUser[]>(`${USER_URL}?cpf=${client.cpf}`).pipe(
       switchMap(existingClients =>{
         if(existingClients.length > 0){
           return throwError(() => new Error('CPF já cadstrado no sistema.'));

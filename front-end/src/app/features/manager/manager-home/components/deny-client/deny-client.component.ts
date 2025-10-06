@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SolicitacoesService } from '../../../../../core/services/solicitacoes.service';
-
 @Component({
   selector: 'app-deny-client',
   imports: [],
@@ -11,6 +10,7 @@ import { SolicitacoesService } from '../../../../../core/services/solicitacoes.s
 export class DenyClientComponent {
 
   cpfCliente: string = '';
+  requestSuccess: boolean = false;
 
   constructor(public bsModalRef: BsModalRef, private solicitacoesService: SolicitacoesService){}
 
@@ -21,6 +21,7 @@ export class DenyClientComponent {
   denyRequest(){
     this.solicitacoesService.denyRequest(this.cpfCliente).subscribe({
       next: (response) => {
+        this.requestSuccess = true;
         this.bsModalRef.hide();
       },
       error: (err) =>{

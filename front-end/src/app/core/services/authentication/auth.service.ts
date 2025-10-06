@@ -50,6 +50,7 @@ export class AuthService {
         if (users && users.length > 0){
           const user = users[0];
           if (user.status != "ACTIVE"){
+            console.log(user)
             return alert("Usuário desativado ou ainda não foi aprovado.");
           }
           localStorage.setItem('user', JSON.stringify(user));

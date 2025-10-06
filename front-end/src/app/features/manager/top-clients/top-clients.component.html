@@ -5,7 +5,7 @@
         <p>Os 3 clientes com maior saldo em conta.</p>
     </div>
 
-    <div class="container mt-5">
+    <div class="container mt-5" *ngIf="topClients && topClients.length > 0">
         <div class="row justify-content-center">
             <div class="col-lg-9">
                 <div class="card">
@@ -26,13 +26,13 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr *ngFor="let client of topClients; let i=index">
+                                    <tr *ngFor="let client of topClients| slice:0:3; let i=index">
                                         <td>#{{i + 1}}</td>
-                                        <td>{{client.cpf | mask: "000.000.000-00"}}</td>
-                                        <td>{{client.nome}}</td>
-                                        <td>{{client.cidade}}</td>
-                                        <td>{{client.estado}}</td>
-                                        <td>{{client.saldo | currency: 'BRL'}}</td>
+                                        <td>{{client.cpf ?? '' | mask: "000.000.000-00"}}</td>
+                                        <td>{{client.clientName}}</td>
+                                        <td>{{client.city}}</td>
+                                        <td>{{client.state}}</td>
+                                        <td>{{client.balance ?? '' | currency: 'BRL'}}</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -42,4 +42,10 @@
             </div>
         </div>
     </div>
-</div>
+
+    <div *ngIf="topClients && topClients.length === 0">
+      <div class="semContas">
+        <h3>Nenhuma Conta no Momento</h3>
+      </div>
+    </div>
+  </div>

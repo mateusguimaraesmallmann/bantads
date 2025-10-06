@@ -1,5 +1,3 @@
-import { Observable } from "rxjs";
-
 export interface Account {
   number: number;
   clientCpf: string | null;
@@ -9,4 +7,14 @@ export interface Account {
   managerCpf: string | null;
   managerName: string | null;
   createdAt: Date;
+}
+
+
+//Interface para carregar os clientes com mais saldo na conta
+export interface topClientAccount{
+  cpf: string | null,
+  clientName: string | null,
+  city: string | null,
+  state: string | null,
+  balance: number | null
 }

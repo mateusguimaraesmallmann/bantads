@@ -3,6 +3,11 @@ import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../core/components/header/header.component';
 import { NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { NAVITEMS } from '../navItems';
+import { AccountService } from '../../../core/services/account.service';
+import { UserService } from '../../../core/services/user.service';
+import { Account, topClientAccount } from '../../../core/models/account.model';
+import { ClientDetails } from '../../../core/models/client-details.model';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-top-clients',
@@ -16,13 +21,50 @@ import { NAVITEMS } from '../navItems';
 export class TopClientsComponent {
     navItems = NAVITEMS;
 
-    topClients = [
-      {cpf: "12345678910", nome: "Tara", cidade: "São Luís", estado: "MA", saldo:1000000},
-      {cpf: "12345678910", nome: "Teste Nelson", cidade: "Curitiba", estado: "PR", saldo:1500000},
-      {cpf: "12345678910", nome: "Clóvis dos Santos", cidade: "São Paulo", estado: "SP", saldo: 5000000000000000000000}
-    ];
+    constructor(private accountService: AccountService, private userService: UserService){
+
+    }
+
+    //Carrega os dados das contas e clientes e junta para a interface topClientAccount
+    allAccounts: Account[] = [];
+    allUsers: ClientDetails[] = [];
+
+    topClients: topClientAccount[] = []
 
     ngOnInit(){
-      this.topClients.sort((a,b) => b.saldo - a.saldo);
+      forkJoin({
+        accounts: this.accountService.returnAllAccounts(),
+        clients: this.userService.returnAllClients()
+      }).subscribe({
+        next: ({accounts, clients}) => {
+          const clientMap = new Map<string, ClientDetails>();
+          for (const client of clients){
+            clientMap.set(client.cpf, client);
+          }
+
+          this.topClients = accounts.map(account => {
+            //Bate os dados do CPF da conta com os obtidos da tabela de clientes
+            const clientData = clientMap.get(account.clientCpf!);
+
+            //Se não for vazio
+            if (clientData){
+              return {
+                cpf: account.clientCpf,
+                clientName: account.clientName,
+                city: clientData.cidade,
+                state: clientData.estado,
+                balance: account.balance
+              }
+            }
+
+            return null;
+          })
+          .filter((client) => client != null)
+          .sort((a, b) => b.balance - a.balance)
+        },
+        error: (err) => {
+          console.log("Deu ruim pra carregar os melhores clientes: ", err);
+        }
+      })
     }
 }

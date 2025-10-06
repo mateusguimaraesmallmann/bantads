@@ -37,7 +37,7 @@ export class AccountService {
     );
   }
 
-  //#region Retorna Dados da Conta
+  //#region Contas
   public returnAccountData(cpfClient: string): Observable<Account | null> {
       return this.http.get<Account[]>(`${ACCOUNTS_URL}?clientCpf=${cpfClient}`).pipe(
           map(accounts => {
@@ -48,6 +48,11 @@ export class AccountService {
           })
       );
   }
+
+  public returnAllAccounts (): Observable<Account[]>{
+    return this.http.get<Account[]>(ACCOUNTS_URL);
+  }
+  //#endregion
 
   //#region Gera o Número da Conta
   private generateUniqueAccountNumber(): Observable<number> {

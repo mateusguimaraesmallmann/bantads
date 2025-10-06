@@ -11,6 +11,7 @@ import { SolicitacoesService } from '../../../../../../core/services/solicitacoe
 export class AproveClientComponent{
 
   cpfCliente: string = '';
+  requestSuccess: boolean = false;
 
   constructor(public bsModalRef: BsModalRef, private solicitacoesService: SolicitacoesService) {}
 
@@ -21,6 +22,7 @@ export class AproveClientComponent{
   approveRequest(){
     this.solicitacoesService.approveRequest(this.cpfCliente).subscribe({
       next: (response) => {
+        this.requestSuccess = true;
         this.bsModalRef.hide();
       },
       error: (err) =>{

@@ -17,7 +17,7 @@
       "password": "123456",
       "role": "CLIENT",
       "status": "ACTIVE",
-      "balance": 2340.00
+      "balance": 2340
     },
     {
       "id": "101",
@@ -36,6 +36,33 @@
       "password": "",
       "role": "MANAGER",
       "status": "DISABLED"
+    },
+    {
+      "id": "c440",
+      "name": "Tiago Teste",
+      "email": "tiago.teste@gmail.com",
+      "cpf": "99999999999",
+      "password": "tads",
+      "role": "MANAGER",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "541a",
+      "name": "Tiago Teste 2",
+      "email": "tiago.salles@ufpr.br",
+      "cpf": "88888888888",
+      "password": "tads",
+      "role": "CLIENT",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "2ddd",
+      "name": "Davi Adamis Cordeiro",
+      "email": "davi.teste@gmail.com",
+      "cpf": "55555555555",
+      "password": "tads",
+      "role": "CLIENT",
+      "status": "ACTIVE"
     }
   ],
   "admins": [
@@ -83,6 +110,13 @@
       "email": "sergio.nascimento@bantads.com.br",
       "cpf": "98767490342",
       "phone": "49999015234"
+    },
+    {
+      "id": "1650",
+      "name": "Tiago Teste",
+      "email": "tiago.teste@gmail.com",
+      "cpf": "99999999999",
+      "phone": "99999999999"
     }
   ],
   "clients": [
@@ -149,32 +183,70 @@
       "estado": "PR",
       "status": "APPROVED",
       "role": "CLIENT"
+    },
+    {
+      "id": "64e6",
+      "nome": "Tiago Teste 2",
+      "email": "tiago.salles@ufpr.br",
+      "cpf": "88888888888",
+      "salario": 2500,
+      "cep": "81010330",
+      "logradouro": "Rua Serafim França",
+      "bairro": "Novo Mundo",
+      "numero": "149",
+      "complemento": "casa",
+      "cidade": "Curitiba",
+      "estado": "PR",
+      "status": "APPROVED",
+      "role": "CLIENT"
+    },
+    {
+      "id": "ec8f",
+      "nome": "Davi Adamis Cordeiro",
+      "email": "davi.teste@gmail.com",
+      "cpf": "55555555555",
+      "salario": 5000,
+      "cep": "81010330",
+      "logradouro": "Rua Serafim França",
+      "bairro": "Novo Mundo",
+      "numero": "149",
+      "complemento": "casa",
+      "cidade": "Curitiba",
+      "estado": "PR",
+      "status": "APPROVED",
+      "role": "CLIENT"
     }
   ],
   "accounts": [
     {
-      "id": "5001",
-      "clientId": 101,
-      "managerId": 1,
-      "number": "7001",
-      "balance": 2450,
-      "limit": 2000
+      "number": 1000,
+      "clientCpf": "11111111111",
+      "clientName": "tiago teste",
+      "balance": 2500,
+      "limit": 1250,
+      "managerCpf": "22222222222",
+      "managerName": "Tiago Valente",
+      "createdAt": "2025-09-05T10:00:00-03:00"
     },
     {
-      "id": "5002",
-      "clientId": 102,
-      "managerId": 1,
-      "number": "7002",
-      "balance": -500,
-      "limit": 1000
+      "number": 1001,
+      "clientCpf": "55555555555",
+      "clientName": "Davi Adamis Cordeiro",
+      "balance": 5000,
+      "limit": 2500,
+      "managerCpf": "99999999999",
+      "managerName": "Tiago Teste",
+      "createdAt": "2025-09-05T10:00:00-03:00"
     },
     {
-      "id": "5003",
-      "clientId": 103,
-      "managerId": 2,
-      "number": "7003",
-      "balance": -150,
-      "limit": 1750
+      "number": 1002,
+      "clientCpf": "88888888888",
+      "clientName": "Tiago Teste 2",
+      "balance": 50000,
+      "limit": 10000,
+      "managerCpf": "99999999999",
+      "managerName": "Tiago Teste",
+      "createdAt": "2025-09-05T10:00:00-03:00"
     }
   ],
   "transactions": [

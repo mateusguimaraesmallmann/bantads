@@ -10,6 +10,8 @@ import { ClientDetailsCpf } from '../../../core/models/client-details.model';
 import { SolicitacoesService } from '../../../core/services/solicitacoes.service';
 import { AuthService } from '../../../core/services/authentication/auth.service';
 import { User } from '../../../core/models/user.model';
+import { HttpClient } from '@angular/common/http';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-manager-home',
@@ -50,7 +52,7 @@ export class ManagerHomeComponent implements OnInit {
 
       const modalConfig = {
         initialState: {
-          cpfCliente: cpfCliente
+          cpfCliente: cpfCliente,
         }
       };
 
@@ -59,5 +61,25 @@ export class ManagerHomeComponent implements OnInit {
         }else{
           this.bsModalRef = this.modalService.show(DenyClientComponent, modalConfig);
         }
+
+        //Cria um listener que recebe uma callback quando o método onHidden do modal é chamado
+        //Se a operação do modal foi concluída, sem somente fechá-lo, atualiza a lista de solicitações
+        if (this.bsModalRef?.onHidden){
+          this.bsModalRef.onHidden.pipe(take(1)).subscribe(() => {
+            const success = this.bsModalRef?.content.requestSuccess;
+
+            if (success){
+              this.updateSolicitationList(cpfCliente);
+            }
+          })
+        }
     }
+
+    //Método para atualizar a lista dinamicamente na tela
+      public updateSolicitationList(cpf: string){
+          const client = this.solicitacoes.find((cliente) => cliente.cpf === cpf);
+          const arrayIndex = this.solicitacoes.indexOf(client!);
+          this.solicitacoes.splice(arrayIndex, 1)
+          this.numPedidos = this.solicitacoes.length;
+      }
 }

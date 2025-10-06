@@ -83,8 +83,7 @@ export class RegisterComponent {
     const payload = this.form.getRawValue();
 
     const salarioStr = payload.salario?.toString() ?? '';
-    const onlyNumbers = salarioStr.replace(/[^\d]/g, '');
-    const salario = Number(onlyNumbers) / 100;
+    const salario = Number(salarioStr);
 
     const newUserPayload: NewUser = {
       ...payload,

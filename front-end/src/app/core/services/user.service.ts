@@ -28,6 +28,10 @@ export class UserService {
 
   listarDetalhesCliente(cpf:string) : Observable<ClientDetails>{
     const url = this.apiUrl + "/" + cpf;
-    return this.http.get<ClientDetails>(url); 
+    return this.http.get<ClientDetails>(url);
+  }
+
+  returnAllClients(): Observable<ClientDetails[]>{
+    return this.http.get<ClientDetails[]>(this.apiUrl);
   }
 }
