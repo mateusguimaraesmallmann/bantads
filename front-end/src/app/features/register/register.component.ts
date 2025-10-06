@@ -9,6 +9,8 @@ import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { RouterLink, Router } from '@angular/router';
 import { NewUser } from '../../core/models/new-client.model';
 
+declare var bootstrap: any;
+
 @Component({
   selector: 'app-register',
   imports: [CommonModule, ReactiveFormsModule,  NgxMaskDirective, RouterLink],
@@ -93,16 +95,18 @@ export class RegisterComponent {
     }
 
     this.registerService.registerClient(newUserPayload).subscribe({
-      next: (response) =>{
-        console.log('Cliente cadastrado com sucesso!', response);
-        alert('Cadastro enviado para análise. Quando aprovado, sua senha será encaminhada no seu e-mail.');
-        this.router.navigate(['/login']);
+      next: () => {
+        const successModalEl = document.getElementById('successRegisterModal');
+        if (successModalEl) {
+          const successModal = new bootstrap.Modal(successModalEl);
+          successModal.show();
+        }
       },
       error: (err) => {
         console.error('Erro no cadastro: ', err);
-        alert(err.message)
+        alert('Ocorreu um erro ao enviar o cadastro.');
       }
-    })
+    });
 
   }
 
