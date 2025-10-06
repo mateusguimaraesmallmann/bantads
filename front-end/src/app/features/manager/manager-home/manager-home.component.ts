@@ -33,14 +33,11 @@ export class ManagerHomeComponent implements OnInit {
 
     solicitacoes: ClientDetailsCpf[] = [];
 
-    numPedidos: number = 0;
-
     ngOnInit(): void{
       this.currentUser = this.authService.getCurrentUser();
       this.solicitacoesService.listRequests().subscribe({
         next: (data) =>{
           this.solicitacoes = data;
-          this.numPedidos = this.solicitacoes.length;
         },
         error: (err) =>{
           console.error('Erro ao buscar as solicitações: ', err);
@@ -80,6 +77,5 @@ export class ManagerHomeComponent implements OnInit {
           const client = this.solicitacoes.find((cliente) => cliente.cpf === cpf);
           const arrayIndex = this.solicitacoes.indexOf(client!);
           this.solicitacoes.splice(arrayIndex, 1)
-          this.numPedidos = this.solicitacoes.length;
       }
 }

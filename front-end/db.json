@@ -215,6 +215,22 @@
       "estado": "PR",
       "status": "APPROVED",
       "role": "CLIENT"
+    },
+    {
+      "id": "666",
+      "nome": "Cliente teste",
+      "email": "cliente.teste@gmail.com",
+      "cpf": "78526458732",
+      "salario": 5000,
+      "cep": "81010330",
+      "logradouro": "Rua Serafim França",
+      "bairro": "Novo Mundo",
+      "numero": "149",
+      "complemento": "casa",
+      "cidade": "Curitiba",
+      "estado": "PR",
+      "status": "PENDENT",
+      "role": "CLIENT"
     }
   ],
   "accounts": [

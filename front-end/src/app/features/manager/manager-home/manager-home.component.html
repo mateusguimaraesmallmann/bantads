@@ -1,18 +1,6 @@
 <app-header [navItems]="navItems"></app-header>
 <div class="main-content page-with-navbar">
-    <div class="hello-msg" *ngIf="currentUser != null">
-        <p>Olá, {{currentUser.name}}! 👋</p>
-        <p>Estas são as novas solicitações de aprovação de hoje.</p>
-    </div>
-    <div class="card-container">
-        <div class="card-top">
-            <div class="card-content">
-                <p>Pedidos pendentes</p>
-                <p class="numPedidos">{{numPedidos}}</p>
-            </div>
-        </div>
-    </div>
-
+    
     <div class="container mt-5" *ngIf="solicitacoes && solicitacoes.length > 0">
         <div class="row justify-content-center">
             <div class="col-lg-9">
@@ -38,8 +26,8 @@
                                             <td>{{solicitacao.salario | currency: 'BRL'}}</td>
                                             <td>
                                                 <div class="d-flex justify-content-center">
-                                                    <button type="button" class="btn btn-success me-2" (click)="responseManager('aproveButton', solicitacao.cpf)">👍</button>
-                                                    <button type="button" class="btn btn-danger" (click)="responseManager('denyButton', solicitacao.cpf)">👎</button>
+                                                    <button type="button" class="btn btn-success me-2" (click)="responseManager('aproveButton', solicitacao.cpf)">Aprovar</button>
+                                                    <button type="button" class="btn btn-danger" (click)="responseManager('denyButton', solicitacao.cpf)">Recusar</button>
                                                 </div>
                                             </td>
                                         </tr>
