@@ -46,7 +46,9 @@ export class ManagerClientDetailsComponent implements OnInit {
   }
 
   carregarDadosCliente(cpf:string){
+    this.cliente = undefined;
     this.isLoading=true;
+    
     const subscription= this.userService.listarDetalhesCliente(cpf).subscribe({
       next: (response) => this.processarSucesso(() => this.listarDetalhesCliente(response, subscription)),
       error: (err) => this.processarErro(err, subscription)

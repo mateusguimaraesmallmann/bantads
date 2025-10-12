@@ -70,8 +70,9 @@ export class ManagerListaClientesComponent implements OnInit {
         limite: 1500.00
       }
     ];
-    // this.listaTodosClientes = dadosDaApi;
+    this.listaTodosClientes = dadosDaApi;
     // this.loading=true;
+    // this.listaTodosClientes = [];
     // const subscription= this.managerService.listarTodosOsClientesManager().subscribe({
     //   next: (response) => this.processarSucesso(() => this.listarTodosClientes(response, subscription)),
     //   error: (err) => this.processarErro(err, subscription)

@@ -67,6 +67,7 @@ export class AdministratorListaClientesComponent implements OnInit {
     ];
     this.listaTodosClientes = dadosDaApi;
     // this.loading=true;
+    //this.listaTodosClientes=[];
     // const subscription= this.adminService.listarTodosOsClientesAdministrator().subscribe({
     //   next: (response) => this.processarSucesso(() => this.listarTodosClientes(response, subscription)),
     //   error: (err) => this.processarErro(err, subscription)
