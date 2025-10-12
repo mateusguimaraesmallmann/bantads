@@ -145,6 +145,11 @@ export class TransactionHistoryComponent implements OnInit{
     }
     return null;
   }
+  
+  processarSucesso(callback: () => void) {
+    console.log("deu boa");
+    callback();
+  }  
 
   processarErro(error: any): void {
     console.log("erro ao processar solicitação")

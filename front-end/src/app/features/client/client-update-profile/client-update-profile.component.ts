@@ -135,7 +135,7 @@ export class UpdateProfileComponent implements OnInit{
       alert('Formulário inválido!');
       return;
     }
-     this.status = 'loading';
+    this.status = 'loading';
     const formValues = this.clientUpdateForm.value;
 
     const userUpdate: ClientUpdate = {
@@ -160,6 +160,10 @@ export class UpdateProfileComponent implements OnInit{
     });
   }
 
+  voltar(): void {
+    this.router.navigate(['/client-home']);
+  }
+
   processarSucesso(): void {
     this.status = 'success';
   }
@@ -171,9 +175,5 @@ export class UpdateProfileComponent implements OnInit{
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-  }
-
-  voltar(): void {
-    this.router.navigate(['/client-home']);
-  }
+  }  
 }

@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../../core/components/header/header.component';
 import { ClientDetails } from '../../../core/models/client-details.model';
 import { NAVITEMS } from '../navItemsAdm';
+import { AdministratorService } from '../../../core/services/administrator.service'; 
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-administrator-client-list',
@@ -14,9 +16,10 @@ import { NAVITEMS } from '../navItemsAdm';
 })
 export class AdministratorListaClientesComponent implements OnInit {
   navItems = NAVITEMS;
-
+  loading:boolean = false;
   listaTodosClientes: ClientDetails[] = [];
-  constructor() { }
+
+  constructor(private adminService : AdministratorService) { }
 
   ngOnInit(): void {
     this.carregarClientes();
@@ -63,5 +66,28 @@ export class AdministratorListaClientesComponent implements OnInit {
       }
     ];
     this.listaTodosClientes = dadosDaApi;
+    // this.loading=true;
+    // const subscription= this.adminService.listarTodosOsClientesAdministrator().subscribe({
+    //   next: (response) => this.processarSucesso(() => this.listarTodosClientes(response, subscription)),
+    //   error: (err) => this.processarErro(err, subscription)
+    // });    
   }
+
+  public listarTodosClientes(clientes : ClientDetails[], subscription:Subscription){
+    if(clientes != null && clientes.length > 0){
+      this.listaTodosClientes = clientes;
+    }
+    this.loading = false;
+    subscription.unsubscribe()
+  }
+    
+  processarSucesso(callback: () => void) {
+    console.log("deu boa");
+    callback();
+  }
+
+  processarErro(error:any, subscription:Subscription){
+    console.log("deu ruim" + error);
+    subscription.unsubscribe();
+  }    
 }
