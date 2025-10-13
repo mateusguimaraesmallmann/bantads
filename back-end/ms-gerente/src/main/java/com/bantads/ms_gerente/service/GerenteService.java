@@ -2,7 +2,11 @@ package com.bantads.ms_gerente.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.bantads.ms_gerente.model.dto.output.GerenteRemovidoEvent;
 import org.modelmapper.ModelMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +23,8 @@ import jakarta.persistence.EntityNotFoundException;
 @RequiredArgsConstructor
 public class GerenteService {
 
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
     private final GerenteRepository gerenteRepository;
     private final ModelMapper modelMapper;
 
@@ -54,5 +60,15 @@ public class GerenteService {
 
         Gerente atualizado = gerenteRepository.save(existente);
         return modelMapper.map(atualizado, GerenteDTOOut.class);
+    }
+
+    public void removerGerente(String cpf) {
+        Gerente gerente = gerenteRepository.findByCpf(cpf)
+                .orElseThrow(() -> new EntityNotFoundException("Gerente não encontrado"));
+
+        gerenteRepository.delete(gerente);
+        GerenteRemovidoEvent event = new GerenteRemovidoEvent(gerente.getId().toString(), gerente.getNome());
+        rabbitTemplate.convertAndSend("GERENTE_REMOVIDO", event);
+
     }
 }
