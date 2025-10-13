@@ -1,0 +1,26 @@
+package com.bantads.ms_saga.producer;
+
+import com.bantads.ms_saga.config.RabbitMQConfig;
+import com.bantads.ms_saga.dto.GerenteRemovidoEvent;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SagaProducer {
+
+    private final RabbitTemplate rabbitTemplate;
+
+    public SagaProducer(RabbitTemplate rabbitTemplate) {
+        this.rabbitTemplate = rabbitTemplate;
+    }
+
+    public void removerGerenteDasContas(GerenteRemovidoEvent event) {
+        rabbitTemplate.convertAndSend(RabbitMQConfig.CONTA_REMOVER_GERENTE_QUEUE, event);
+        System.out.println("Enviado para ms-conta: " + event.getGerenteId());
+    }
+
+    public void removerGerenteDosClientes(GerenteRemovidoEvent event) {
+        rabbitTemplate.convertAndSend(RabbitMQConfig.CLIENTE_REMOVER_GERENTE_QUEUE, event);
+        System.out.println("Enviado para ms-cliente: " + event.getGerenteId());
+    }
+}
