@@ -27,5 +27,21 @@ public class ClienteSagaService {
 
         return response;
     }
+
+    public CadastroClienteDTOIn cadastrarCliente(CadastroClienteDTOIn dto) {
+        
+        CadastroClienteDTOIn response = new CadastroClienteDTOIn();
+        
+        try {
+            ClienteClient.buscarPorCpf(dto.getCpf());
+
+            response.setCpf(cpf);      
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return response;
+    }
     
 }

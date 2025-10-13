@@ -24,5 +24,12 @@ public class ClienteSagaController {
         RemoverGerenteDTOOut response = sagaService.aprovarCliente(cpf);
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("cadastrar")
+    public ResponseEntity<?> cadastrarCliente(@RequestBody CadastroClienteDTOIn dto) {
+
+        CadastroClienteDTOIn response = sagaService.cadastrarCliente(dto);
+        return ResponseEntity.ok(response);
+    }
     
 }
