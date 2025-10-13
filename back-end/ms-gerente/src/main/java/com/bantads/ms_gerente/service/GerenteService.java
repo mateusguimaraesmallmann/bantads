@@ -68,7 +68,7 @@ public class GerenteService {
 
         gerenteRepository.delete(gerente);
         GerenteRemovidoEvent event = new GerenteRemovidoEvent(gerente.getId().toString(), gerente.getNome());
-        rabbitTemplate.convertAndSend("GERENTE_REMOVIDO", event);
+        rabbitTemplate.convertAndSend("GERENTE_REMOVIDO_QUEUE", event);
 
     }
 }

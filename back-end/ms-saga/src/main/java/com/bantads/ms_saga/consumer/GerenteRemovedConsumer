@@ -1,0 +1,24 @@
+package com.bantads.ms_saga.consumer;
+
+import com.bantads.ms_saga.config.RabbitMQConfig;
+import com.bantads.ms_saga.dto.GerenteRemovidoEvent;
+import com.bantads.ms_saga.producer.SagaProducer;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.stereotype.Service;
+
+@Service
+public class GerenteRemovedConsumer {
+
+    private final SagaProducer sagaProducer;
+
+    public GerenteRemovedConsumer(SagaProducer sagaProducer) {
+        this.sagaProducer = sagaProducer;
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.GERENTE_REMOVIDO_QUEUE)
+    public void onGerenteRemovido(GerenteRemovidoEvent event) {
+        System.out.println("Saga iniciada: Gerente removido " + event.getNome());
+        sagaProducer.removerGerenteDasContas(event);
+        sagaProducer.removerGerenteDosClientes(event);
+    }
+}
