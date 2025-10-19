@@ -54,7 +54,7 @@ export class ManagerListaClientesComponent implements OnInit {
         cidade: "São Paulo",
         estado: "SP",
         conta: "2345",
-        saldo: 25750.00,
+        saldo: -25750.00,
         limite: 10000.00
       },
       {

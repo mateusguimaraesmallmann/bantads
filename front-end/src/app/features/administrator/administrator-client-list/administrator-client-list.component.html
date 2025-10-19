@@ -8,8 +8,21 @@
       </div>
 
       <div class="card-body">
+      <div class="mb-3">
+        <label for="buscaCliente" class="form-label">Pesquisar por Nome ou CPF</label>
+        <input
+          type="text"
+          id="buscaCliente"
+          class="form-control"
+          placeholder="Digite o nome ou CPF do cliente..."
+          [(ngModel)]="termoBusca"
+          (input)="ordenarEFiltrarClientes()"
+        >
+      </div>    
+
         <div class="table-responsive">
           <table class="table table-striped table-hover">
+
             <thead class="table-dark">
               <tr>
                 <th scope="col">Nome</th>
@@ -18,22 +31,32 @@
                 <th scope="col">Telefone</th>
                 <th scope="col">Cidade</th>
                 <th scope="col">Estado</th>
-                <th scope="col" class="text-end">Saldo (R$)</th>
-                <th scope="col" class="text-end">Limite (R$)</th>
+                <th scope="col" class="text-start">Saldo (R$)</th>
+                <th scope="col" class="text-start">Limite (R$)</th>
               </tr>
             </thead>
+
             <tbody>
-              <tr *ngFor="let cliente of listaTodosClientes">
+              <tr *ngFor="let cliente of listaClientesFiltrados">
                 <td>{{ cliente.nome }}</td>
                 <td>{{ cliente.cpf }}</td>
                 <td>{{ cliente.email }}</td>
                 <td>{{ cliente.telefone }}</td>
                 <td>{{ cliente.cidade }}</td>
                 <td>{{ cliente.estado }}</td>
-                <td>{{ cliente.saldo | currency:'BRL' }}</td>
-                <td>{{ cliente.limite | currency:'BRL' }}</td>
+                <td class="text-start" [ngClass]="{'text-danger': cliente.saldo < 0}">
+                  {{ cliente.saldo | currency:'BRL' }}
+                </td>
+                <td class="text-start">{{ cliente.limite | currency:'BRL' }}</td>
               </tr>
             </tbody>
+
+            <tr *ngIf="listaClientesFiltrados.length === 0">
+              <td colspan="9" class="text-center text-muted">
+                Nenhum cliente encontrado com o termo "{{ termoBusca }}".
+              </td>
+            </tr>
+            
           </table>
         </div>
       </div>

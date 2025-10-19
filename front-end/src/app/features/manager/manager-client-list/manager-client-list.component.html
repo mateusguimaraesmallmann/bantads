@@ -28,11 +28,12 @@
               <th scope="col">Telefone</th>
               <th scope="col">Cidade</th>
               <th scope="col">Estado</th>
-              <th scope="col" class="text-end">Saldo (R$)</th>
-              <th scope="col" class="text-end">Limite (R$)</th>
+              <th scope="col" class="text-start">Saldo (R$)</th>
+              <th scope="col" class="text-start">Limite (R$)</th>
               <th scope="col" class="text-center">Ações</th>
             </tr>
           </thead>
+
           <tbody>
             <tr *ngFor="let cliente of listaClientesFiltrados">
               <td>{{ cliente.nome }}</td>
@@ -41,11 +42,11 @@
               <td>{{ cliente.telefone }}</td>
               <td>{{ cliente.cidade }}</td>
               <td>{{ cliente.estado }}</td>
-              <td class="text-end" [ngClass]="{'text-danger': cliente.saldo < 0}">
-                {{ cliente.saldo }}
+              <td class="text-start" [ngClass]="{'text-danger': cliente.saldo < 0}">
+                {{ cliente.saldo | currency:'BRL'}}
               </td>
-              <td class="text-end">
-                {{ cliente.limite }}
+              <td class="text-start">
+                {{ cliente.limite | currency:'BRL'}}
               </td>
               <td class="text-center">
                 <a [routerLink]="['/manager-client-details', cliente.cpf]"
@@ -55,11 +56,13 @@
                 </a>
               </td>
             </tr>
+
             <tr *ngIf="listaClientesFiltrados.length === 0">
               <td colspan="9" class="text-center text-muted">
                 Nenhum cliente encontrado com o termo "{{ termoBusca }}".
               </td>
             </tr>
+            
           </tbody>
         </table>
       </div>

@@ -18,11 +18,14 @@ export class AdministratorListaClientesComponent implements OnInit {
   navItems = NAVITEMS;
   loading:boolean = false;
   listaTodosClientes: ClientDetails[] = [];
+  public listaClientesFiltrados: ClientDetails[] = [];
+  public termoBusca: string = '';
 
   constructor(private adminService : AdministratorService) { }
 
   ngOnInit(): void {
     this.carregarClientes();
+    this.ordenarEFiltrarClientes();
   }
 
   private carregarClientes(): void {
@@ -61,7 +64,7 @@ export class AdministratorListaClientesComponent implements OnInit {
         cidade: "Rio de Janeiro",
         estado: "RJ",
         conta: "6789",
-        saldo: 2800.75,
+        saldo: -2800.75,
         limite: 1500.00
       }
     ];
@@ -81,7 +84,21 @@ export class AdministratorListaClientesComponent implements OnInit {
     this.loading = false;
     subscription.unsubscribe()
   }
-    
+
+  public ordenarEFiltrarClientes(): void {
+    let clientesOrdenados = [...this.listaTodosClientes].sort((a, b) => a.nome.localeCompare(b.nome));
+
+    if (this.termoBusca) {
+      const termoBuscaMinusculo = this.termoBusca.toLowerCase();
+      this.listaClientesFiltrados = clientesOrdenados.filter(cliente =>
+        cliente.nome.toLowerCase().includes(termoBuscaMinusculo) ||
+        cliente.cpf.replace(/[.-]/g, '').includes(termoBuscaMinusculo.replace(/[.-]/g, ''))
+      );
+    } else {
+      this.listaClientesFiltrados = clientesOrdenados;
+    }
+  }
+
   processarSucesso(callback: () => void) {
     console.log("deu boa");
     callback();
