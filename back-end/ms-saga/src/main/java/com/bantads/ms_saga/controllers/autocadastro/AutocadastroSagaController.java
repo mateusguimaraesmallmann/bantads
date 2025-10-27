@@ -17,5 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AutocadastroSagaController {
 
     private final AutocadastroSagaService sagaService;
+
+    @PostMapping()
+    public ResponseEntity<?> autoCadastro(@Validated @RequestBody ClienteCadastroRequestDTO body) {
+        return sagaService.autoCadastro(body);
+    }
     
 }
