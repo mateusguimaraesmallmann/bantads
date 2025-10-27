@@ -1,8 +1,9 @@
 package com.bantads.ms_saga.controllers.cliente;
 
-import com.bantads.ms_saga.model.dto.input.RemoverGerenteDTOIn;
-import com.bantads.ms_saga.model.dto.output.RemoverGerenteDTOOut;
+import com.bantads.ms_saga.model.dto.input.CadastroClienteDTOIn;
+import com.bantads.ms_saga.model.dto.output.AprovarClienteDTOOut;
 import com.bantads.ms_saga.services.gerente.GerenteSagaService;
+import com.bantads.ms_saga.services.cliente.ClienteSagaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,7 +22,7 @@ public class ClienteSagaController {
     @PostMapping("aprovar/{cpf}")
     public ResponseEntity<?> aprovarCliente(@PathVariable String cpf) {
 
-        RemoverGerenteDTOOut response = sagaService.aprovarCliente(cpf);
+        AprovarClienteDTOOut response = sagaService.aprovarCliente(cpf);
         return ResponseEntity.ok(response);
     }
 

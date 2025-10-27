@@ -1,7 +1,5 @@
-package com.bantads.ms_saga.controllers.cliente;
+package com.bantads.ms_saga.controllers.autocadastro;
 
-import com.bantads.ms_saga.model.dto.input.RemoverGerenteDTOIn;
-import com.bantads.ms_saga.model.dto.output.RemoverGerenteDTOOut;
 import com.bantads.ms_saga.services.gerente.GerenteSagaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
