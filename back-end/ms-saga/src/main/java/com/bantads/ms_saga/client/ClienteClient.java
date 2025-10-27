@@ -1,8 +1,9 @@
 package com.bantads.ms_saga.client;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import com.bantads.ms_gerente.model.dto.input.CriarGerenteDTOIn;
-import com.bantads.ms_gerente.model.dto.output.GerenteDTOOut;
+import com.bantads.ms_saga.model.dto.input.CadastroClienteDTOIn;
+import com.bantads.ms_saga.model.dto.output.CadastroClienteDTOOut;
+import com.bantads.ms_saga.model.dto.output.GerenteDTOOut;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,12 +11,18 @@ import org.springframework.web.bind.annotation.*;
 public class ClienteClient {
 
     @GetMapping("/clientes/{cpf}")
-    GerenteDTOOut buscarPorCpf(@PathVariable String cpf);
+    GerenteDTOOut buscarPorCpf(@PathVariable String cpf){
+
+    }
 
     @PostMapping("/clientes")
-    CadastroClienteDTOOut criarCliente(@RequestBody CadastroClienteDTOIn dto);
+    CadastroClienteDTOOut criarCliente(@RequestBody CadastroClienteDTOIn dto){
+
+    }
 
     @DeleteMapping("/clientes/{cpf}")
-    void removerPorCpf(@PathVariable String cpf);
+    void removerPorCpf(@PathVariable String cpf){
+
+    }
     
 }
