@@ -86,6 +86,12 @@ services:
     container_name: ms-cliente
     ports:
       - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-db:5432/cliente
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin
+      SPRING_FLYWAY_ENABLED: "false" 
+      SPRING_CLOUD_COMPATIBILITY_VERIFIER_ENABLED: "false"
     depends_on:
       postgres-db:
         condition: service_healthy
@@ -155,7 +161,7 @@ services:
       - ms-cliente
       - ms-conta
       - ms-gerente
-      - ms-saga
+#     - ms-saga
     networks:
       - bantads-net
 
