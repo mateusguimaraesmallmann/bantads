@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.empresa_aerea.saga.dtos.LoginRequestDTO;
-import br.com.empresa_aerea.saga.services.SagaAuthService;
+import com.bantads.ms_saga.services.SagaAuthService;
 
 @Component
 @RestController

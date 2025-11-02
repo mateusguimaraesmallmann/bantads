@@ -1,9 +1,16 @@
-package com.bantads.ms_saga.services.autoCadastro;
+package com.bantads.ms_saga.services.autocadastro;
 
-import com.bantads.ms_saga.client.GerenteClient;
-import com.bantads.ms_saga.model.dto.input.RemoverGerenteDTOIn;
-import com.bantads.ms_saga.model.dto.output.RemoverGerenteDTOOut;
+import com.bantads.ms_saga.client.ClienteClient;
+import com.bantads.ms_saga.model.dto.input.CadastroClienteDTOIn;
+import com.bantads.ms_saga.model.dto.output.AprovarClienteDTOOut;
 import lombok.RequiredArgsConstructor;
+
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
