@@ -1,4 +1,4 @@
-package com.bantads.ms_saga.services.altercaoDePerfil;
+package com.bantads.ms_saga.services.alteracaoDePerfil;
 
 
 import org.springframework.stereotype.Service;
