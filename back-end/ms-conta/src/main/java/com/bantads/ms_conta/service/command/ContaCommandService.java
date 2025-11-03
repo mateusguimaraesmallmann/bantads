@@ -1,9 +1,6 @@
 package com.bantads.ms_conta.service.command;
 
-import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
-import com.bantads.ms_conta.model.dto.input.DepositarSacarDTOIn;
-import com.bantads.ms_conta.model.dto.input.SalvarContaMongoDTOIn;
-import com.bantads.ms_conta.model.dto.input.TransferirDTOIn;
+import com.bantads.ms_conta.model.dto.input.*;
 import com.bantads.ms_conta.model.dto.output.ContaCriadaDTOOut;
 import com.bantads.ms_conta.model.dto.output.DepositarSacarDTOOut;
 import com.bantads.ms_conta.model.dto.output.TransferirDTOOut;
@@ -22,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 @Service
@@ -155,6 +153,14 @@ public class ContaCommandService {
                 depositarSacarDTOOut.getSaldo(),
                 movimentacaoOrigem.getValor()
         );
+    }
+
+    public void mudarGerente(MudarGerenteDTOIn command) {
+        Optional<Conta> conta = contaJpaRepository.findByNumero(command.getNumeroConta());
+        if (conta.isPresent() && !conta.get().getIdGerente().equals(command.getGerenteId())) {
+            conta.get().setIdGerente(command.getGerenteId());
+            contaJpaRepository.save(conta.get());
+        }
     }
 
     private Movimentacao criarMovimentacao(

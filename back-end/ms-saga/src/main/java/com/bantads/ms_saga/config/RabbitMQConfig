@@ -1,26 +1,26 @@
-package com.bantads.ms_saga.producer;
+package com.bantads.ms_saga.config;
 
-import com.bantads.ms_saga.config.RabbitMQConfig;
-import com.bantads.ms_saga.dto.GerenteRemovidoEvent;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.stereotype.Service;
 
-@Service
-public class SagaProducer {
+@Configuration
+public class RabbitConfig {
+    public static final String SAGA_EXCHANGE = "saga.exchange";
 
-    private final RabbitTemplate rabbitTemplate;
-
-    public SagaProducer(RabbitTemplate rabbitTemplate) {
-        this.rabbitTemplate = rabbitTemplate;
+    @Bean
+    TopicExchange sagaExchange() {
+        return new TopicExchange(SAGA_EXCHANGE);
     }
 
-    public void removerGerenteDasContas(GerenteRemovidoEvent event) {
-        rabbitTemplate.convertAndSend(RabbitMQConfig.CONTA_REMOVER_GERENTE_QUEUE, event);
-        System.out.println("Enviado para ms-conta: " + event.getGerenteId());
+    @Bean
+    Queue msContaQueryQueue() {
+        return QueueBuilder.durable("ms-conta.query.queue")
+                .withArgument("x-dead-letter-exchange", "saga.dlq")
+                .build();
     }
 
-    public void removerGerenteDosClientes(GerenteRemovidoEvent event) {
-        rabbitTemplate.convertAndSend(RabbitMQConfig.CLIENTE_REMOVER_GERENTE_QUEUE, event);
-        System.out.println("Enviado para ms-cliente: " + event.getGerenteId());
+    @Bean
+    Binding bindContaQuery(Queue msContaQueryQueue, TopicExchange sagaExchange) {
+        return BindingBuilder.bind(msContaQueryQueue)
+                .to(sagaExchange)
+                .with("ms.conta.query.*");
     }
 }
