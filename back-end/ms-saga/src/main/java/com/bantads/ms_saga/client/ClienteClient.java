@@ -2,7 +2,9 @@ package com.bantads.ms_saga.client;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import com.bantads.ms_saga.model.dto.input.CadastroClienteDTOIn;
+import com.bantads.ms_saga.model.dto.input.EditarClienteDTOIn;
 import com.bantads.ms_saga.model.dto.output.CadastroClienteDTOOut;
+import com.bantads.ms_saga.model.dto.output.EditarClienteDTOOut;
 import com.bantads.ms_saga.model.dto.output.GerenteDTOOut;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -25,4 +27,12 @@ public class ClienteClient {
 
     }
     
+    @PutMapping("/clientes/{cpf}")
+    public
+        EditarClienteDTOOut atualizarCliente(
+                @PathVariable("cpf") String cpf, 
+                @RequestBody EditarClienteDTOIn dto) {
+
+        return null;
+    }      
 }
