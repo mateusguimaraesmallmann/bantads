@@ -1,16 +1,24 @@
 package com.bantads.ms_saga.model.dto.output;
 
-import java.math.BigDecimal;
-
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-@Data
-public class EditarClienteDTOOut {
+import java.math.BigDecimal;
+
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor
+public final class ClienteDTOOut {
+
+    @Schema(type = "Long", description = "ID")
+    private Long id;
+
     @Schema(description = "Nome completo do cliente", example = "Maria da Silva")
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
@@ -20,6 +28,10 @@ public class EditarClienteDTOOut {
     @Email(message = "O e-mail deve ser válido")
     private String email;
 
+    @Schema(description = "CPF do cliente (somente números)", example = "12345678901")
+    @NotBlank(message = "O CPF é obrigatório")
+    private String cpf;
+
     @Schema(description = "Telefone do cliente com DDD", example = "41987654321")
     @NotBlank(message = "O telefone é obrigatório")
     private String telefone;
@@ -27,5 +39,9 @@ public class EditarClienteDTOOut {
     @Schema(description = "Salário do cliente", example = "3500.50")
     @NotNull(message = "O salário é obrigatório")
     @DecimalMin(value = "0.0", inclusive = false, message = "O salário deve ser maior que zero")
-    private BigDecimal salario;    
+    private BigDecimal salario;
+
+    // @Schema(exampleClasses = {EnderecoDTOOut.class}, description = "Endereço do cliente")
+    // private EnderecoDTOOut endereco;
+
 }
