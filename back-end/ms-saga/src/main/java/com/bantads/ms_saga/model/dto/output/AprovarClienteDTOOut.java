@@ -1,14 +1,27 @@
 package com.bantads.ms_saga.model.dto.output;
 
 import lombok.Data;
+import lombok.Setter;
+import lombok.Getter;
 
 @Data
 public class AprovarClienteDTOOut {
-    private String cliente;
-    private String numero;
-    private double saldo;
-    private double limite;
-    private String gerente;
-    private String criacao;
-    
+    private String cpf;
+    private boolean aprovado;
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public boolean isAprovado() {
+        return aprovado;
+    }
+
+    public void setAprovado(boolean aprovado) {
+        this.aprovado = aprovado;
+    }
 }

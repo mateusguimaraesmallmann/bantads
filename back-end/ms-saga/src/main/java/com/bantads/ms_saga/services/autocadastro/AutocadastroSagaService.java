@@ -24,7 +24,7 @@ public class AutocadastroSagaService {
         AprovarClienteDTOOut response = new AprovarClienteDTOOut();
         
         try {
-            ClienteClient.buscarPorCpf(dto.getCpf());
+            ClienteClient.buscarPorCpf(cpf);
 
             response.setCpf(cpf);        
 
@@ -42,7 +42,7 @@ public class AutocadastroSagaService {
         try {
             ClienteClient.buscarPorCpf(dto.getCpf());
 
-            response.setCpf(cpf);      
+            response.setCpf(response.getCpf());
 
         } catch (Exception e) {
             e.printStackTrace();

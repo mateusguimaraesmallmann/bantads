@@ -22,6 +22,8 @@ public class Conta {
 
     private Long idCliente;
 
+    private Long idGerente;
+
     private Long numero;
 
     private BigDecimal saldo;

@@ -2,6 +2,7 @@ package com.bantads.ms_conta.service.command;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Optional;
 import java.util.Random;
 
 import org.modelmapper.ModelMapper;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
 import com.bantads.ms_conta.model.dto.input.DepositarSacarDTOIn;
+import com.bantads.ms_conta.model.dto.input.MudarGerenteDTOIn;
 import com.bantads.ms_conta.model.dto.input.RecalcularLimiteDTOIn;
 import com.bantads.ms_conta.model.dto.input.SalvarContaMongoDTOIn;
 import com.bantads.ms_conta.model.dto.input.TransferirDTOIn;
@@ -159,6 +161,14 @@ public class ContaCommandService {
                 depositarSacarDTOOut.getSaldo(),
                 movimentacaoOrigem.getValor()
         );
+    }
+
+    public void mudarGerente(MudarGerenteDTOIn command) {
+        Optional<Conta> conta = contaJpaRepository.findByNumero(command.getNumeroConta());
+        if (conta.isPresent() && !conta.get().getIdGerente().equals(command.getGerenteId())) {
+            conta.get().setIdGerente(command.getGerenteId());
+            contaJpaRepository.save(conta.get());
+        }
     }
 
     private Movimentacao criarMovimentacao(

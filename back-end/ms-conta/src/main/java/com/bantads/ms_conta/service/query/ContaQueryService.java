@@ -1,6 +1,7 @@
 package com.bantads.ms_conta.service.query;
 
 import com.bantads.ms_conta.model.dto.input.SalvarContaMongoDTOIn;
+import com.bantads.ms_conta.model.dto.output.ContaPorGerenteDTOOut;
 import com.bantads.ms_conta.model.dto.output.ExtratoDTOOut;
 import com.bantads.ms_conta.model.dto.output.MovimentacaoDTOOut;
 import com.bantads.ms_conta.model.dto.output.SaldoDTOOut;
@@ -49,6 +50,10 @@ public class ContaQueryService {
     public void salvarConta(SalvarContaMongoDTOIn contaDTOIn) {
         Conta conta = new Conta(contaDTOIn);
         contaRepository.save(conta);
+    }
+
+    public List<ContaPorGerenteDTOOut> contarContasPorGerente(){
+        return contaRepository.countContasByGerente();
     }
 
     private MovimentacaoDTOOut mapToDTO(Movimentacao movimentacao) {

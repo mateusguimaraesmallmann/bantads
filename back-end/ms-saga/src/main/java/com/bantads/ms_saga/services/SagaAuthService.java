@@ -19,14 +19,14 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import br.com.empresa_aerea.saga.configurations.SagaMessaging;
-import br.com.empresa_aerea.saga.dtos.AuthResponseDTO;
-import br.com.empresa_aerea.saga.dtos.ClienteDTO;
-import br.com.empresa_aerea.saga.dtos.FuncionarioDTO;
-import br.com.empresa_aerea.saga.dtos.LoginRequestDTO;
-import br.com.empresa_aerea.saga.dtos.LoginResponseDTO;
-import br.com.empresa_aerea.saga.enums.TipoUsuario;
-import br.com.empresa_aerea.saga.producers.LoginProducer;
+import com.bantads.ms_saga.configurations.SagaMessaging;
+import com.bantads.ms_saga.dtos.AuthResponseDTO;
+import com.bantads.ms_saga.dtos.ClienteDTO;
+import com.bantads.ms_saga.dtos.FuncionarioDTO;
+import com.bantads.ms_saga.dtos.LoginRequestDTO;
+import com.bantads.ms_saga.dtos.LoginResponseDTO;
+import com.bantads.ms_saga.enums.TipoUsuario;
+import com.bantads.ms_saga.producers.LoginProducer;
 
 @Service
 public class SagaAuthService {
@@ -61,20 +61,20 @@ public class SagaAuthService {
 
             Map<String, Object> responseAuth = responseFutureAuth.get(FUTURE_RESPONSE_TIMEOUT, TimeUnit.SECONDS);
 
-            if(responseAuth.get("errorMessage") != null) {
+            if (responseAuth != null && responseAuth.get("errorMessage") != null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário ou senha incorretos!");
             }
 
             AuthResponseDTO loginResponse = objectMapper.convertValue(responseAuth, AuthResponseDTO.class);
 
-            if(loginResponse.getTipo().equals(TipoUsuario.CLIENTE)){
+            if (loginResponse != null && TipoUsuario.CLIENTE.equals(loginResponse.getTipo())) {
                 ClienteDTO clienteDTO = new ClienteDTO(null, null, loginRequestDTO.getLogin(), null, null, null);
-                
+
                 loginProducer.sendLoginCliente(clienteDTO, correlationIdCliente);
                 Map<String, Object> responseCliente = responseFutureCliente.get(FUTURE_RESPONSE_TIMEOUT, TimeUnit.SECONDS);
                 ClienteDTO cliente = objectMapper.convertValue(responseCliente, ClienteDTO.class);
 
-                LoginResponseDTO response = new LoginResponseDTO(loginResponse.getAccess_token(),"bearer","CLIENTE",cliente);
+                LoginResponseDTO response = new LoginResponseDTO(loginResponse.getAccess_token(), "bearer", "CLIENTE", cliente);
 
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
@@ -84,7 +84,7 @@ public class SagaAuthService {
                 Map<String, Object> responseFuncionario = responseFutureFuncionario.get(FUTURE_RESPONSE_TIMEOUT, TimeUnit.SECONDS);
                 FuncionarioDTO funcionario = objectMapper.convertValue(responseFuncionario, FuncionarioDTO.class);
 
-                LoginResponseDTO response = new LoginResponseDTO(loginResponse.getAccess_token(),"bearer","FUNCIONARIO",funcionario);
+                LoginResponseDTO response = new LoginResponseDTO(loginResponse.getAccess_token(), "bearer", "FUNCIONARIO", funcionario);
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             }
 
@@ -118,7 +118,16 @@ public class SagaAuthService {
 
     private void handleResponse(Message message) {
         try {
-            String correlationId = new String(message.getMessageProperties().getCorrelationId());
+            String correlationId = message.getMessageProperties().getCorrelationIdString();
+            if (correlationId == null) {
+                // fallback: try raw correlation id
+                Object raw = message.getMessageProperties().getCorrelationId();
+                correlationId = raw != null ? raw.toString() : null;
+            }
+            if (correlationId == null) {
+                logger.warn("Mensagem recebida sem correlationId, descartando.");
+                return;
+            }
 
             @SuppressWarnings("unchecked")
             Map<String, Object> response = objectMapper.readValue(message.getBody(), Map.class);
