@@ -40,4 +40,7 @@ public class Cliente {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal salario;
 
+    @Column(precision = 10, scale = 2)
+    private BigDecimal limiteSugerido;
+
 }
