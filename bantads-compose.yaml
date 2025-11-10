@@ -133,20 +133,20 @@ services:
       - bantads-net
 
 #================ SAGA ======================
-  ms-saga:
-    build:
-      context: ./back-end/ms-saga
-      dockerfile: Dockerfile
-    container_name: ms-saga
-    ports:
-      - "8084:8084"
-    depends_on:
-      mongo-db:
-        condition: service_healthy
-      postgres-db:
-        condition: service_healthy
-    networks:
-      - bantads-net
+  # ms-saga:
+  #   build:
+  #     context: ./back-end/ms-saga
+  #     dockerfile: Dockerfile
+  #   container_name: ms-saga
+  #   ports:
+  #     - "8084:8084"
+  #   depends_on:
+  #     mongo-db:
+  #       condition: service_healthy
+  #     postgres-db:
+  #       condition: service_healthy
+  #   networks:
+  #     - bantads-net
 
 # =============== API GATEWAY ===============
   api-gateway:

@@ -4,6 +4,8 @@ import com.bantads.ms_saga.model.dto.input.CadastroClienteDTOIn;
 import com.bantads.ms_saga.model.dto.output.AprovarClienteDTOOut;
 import com.bantads.ms_saga.services.gerente.GerenteSagaService;
 import com.bantads.ms_saga.services.cliente.ClienteSagaService;
+import com.bantads.ms_saga.model.dto.output.GerenteDTOOut;
+import com.bantads.ms_saga.model.dto.input.GerenteDTOIn;
 
 import lombok.RequiredArgsConstructor;
 
@@ -46,12 +48,12 @@ public class FuncionarioSagaController {
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping
-    public ResponseEntity<RemoverGerenteDTOOut> removerGerente(
-        @RequestBody RemoverGerenteDTOIn dto) {
+    // @DeleteMapping
+    // public ResponseEntity<GerenteDTOOut> removerGerente(
+    //     @RequestBody GerenteDTOIn dto) {
 
-        RemoverGerenteDTOOut resultado = sagaService.removerGerente(dto);
-        return ResponseEntity.ok(resultado);
-    }
+    //     GerenteDTOOut resultado = sagaService.removerGerente(dto);
+    //     return ResponseEntity.ok(resultado);
+    // }
     
 }
