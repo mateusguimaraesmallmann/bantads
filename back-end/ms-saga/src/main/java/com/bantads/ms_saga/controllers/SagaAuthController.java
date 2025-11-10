@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.empresa_aerea.saga.dtos.LoginRequestDTO;
+import com.bantads.ms_saga.dtos.LoginRequestDTO;
 import com.bantads.ms_saga.services.SagaAuthService;
 
 @Component
@@ -24,7 +24,7 @@ public class SagaAuthController {
 
     @PostMapping("/login")
     public ResponseEntity<Object> login(@Validated @RequestBody LoginRequestDTO body) {
-        return sagsagaAuthServiceaAuthService.login(body);
+        return sagaAuthService.login(body);
     }
     
 }

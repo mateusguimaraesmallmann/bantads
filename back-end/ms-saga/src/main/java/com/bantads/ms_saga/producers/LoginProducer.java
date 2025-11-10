@@ -2,7 +2,6 @@ package com.bantads.ms_saga.producers;
 
 import org.springframework.stereotype.Component;
 import com.bantads.ms_saga.dtos.ClienteDTO;
-import com.bantads.ms_saga.dtos.FuncionarioDTO;
 import com.bantads.ms_saga.dtos.LoginRequestDTO;
 
 @Component
@@ -13,5 +12,4 @@ public class LoginProducer {
 
     public void sendLoginCliente(ClienteDTO dto, String correlationId) { /* send to cliente */ }
 
-    public void sendLoginFuncionario(FuncionarioDTO dto, String correlationId) { /* send to funcionario */ }
 }

@@ -21,9 +21,9 @@ public class AutocadastroSagaController {
 
     private final AutocadastroSagaService sagaService;
 
-    @PostMapping()
-    public ResponseEntity<?> autoCadastro(@Validated @RequestBody ClienteCadastroRequestDTO body) {
-        return sagaService.autoCadastro(body);
-    }
+    // @PostMapping()
+    // public ResponseEntity<?> autoCadastro(@Validated @RequestBody ClienteCadastroRequestDTO body) {
+    //     return sagaService.autoCadastro(body);
+    // }
     
 }

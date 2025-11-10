@@ -1,7 +1,7 @@
 package com.bantads.ms_saga.controllers.gerente;
 
-import com.bantads.ms_saga.model.dto.input.RemoverGerenteDTOIn;
-import com.bantads.ms_saga.model.dto.output.RemoverGerenteDTOOut;
+// import com.bantads.ms_saga.model.dto.input.RemoverGerenteDTOIn;
+// import com.bantads.ms_saga.model.dto.output.RemoverGerenteDTOOut;
 import com.bantads.ms_saga.services.gerente.GerenteSagaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,11 @@ public class GerenteSagaController {
 
     private final GerenteSagaService sagaService;
 
-    @DeleteMapping
-    public ResponseEntity<RemoverGerenteDTOOut> removerGerente(
-            @RequestBody RemoverGerenteDTOIn dto) {
+    // @DeleteMapping
+    // public ResponseEntity<RemoverGerenteDTOOut> removerGerente(
+    //         @RequestBody RemoverGerenteDTOIn dto) {
 
-        RemoverGerenteDTOOut resultado = sagaService.removerGerente(dto);
-        return ResponseEntity.ok(resultado);
-    }
+    //     RemoverGerenteDTOOut resultado = sagaService.removerGerente(dto);
+    //     return ResponseEntity.ok(resultado);
+    // }
 }

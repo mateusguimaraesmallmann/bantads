@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import com.bantads.ms_saga.controllers.funcionario.ClienteCadastroRequestDTO;
+import com.bantads.ms_saga.controllers.autocadastro.ClienteCadastroRequestDTO;
 import com.bantads.ms_saga.model.dto.output.GerenteDTOOut;
 
 @Service

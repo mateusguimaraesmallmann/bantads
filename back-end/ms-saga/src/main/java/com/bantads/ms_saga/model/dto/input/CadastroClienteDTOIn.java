@@ -7,6 +7,14 @@ import lombok.Setter;
 @Data
 @Getter
 @Setter
-public class CadastroClienteDTOIn {
+public class CadastroClienteDTOIn {public String getCpf() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getCpf'");
+    }
+
+public void setCpf(String cpf) {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'setCpf'");
+}
     
 }

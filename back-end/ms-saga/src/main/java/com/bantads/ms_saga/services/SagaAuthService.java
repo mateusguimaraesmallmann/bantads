@@ -19,10 +19,9 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import com.bantads.ms_saga.configurations.SagaMessaging;
+import com.bantads.ms_saga.config.RabbitConfig;
 import com.bantads.ms_saga.dtos.AuthResponseDTO;
 import com.bantads.ms_saga.dtos.ClienteDTO;
-import com.bantads.ms_saga.dtos.FuncionarioDTO;
 import com.bantads.ms_saga.dtos.LoginRequestDTO;
 import com.bantads.ms_saga.dtos.LoginResponseDTO;
 import com.bantads.ms_saga.enums.TipoUsuario;
@@ -77,16 +76,9 @@ public class SagaAuthService {
                 LoginResponseDTO response = new LoginResponseDTO(loginResponse.getAccess_token(), "bearer", "CLIENTE", cliente);
 
                 return ResponseEntity.status(HttpStatus.OK).body(response);
-            } else {
-                FuncionarioDTO funcionarioDTO = new FuncionarioDTO(null, null, loginRequestDTO.getLogin(), null, null, false);
+            } 
 
-                loginProducer.sendLoginFuncionario(funcionarioDTO, correlationIdFuncionario);
-                Map<String, Object> responseFuncionario = responseFutureFuncionario.get(FUTURE_RESPONSE_TIMEOUT, TimeUnit.SECONDS);
-                FuncionarioDTO funcionario = objectMapper.convertValue(responseFuncionario, FuncionarioDTO.class);
-
-                LoginResponseDTO response = new LoginResponseDTO(loginResponse.getAccess_token(), "bearer", "FUNCIONARIO", funcionario);
-                return ResponseEntity.status(HttpStatus.OK).body(response);
-            }
+            throw new Exception("login para gerentes ha de ser implementado");
 
         } catch (TimeoutException e) {
             logger.error("Timeout na autenticação: {}", e.getMessage());
@@ -101,24 +93,19 @@ public class SagaAuthService {
         }
     }
 
-    @RabbitListener(queues = SagaMessaging.QUEUE_RPL_AUTH_LOGIN)
+    @RabbitListener(queues = RabbitConfig.QUEUE_RPL_AUTH_LOGIN)
     public void handleAuthResponse(Message message) {
         handleResponse(message);
     }
 
-    @RabbitListener(queues = SagaMessaging.QUEUE_RPL_AUTH_CLIENTE)
+    @RabbitListener(queues = RabbitConfig.QUEUE_RPL_AUTH_CLIENTE)
     public void handleClienteResponse(Message message) {
-        handleResponse(message);
-    }
-
-    @RabbitListener(queues = SagaMessaging.QUEUE_RPL_AUTH_FUNCIONARIO)
-    public void handleFuncionarioResponse(Message message) {
         handleResponse(message);
     }
 
     private void handleResponse(Message message) {
         try {
-            String correlationId = message.getMessageProperties().getCorrelationIdString();
+            String correlationId = message.getMessageProperties().getCorrelationId();
             if (correlationId == null) {
                 // fallback: try raw correlation id
                 Object raw = message.getMessageProperties().getCorrelationId();
