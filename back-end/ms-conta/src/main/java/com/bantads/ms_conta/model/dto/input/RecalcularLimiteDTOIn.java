@@ -1,4 +1,4 @@
-package com.bantads.ms_saga.model.dto.input;
+package com.bantads.ms_conta.model.dto.input;
 
 import java.math.BigDecimal;
 
@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor 
 public class RecalcularLimiteDTOIn {
-    private Long idGerente;
-    private BigDecimal novoLimite;
-    private BigDecimal saldoAtual;
+    private Long idDoCliente;
+    private BigDecimal novoSalario;
 }

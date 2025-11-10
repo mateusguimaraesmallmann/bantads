@@ -1,23 +1,27 @@
 package com.bantads.ms_conta.consumer;
 
-import com.bantads.ms_conta.model.dto.input.MudarGerenteDTOIn;
-import com.bantads.ms_conta.service.command.ContaCommandService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.RequiredArgsConstructor;
+import java.nio.charset.StandardCharsets;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import java.nio.charset.StandardCharsets;
+import com.bantads.ms_conta.model.dto.input.MudarGerenteDTOIn;
+import com.bantads.ms_conta.service.command.ContaCommandService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Component
-@RequiredArgsConstructor
 public class ContaSagaConsumer {
     private static final Logger logger = LoggerFactory.getLogger(ContaSagaConsumer.class);
     private final ContaCommandService contaService;
     private final ObjectMapper objectMapper;
+
+    public ContaSagaConsumer(ObjectMapper objectMapper) {
+        this.contaService = null;
+        this.objectMapper = objectMapper;
+    }
 
     @RabbitListener(queues = "ms-conta.query.queue")
     public void handleQuery(Message message) {
