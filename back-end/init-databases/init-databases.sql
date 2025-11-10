@@ -103,3 +103,5 @@ INSERT INTO "bantads"."gerente"."gerente" (cpf, nome, email) VALUES
 ('23862179060', 'Gyândula', 'ger3@bantads.com.br'),
 ('40501740066', 'Adamântio', 'adm1@bantads.com.br')
 ON CONFLICT (cpf) DO NOTHING;
+
+-- tabela para salvar o estado do SAGA
