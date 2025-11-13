@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import com.bantads.ms_saga.controllers.autocadastro.ClienteCadastroRequestDTO;
 import com.bantads.ms_saga.model.dto.output.GerenteDTOOut;
+import com.bantads.ms_saga.model.dto.output.ClienteDTOOut;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +26,7 @@ public class ClienteSagaService {
         AprovarClienteDTOOut response = new AprovarClienteDTOOut();
         
         try {
-            GerenteDTOOut cliente = clienteClient.buscarPorCpf(cpf);
+            ClienteDTOOut cliente = clienteClient.buscarPorCpf(cpf);
             if (cliente != null) {
                 response.setCpf(cpf);
                 response.setAprovado(true);
@@ -38,9 +39,9 @@ public class ClienteSagaService {
         return response;
     }
 
-    public CadastroClienteDTOIn cadastrarCliente(CadastroClienteDTOIn dto) {
+    public ClienteDTOOut cadastrarCliente(CadastroClienteDTOIn dto) {
         try {
-            return clienteClient.cadastrar(dto);
+            return clienteClient.criarCliente(dto);
         } catch (Exception e) {
             logger.error("Erro ao cadastrar cliente: {}", e.getMessage(), e);
             return null;

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bantads.ms_saga.model.dto.input.CadastroClienteDTOIn;
 import com.bantads.ms_saga.model.dto.output.AprovarClienteDTOOut;
+import com.bantads.ms_saga.model.dto.output.ClienteDTOOut;
 import com.bantads.ms_saga.services.cliente.ClienteSagaService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class ClienteSagaController {
     @PostMapping("cadastrar")
     public ResponseEntity<?> cadastrarCliente(@RequestBody CadastroClienteDTOIn dto) {
 
-        CadastroClienteDTOIn response = sagaService.cadastrarCliente(dto);
+        ClienteDTOOut response = sagaService.cadastrarCliente(dto);
         return ResponseEntity.ok(response);
     }
     
