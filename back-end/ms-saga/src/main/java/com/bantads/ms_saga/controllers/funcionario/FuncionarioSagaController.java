@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.bantads.ms_saga.model.dto.input.CadastroClienteDTOIn;
 import com.bantads.ms_saga.model.dto.output.AprovarClienteDTOOut;
 import com.bantads.ms_saga.services.cliente.ClienteSagaService;
+import com.bantads.ms_saga.controllers.autocadastro.ClienteCadastroRequestDTO;
 
 import lombok.RequiredArgsConstructor;
 
