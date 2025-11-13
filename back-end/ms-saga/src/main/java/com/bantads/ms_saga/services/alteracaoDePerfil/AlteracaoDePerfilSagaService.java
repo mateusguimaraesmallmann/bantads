@@ -21,7 +21,7 @@ public class AlteracaoDePerfilSagaService {
     public EditarClienteDTOOut atualizarCliente(String cpf, EditarClienteDTOIn editarCliente) {
 
         try {
-            ClienteDTOOut dadosClienteAntigo = clienteClient.buscarClientePorCpf(cpf);
+            ClienteDTOOut dadosClienteAntigo = clienteClient.buscarPorCpf(cpf);
             EditarClienteDTOOut clienteAtualizadoDTO = clienteClient.atualizarCliente(cpf, editarCliente);
 
 

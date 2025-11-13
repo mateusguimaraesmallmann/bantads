@@ -19,10 +19,10 @@ import com.bantads.ms_saga.model.dto.output.GerenteDTOOut;
 public interface ClienteClient {
 
     @GetMapping("/clientes/{cpf}")
-    GerenteDTOOut buscarPorCpf(@PathVariable("cpf") String cpf);
+    ClienteDTOOut buscarPorCpf(@PathVariable("cpf") String cpf);
 
     @PostMapping("/clientes")
-    CadastroClienteDTOOut criarCliente(@RequestBody CadastroClienteDTOIn dto);
+    ClienteDTOOut criarCliente(@RequestBody CadastroClienteDTOIn dto);
 
     @DeleteMapping("/clientes/{cpf}")
     void removerPorCpf(@PathVariable("cpf") String cpf);
@@ -32,11 +32,6 @@ public interface ClienteClient {
             @PathVariable("cpf") String cpf,
             @RequestBody EditarClienteDTOIn dto);
 
-    public CadastroClienteDTOIn cadastrar(CadastroClienteDTOIn dto);
-      
-
-    @GetMapping("/clientes/{cpf}")
-    public
-    ClienteDTOOut buscarClientePorCpf(@PathVariable String cpf);
+    //public CadastroClienteDTOIn cadastrar(CadastroClienteDTOIn dto);
 
 }

@@ -17,7 +17,7 @@ public interface ContaJpaRepository extends JpaRepository<Conta, Long> {
 
     boolean existsByIdCliente(Long idCliente);
 
-    @Query("SELECT c FROM Conta c JOIN FETCH c.gerente g WHERE c.idCliente = :idCliente")
+    //@Query("SELECT c FROM Conta c JOIN FETCH c.gerente g WHERE c.idCliente = :idCliente")
     Optional<Conta> findByIdCliente(long idCliente);
 
 }
