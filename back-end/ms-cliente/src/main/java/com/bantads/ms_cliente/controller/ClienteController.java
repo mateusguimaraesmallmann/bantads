@@ -1,16 +1,23 @@
 package com.bantads.ms_cliente.controller;
 
-import com.bantads.ms_cliente.model.dto.input.CriarClienteDTOIn;
+import java.util.List;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.bantads.ms_cliente.model.dto.input.EditarClienteDTOIn;
 import com.bantads.ms_cliente.model.dto.output.ClienteAprovadoDTOOut;
 import com.bantads.ms_cliente.model.dto.output.ClienteDTOOut;
 import com.bantads.ms_cliente.service.ClienteService;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/clientes")
@@ -18,13 +25,6 @@ import java.util.List;
 public class ClienteController {
 
     private final ClienteService clienteService;
-
-    @PostMapping
-    public ResponseEntity<ClienteDTOOut> criarCliente(
-            @Valid @RequestBody CriarClienteDTOIn criarClienteDTOIn) {
-        ClienteDTOOut dto = clienteService.criarCliente(criarClienteDTOIn);
-        return ResponseEntity.ok(dto);
-    }
 
     @GetMapping("/{cpf}")
     public ResponseEntity<ClienteDTOOut> buscarPorCpf(@PathVariable String cpf) {

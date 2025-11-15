@@ -12,6 +12,7 @@ CREATE SCHEMA IF NOT EXISTS cliente;
 CREATE SCHEMA IF NOT EXISTS contacomando;
 CREATE SCHEMA IF NOT EXISTS contaleitura;
 CREATE SCHEMA IF NOT EXISTS gerente;
+CREATE SCHEMA IF NOT EXISTS saga;
 
 -- tipos já definidos
 CREATE TYPE enum_tipo_movimentacao AS ENUM ('depósito', 'saque', 'transferência');
@@ -36,7 +37,7 @@ CREATE TABLE IF NOT EXISTS "bantads"."cliente"."cliente" (
   "nome" VARCHAR(255) NOT NULL,
   "salario" DOUBLE PRECISION DEFAULT 0,
   "telefone" VARCHAR(11),
-  "endereco" INTEGER NOT NULL REFERENCES "bantads"."cliente"."endereco" ("id")
+  "endereco" INTEGER REFERENCES "bantads"."cliente"."endereco" ("id")
 );
 
 -- população inicial de endereços dos clientes
@@ -105,3 +106,12 @@ INSERT INTO "bantads"."gerente"."gerente" (cpf, nome, email) VALUES
 ON CONFLICT (cpf) DO NOTHING;
 
 -- tabela para salvar o estado do SAGA
+CREATE TABLE IF NOT EXISTS "bantads"."saga"."saga_instance" (
+    "id" UUID PRIMARY KEY,
+    "correlation_id" UUID NOT NULL UNIQUE,
+    "saga_type" VARCHAR(255) NOT NULL,
+    "current_state" VARCHAR(50) NOT NULL,
+    "payload" TEXT,
+    "created_at" TIMESTAMPTZ NOT NULL,
+    "updated_at" TIMESTAMPTZ NOT NULL
+);

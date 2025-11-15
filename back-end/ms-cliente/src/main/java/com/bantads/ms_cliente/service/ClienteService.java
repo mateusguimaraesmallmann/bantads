@@ -10,9 +10,11 @@ import com.bantads.ms_cliente.model.dto.output.ClienteDTOOut;
 import com.bantads.ms_cliente.model.entity.Cliente;
 import com.bantads.ms_cliente.model.enums.StatusCliente;
 import com.bantads.ms_cliente.repository.ClienteRepository;
+
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -29,13 +33,13 @@ public class ClienteService {
     private final ModelMapper modelMapper;
     private final ContaClient contaClient;
 
-    public ClienteDTOOut criarCliente(CriarClienteDTOIn clienteDTO) {
-        boolean existe = clienteRepository.existsByCpf(clienteDTO.getCpf());
+    @Transactional
+    public ClienteDTOOut criarClientePorSaga(Cliente cliente) {
+        boolean existe = clienteRepository.existsByCpf(cliente.getCpf());
         if (existe) {
-            throw new EntityExistsException("Cliente já cadastrado no banco de dados");
+            throw new EntityExistsException("Cliente já cadastrado no banco de dados com este CPF.");
         }
 
-        Cliente cliente = modelMapper.map(clienteDTO, Cliente.class);
         cliente.setStatus(StatusCliente.EM_ANALISE);
         Cliente salvo = clienteRepository.save(cliente);
 

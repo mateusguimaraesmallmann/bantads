@@ -42,6 +42,7 @@ public class AutocadastroSaga implements ISagaStateMachine {
         }
     }
 
+    // Tratativa das falhas
     @Override
     public void handleFailure(SagaInstance instance, SagaReply<?> reply) throws JsonProcessingException {
         AutocadastroSagaState state = objectMapper.readValue(instance.getPayload(), AutocadastroSagaState.class);
@@ -68,7 +69,7 @@ public class AutocadastroSaga implements ISagaStateMachine {
         }
     }
 
-    // --- Passos de Sucesso ---
+    // Passos de Sucesso
     private void handleClienteCreated(SagaInstance instance, AutocadastroSagaState state, SagaReply<?> reply) throws JsonProcessingException {
         logger.info("SAGA {}: Passo 1 (Cliente) OK.", instance.getCorrelationId());
         

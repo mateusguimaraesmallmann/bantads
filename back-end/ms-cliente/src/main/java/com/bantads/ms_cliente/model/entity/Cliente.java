@@ -34,9 +34,10 @@ public class Cliente {
     @Column(nullable = false)
     private String nome;
 
-    @Embedded
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "endereco_id")
     private Endereco endereco;
-
+    
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal salario;
 

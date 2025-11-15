@@ -8,6 +8,11 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+
 @Configuration
 public class RabbitMQConfig {
     public static final String SAGA_EXCHANGE = "saga.exchange";
@@ -68,15 +73,18 @@ public class RabbitMQConfig {
     }
 
     //#region Serializador
+ 
     @Bean
     public MessageConverter jsonMessageConverter() {
-        return new Jackson2JsonMessageConverter();
-    }
+       ObjectMapper rabbitObjectMapper = new ObjectMapper();
+       rabbitObjectMapper.registerModule(new JavaTimeModule());
+       return new Jackson2JsonMessageConverter(rabbitObjectMapper);
+   }
 
     @Bean
-    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory) {
+    public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter jsonMessageConverter) {
         final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setMessageConverter(jsonMessageConverter());
+        rabbitTemplate.setMessageConverter(jsonMessageConverter);
         return rabbitTemplate;
     }
 }
