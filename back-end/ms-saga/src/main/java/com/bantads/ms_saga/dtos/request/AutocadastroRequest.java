@@ -8,8 +8,16 @@ public class AutocadastroRequest {
     private String cpf;
     private String nome;
     private String email;
-    private String telefone;
+    //private String telefone;
     private BigDecimal salario;
 
-    private String senha;
+    //private String senha;
+
+    private String cep;
+    private String logradouro;
+    private String numero;
+    private String complemento;
+    private String bairro;
+    private String cidade;
+    private String estado;
 }

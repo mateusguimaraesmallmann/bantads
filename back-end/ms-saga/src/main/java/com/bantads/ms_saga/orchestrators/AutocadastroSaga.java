@@ -81,7 +81,7 @@ public class AutocadastroSaga implements ISagaStateMachine {
 
         CreateAuthUserCommand authCmd = new CreateAuthUserCommand(
             state.getEmail(), 
-            state.getSenha(),
+            null,
             "CLIENTE"      
         );
         

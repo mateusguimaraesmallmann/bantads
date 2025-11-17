@@ -27,14 +27,15 @@ CREATE TABLE IF NOT EXISTS "bantads"."cliente"."cliente" (
   "nome" VARCHAR(255) NOT NULL,
   "salario" DOUBLE PRECISION DEFAULT 0,
   "telefone" VARCHAR(11),
-  "endereco" INTEGER REFERENCES "bantads"."cliente"."endereco" ("id")
+  "endereco_id" INTEGER REFERENCES "bantads"."cliente"."endereco" ("id")
 );
 
 INSERT INTO "bantads"."cliente"."endereco" (cep, estado, cidade, bairro, logradouro, numero) VALUES
 ('81520260', 'PR', 'Curitiba', 'Jardim das Américas', 'R. Dr. Alcides Vieira Arcoverde', '1225'),
 ('80060000', 'PR', 'Curitiba', 'Centro', 'R. XV de Novembro', '1299');
 
-INSERT INTO "bantads"."cliente"."cliente" (cpf, nome, email, salario, endereco) VALUES
+-- população inicial de clientes
+INSERT INTO "bantads"."cliente"."cliente" (cpf, nome, email, salario, endereco_id) VALUES
 ('12912861012', 'Catharyna', 'cli1@bantads.com.br', 10000, 1),
 ('09506382000', 'Cleuddônio', 'cli2@bantads.com.br', 20000, 1),
 ('85733854057', 'Catianna', 'cli3@bantads.com.br', 3000, 2),

@@ -91,8 +91,9 @@ app.post('/login',  (req, res, next) => {
     authServiceProxy(req,res,next)
 });
 
-//CRIAÇÃO DE CONTA
-app.post('/clientes', (req, res, next) => {
+//CRIAÇÃO DE CONTA (AUTOCADASTRO)
+app.post('/autocadastro', (req, res, next) => {
+    req.url = '/saga/autocadastro'; 
     sagaServiceProxy(req, res, next);
 });
 
