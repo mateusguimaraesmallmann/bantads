@@ -1,4 +1,4 @@
-package com.bantads.ms_saga.controllers.alteracaoDePerfil;
+package com.bantads.ms_saga.controllers.alteracaoPerfilUsuario;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bantads.ms_saga.model.dto.input.EditarClienteDTOIn;
 import com.bantads.ms_saga.model.dto.output.EditarClienteDTOOut;
-import com.bantads.ms_saga.services.alteracaoDePerfil.AlteracaoDePerfilSagaService;
+import com.bantads.ms_saga.services.alteracaoPerfilUsuario.AlteracaoPerfilUsuarioService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -17,14 +17,15 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/alteracao-de-perfil/saga")
 @RequiredArgsConstructor
-public class AlteracaoDePerfilSagaController {
+public class AlteracaoPerfilUsuarioSagaController {
     
-    private final AlteracaoDePerfilSagaService alteracaoDePerfilService;
+    private final AlteracaoPerfilUsuarioService alteracaoPerfilUsuarioService;
 
     @PutMapping("/{cpf}")
     public ResponseEntity<EditarClienteDTOOut> atualizarCliente(@PathVariable String cpf, @RequestBody EditarClienteDTOIn editarClienteDTOIn) {
         
-        EditarClienteDTOOut dto = alteracaoDePerfilService.atualizarCliente(cpf, editarClienteDTOIn);
+        EditarClienteDTOOut dto = alteracaoPerfilUsuarioService.atualizarCliente(cpf, editarClienteDTOIn);
         return ResponseEntity.ok(dto);            
+        
     }
 }
