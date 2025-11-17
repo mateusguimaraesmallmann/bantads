@@ -44,8 +44,15 @@ public class AutocadastroSagaController {
                 request.getCpf(),
                 request.getNome(),
                 request.getEmail(),
-                request.getTelefone(),
-                request.getSalario()
+                //request.getTelefone(),
+                request.getSalario(),
+                request.getCep(),
+                request.getLogradouro(),
+                request.getNumero(),
+                request.getComplemento(),
+                request.getBairro(),
+                request.getCidade(),
+                request.getEstado()
             );
 
             // 4. Enviar o primeiro comando ao RabbitMQ

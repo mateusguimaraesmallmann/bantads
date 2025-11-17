@@ -3,6 +3,8 @@ package com.bantads.ms_cliente.saga;
 import com.bantads.ms_cliente.config.RabbitConfig;
 import com.bantads.ms_cliente.model.dto.output.ClienteDTOOut;
 import com.bantads.ms_cliente.model.entity.Cliente;
+import com.bantads.ms_cliente.model.entity.Endereco; 
+import com.bantads.ms_cliente.model.enums.StatusCliente;
 import com.bantads.ms_cliente.saga.dto.CreateClientCommand;
 import com.bantads.ms_cliente.saga.dto.SagaCommand;
 import com.bantads.ms_cliente.saga.dto.SagaFailureReply;
@@ -54,9 +56,25 @@ public class SagaConsumer {
             logger.info("ms-cliente: Comando 'CreateCliente' recebido. CorrelationId: {}", correlationId);
             
             CreateClientCommand payload = command.getPayload();
-            
-            Cliente cliente = modelMapper.map(payload, Cliente.class);
-            
+
+            Cliente cliente = new Cliente();
+            cliente.setCpf(payload.getCpf());
+            cliente.setNome(payload.getNome());
+            cliente.setEmail(payload.getEmail());
+            cliente.setSalario(payload.getSalario());
+            cliente.setStatus(StatusCliente.EM_ANALISE);
+
+            Endereco endereco = new Endereco();
+            endereco.setCep(payload.getCep());
+            endereco.setLogradouro(payload.getLogradouro());
+            endereco.setNumero(payload.getNumero());
+            endereco.setComplemento(payload.getComplemento());
+            endereco.setBairro(payload.getBairro());
+            endereco.setCidade(payload.getCidade());
+            endereco.setEstado(payload.getEstado());
+
+            cliente.setEndereco(endereco);
+
             ClienteDTOOut clienteCriado = clienteService.criarClientePorSaga(cliente);
 
             reply = SagaReply.success(clienteCriado);

@@ -23,7 +23,7 @@ public class AutocadastroSagaState {
         this.cpf = request.getCpf();
         this.nome = request.getNome();
         this.email = request.getEmail();
-        this.senha = request.getSenha();
+        //this.senha = request.getSenha();
         this.salario = request.getSalario();
     }
 }

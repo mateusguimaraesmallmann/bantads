@@ -18,7 +18,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 public class RabbitConfig {
 
     public static final String COMMANDS_EXCHANGE = "saga.exchange";
-    public static final String REPLIES_EXCHANGE = "saga-replies-exchange";
+    public static final String REPLIES_EXCHANGE = "saga.reply.exchange";
 
     public static final String CLIENTE_COMMAND_QUEUE = "cliente-command-queue";
     
