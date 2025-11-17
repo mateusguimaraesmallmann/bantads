@@ -17,8 +17,8 @@ app.use(helmet());
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(bodyParser.urlencoded({ extended: false }));// parse application/x-www-form-urlencoded
-app.use(bodyParser.json());// parse application/json
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 const authServiceProxy = httpProxy(process.env.MS_AUTH_URL, {
     proxyReqBodyDecorator: function(bodyContent, srcReq) {
