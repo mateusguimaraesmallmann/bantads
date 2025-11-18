@@ -28,7 +28,6 @@ public class SagaInstanceService {
         return repository.save(instance);
     }
 
-
     @Transactional
     public void updateSagaState(SagaInstance instance, SagaStatus newState, Object statePayload) throws JsonProcessingException {
         instance.setCurrentState(newState);
@@ -41,4 +40,5 @@ public class SagaInstanceService {
         instance.setCurrentState(newState);
         repository.save(instance);
     }
+
 }

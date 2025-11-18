@@ -1,4 +1,4 @@
-package com.bantads.ms_saga.client;
+package com.bantads.ms_saga.feign.ClientFeign;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,4 +13,5 @@ public interface ContaClient{
 
     @PostMapping("/contas/recalcular-limite") 
     RecalcularLimiteDTOIn recalcularLimite(@RequestBody RecalcularLimiteDTOOut recalculoDTO);
+
 }

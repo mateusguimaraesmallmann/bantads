@@ -11,10 +11,10 @@ import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
 public class RabbitMQConfig {
+
     public static final String SAGA_EXCHANGE = "saga.exchange";
     public static final String SAGA_REPLY = "saga.reply.exchange";
     public static final String SAGA_REPLY_QUEUE = "saga.reply.queue";
@@ -39,8 +39,6 @@ public class RabbitMQConfig {
     public static final String GERENTE_FIND_MIN_CLIENTS_KEY = "gerente.command.find-min-clients";
 
     public static final String SAGA_REPLY_KEY = "saga.reply.key";
-
-    //#region Beans
 
     @Bean
     public DirectExchange commandsExchange() {
@@ -72,8 +70,6 @@ public class RabbitMQConfig {
                 .with("ms.conta.query.*");
     }
 
-    //#region Serializador
- 
     @Bean
     public MessageConverter jsonMessageConverter() {
        ObjectMapper rabbitObjectMapper = new ObjectMapper();
@@ -87,4 +83,5 @@ public class RabbitMQConfig {
         rabbitTemplate.setMessageConverter(jsonMessageConverter);
         return rabbitTemplate;
     }
+    
 }

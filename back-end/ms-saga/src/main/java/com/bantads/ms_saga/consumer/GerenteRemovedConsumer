@@ -21,4 +21,5 @@ public class GerenteRemovedConsumer {
         sagaProducer.removerGerenteDasContas(event);
         sagaProducer.removerGerenteDosClientes(event);
     }
+
 }
