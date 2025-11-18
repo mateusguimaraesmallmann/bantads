@@ -116,5 +116,9 @@ public class ClienteService {
         // TODO: Adicionar motivo da reprovação (MS Conta)
         return new Object();
     }
+
+    public boolean cpfExists(String cpf) {
+        return clienteRepository.existsByCpf(cpf);
+    }
 }
 

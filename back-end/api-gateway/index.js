@@ -99,6 +99,10 @@ app.post('/autocadastro', (req, res, next) => {
     sagaServiceProxy(req, res, next);
 });
 
+app.get('/clientes/public/check-cpf/:cpf', (req, res, next) => {
+    clienteServiceProxy(req, res, next);
+});
+
 app.get('/clientes', verifyJWT, (req, res, next) => {
     clienteServiceProxy(req, res, next);
 });

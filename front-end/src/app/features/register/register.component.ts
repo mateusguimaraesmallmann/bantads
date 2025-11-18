@@ -8,6 +8,7 @@ import { debounceTime, distinctUntilChanged, filter, switchMap, tap, catchError,
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { RouterLink, Router } from '@angular/router';
 import { NewUser } from '../../core/models/new-client.model';
+import { HttpErrorResponse } from '@angular/common/http';
 
 declare var bootstrap: any;
 
@@ -22,12 +23,13 @@ export class RegisterComponent {
   loadingCep = false;
   cepNotFound = false;
 
+  errorMessage: string | null = null;
+
   constructor(private fb: FormBuilder, private viaCep: ViacepService, private registerService: RegisterService, private router:Router, accountService: AccountService) {
     this.form.get('cep')!.valueChanges.pipe(
       debounceTime(400),
       distinctUntilChanged(),
-      tap(() => { this.cepNotFound = false; }),
-      mapVal => mapVal
+      tap(() => { this.cepNotFound = false; })
     );
     this.setupCepLookup();
   }
@@ -77,6 +79,8 @@ export class RegisterComponent {
 
   //#region Submit
   submit() {
+    this.errorMessage = null;
+
     if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
@@ -102,12 +106,15 @@ export class RegisterComponent {
           successModal.show();
         }
       },
-      error: (err) => {
+      error: (err: HttpErrorResponse) => {
         console.error('Erro no cadastro: ', err);
-        alert('Ocorreu um erro ao enviar o cadastro.');
+
+        if (err.status === 409 || err.status === 503) {
+          this.errorMessage = err.error;
+        } else {
+          this.errorMessage = 'Ocorreu um erro inesperado. Tente novamente mais tarde.';
+        }
       }
     });
-
   }
-
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.ResponseEntity;
 
 import com.bantads.ms_saga.model.dto.input.CadastroClienteDTOIn;
 import com.bantads.ms_saga.model.dto.input.EditarClienteDTOIn;
@@ -20,6 +21,9 @@ public interface ClienteClient {
 
     @GetMapping("/clientes/{cpf}")
     ClienteDTOOut buscarPorCpf(@PathVariable("cpf") String cpf);
+
+    @GetMapping("/clientes/public/check-cpf/{cpf}")
+    ResponseEntity<Void> checkCpfExists(@PathVariable("cpf") String cpf);
 
     @PostMapping("/clientes")
     ClienteDTOOut criarCliente(@RequestBody CadastroClienteDTOIn dto);

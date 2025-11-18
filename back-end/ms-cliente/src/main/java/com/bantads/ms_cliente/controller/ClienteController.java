@@ -32,6 +32,16 @@ public class ClienteController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/public/check-cpf/{cpf}")
+    public ResponseEntity<Void> checkCpfExists(@PathVariable String cpf) {
+        boolean exists = clienteService.cpfExists(cpf); 
+        if (exists) {
+            return ResponseEntity.ok().build(); // CPF existe (200 OK)
+        } else {
+            return ResponseEntity.notFound().build(); // CPF não existe (404 Not Found)
+        }
+    }
+
     @GetMapping
     public ResponseEntity<List<ClienteDTOOut>> listarTodos() {
         List<ClienteDTOOut> lista = clienteService.listarTodos();
