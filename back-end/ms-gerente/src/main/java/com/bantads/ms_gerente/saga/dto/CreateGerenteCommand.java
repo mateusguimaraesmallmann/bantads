@@ -1,14 +1,13 @@
-package com.bantads.ms_saga.dtos.request;
+package com.bantads.ms_gerente.saga.dto;
 
 import lombok.Data;
 
 @Data
-public class CadastroGerenteRequest {
-    
+public class CreateGerenteCommand {
+
     private String cpf;
     private String nome;
     private String email;
     private String telefone;
-    private String senha;
 
 }

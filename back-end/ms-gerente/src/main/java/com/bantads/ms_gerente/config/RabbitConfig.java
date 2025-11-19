@@ -1,4 +1,4 @@
-package com.bantads.ms_cliente.config;
+package com.bantads.ms_gerente.config;
 
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -17,11 +17,11 @@ public class RabbitConfig {
     public static final String COMMANDS_EXCHANGE = "saga.exchange";
     public static final String REPLIES_EXCHANGE = "saga.reply.exchange";
 
-    public static final String CLIENTE_COMMAND_QUEUE = "cliente-command-queue";
+    public static final String GERENTE_COMMAND_QUEUE = "gerente-command-queue";
     
-    public static final String CLIENTE_CREATE_KEY = "cliente.command.create";
+    public static final String GERENTE_CREATE_KEY = "gerente.command.create";
 
-    public static final String CLIENTE_DELETE_KEY = "cliente.command.delete";
+    public static final String GERENTE_DELETE_KEY = "gerente.command.delete";
     
     public static final String SAGA_REPLY_KEY = "saga.reply.key";
 
@@ -32,24 +32,24 @@ public class RabbitConfig {
     }
     
     @Bean
-    public Queue clienteCommandQueue() {
-        return new Queue(CLIENTE_COMMAND_QUEUE, true);
+    public Queue gerenteCommandQueue() {
+        return new Queue(GERENTE_COMMAND_QUEUE, true);
     }
     
     @Bean
-    public Binding clienteCreateBinding(Queue clienteCommandQueue, DirectExchange commandsExchange) {
+    public Binding gerenteCreateBinding(Queue gerenteCommandQueue, DirectExchange commandsExchange) {
         return BindingBuilder
-                .bind(clienteCommandQueue)
+                .bind(gerenteCommandQueue)
                 .to(commandsExchange)
-                .with(CLIENTE_CREATE_KEY);
+                .with(GERENTE_CREATE_KEY);
     }
     
     @Bean
-    public Binding clienteDeleteBinding(Queue clienteCommandQueue, DirectExchange commandsExchange) {
+    public Binding gerenteDeleteBinding(Queue gerenteCommandQueue, DirectExchange commandsExchange) {
         return BindingBuilder
-                .bind(clienteCommandQueue)
+                .bind(gerenteCommandQueue)
                 .to(commandsExchange)
-                .with(CLIENTE_DELETE_KEY);
+                .with(GERENTE_DELETE_KEY);
     }
 
     @Bean
@@ -65,5 +65,5 @@ public class RabbitConfig {
         rabbitTemplate.setMessageConverter(jsonMessageConverter);
         return rabbitTemplate;
     }
-
+    
 }

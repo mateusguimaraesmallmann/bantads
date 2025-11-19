@@ -3,7 +3,7 @@ package com.bantads.ms_saga.controllers;
 import com.bantads.ms_saga.dtos.request.CadastroGerenteRequest;
 import com.bantads.ms_saga.services.InsercaoGerenteSagaService;
 
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +18,7 @@ public class InsercaoGerenteSagaController {
     @Autowired
     private InsercaoGerenteSagaService insercaoGerenteSagaService;
 
-    @PostMapping("/{cpf}")
+    @PostMapping
     public ResponseEntity<?> cadastrarGerente(@RequestBody CadastroGerenteRequest request) {
         return insercaoGerenteSagaService.cadastrarGerente(request);
     }

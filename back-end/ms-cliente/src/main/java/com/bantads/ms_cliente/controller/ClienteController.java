@@ -36,9 +36,9 @@ public class ClienteController {
     public ResponseEntity<Void> checkCpfExists(@PathVariable String cpf) {
         boolean exists = clienteService.cpfExists(cpf); 
         if (exists) {
-            return ResponseEntity.ok().build(); // CPF existe (200 OK)
+            return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.notFound().build(); // CPF não existe (404 Not Found)
+            return ResponseEntity.notFound().build();
         }
     }
 

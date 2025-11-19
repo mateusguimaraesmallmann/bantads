@@ -35,6 +35,7 @@ public class RabbitMQConfig {
     public static final String CONTA_REASSIGN_GERENTE_KEY = "conta.command.reassign-gerente";
 
     //Gerente
+    public static final String GERENTE_CREATE_KEY = "gerente.command.create";
     public static final String GERENTE_DELETE_KEY = "gerente.command.delete";
     public static final String GERENTE_FIND_MIN_CLIENTS_KEY = "gerente.command.find-min-clients";
 

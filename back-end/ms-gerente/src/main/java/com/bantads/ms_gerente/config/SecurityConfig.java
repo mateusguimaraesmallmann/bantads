@@ -1,4 +1,4 @@
-package com.bantads.ms_cliente.config;
+package com.bantads.ms_gerente.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

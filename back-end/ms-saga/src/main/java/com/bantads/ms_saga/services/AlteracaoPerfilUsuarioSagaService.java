@@ -6,25 +6,14 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 
 import com.bantads.ms_saga.config.RabbitMQConfig;
-import com.bantads.ms_saga.controllers.AlteracaoPerfilUsuarioSagaController;
-import com.bantads.ms_saga.controllers.AutocadastroSagaController;
-import com.bantads.ms_saga.dtos.commands.CreateClientCommand;
 import com.bantads.ms_saga.dtos.request.AlteracaoPerfilRequest;
-import com.bantads.ms_saga.dtos.request.AutocadastroRequest;
 import com.bantads.ms_saga.dtos.saga.SagaCommand;
 import com.bantads.ms_saga.dtos.state.AlteracaoPerfilSagaState;
-import com.bantads.ms_saga.dtos.state.AutocadastroSagaState;
 import com.bantads.ms_saga.entity.SagaInstance;
-import com.bantads.ms_saga.feign.ClientFeign.ClienteClient;
-
-import feign.FeignException;
 
 @Service
 public class AlteracaoPerfilUsuarioSagaService {
@@ -33,7 +22,6 @@ public class AlteracaoPerfilUsuarioSagaService {
 
     @Autowired private SagaInstanceService sagaService;
     @Autowired private RabbitMQSender sender;
-    @Autowired private ClienteClient clienteClient;
 
     public ResponseEntity<?> alterarPerfil(String cpf, AlteracaoPerfilRequest request) {
         

@@ -20,6 +20,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 
                 .requestMatchers(HttpMethod.POST, "/saga/autocadastro/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/saga/insercao-gerente/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/saga/remocao-gerente/**").permitAll()
                 .anyRequest().authenticated() 
             );
 

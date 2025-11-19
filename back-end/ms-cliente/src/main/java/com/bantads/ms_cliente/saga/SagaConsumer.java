@@ -10,7 +10,6 @@ import com.bantads.ms_cliente.saga.dto.SagaCommand;
 import com.bantads.ms_cliente.saga.dto.SagaFailureReply;
 import com.bantads.ms_cliente.saga.dto.SagaReply;
 import com.bantads.ms_cliente.service.ClienteService;
-import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -29,10 +28,6 @@ public class SagaConsumer {
 
     @Autowired
     private ClienteService clienteService;
-
-    @Autowired
-    private ModelMapper modelMapper;
-
 
     @RabbitListener(queues = RabbitConfig.CLIENTE_COMMAND_QUEUE)
     public void handleSagaCommand(SagaCommand<CreateClientCommand> command, Message message) {
@@ -81,14 +76,17 @@ public class SagaConsumer {
             logger.info("ms-cliente: Cliente criado com SUCESSO. Enviando resposta. CorrelationId: {}", correlationId);
 
         } catch (Exception e) {
+            
             logger.error("ms-cliente: FALHA ao criar cliente. Enviando resposta. CorrelationId: {}. Erro: {}", correlationId, e.getMessage());
             SagaFailureReply failure = new SagaFailureReply(
                 "ms-cliente",
                 e.getMessage(),
                 e.getClass().getSimpleName()
             );
+
             reply = SagaReply.failure(failure);
         }
+
         rabbitTemplate.convertAndSend(
             RabbitConfig.REPLIES_EXCHANGE, 
             RabbitConfig.SAGA_REPLY_KEY,   
@@ -99,4 +97,5 @@ public class SagaConsumer {
             }
         );
     }
+
 }

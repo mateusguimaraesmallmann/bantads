@@ -1,4 +1,4 @@
-package com.bantads.ms_cliente.saga.dto;
+package com.bantads.ms_gerente.saga.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -5,8 +5,9 @@ import java.util.stream.Collectors;
 
 import com.bantads.ms_gerente.model.dto.output.GerenteRemovidoEvent;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +16,7 @@ import com.bantads.ms_gerente.model.dto.input.EditarGerenteDTOIn;
 import com.bantads.ms_gerente.model.dto.output.GerenteDTOOut;
 import com.bantads.ms_gerente.model.entity.Gerente;
 import com.bantads.ms_gerente.repository.GerenteRepository;
+import com.bantads.ms_gerente.saga.SagaConsumer;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -23,12 +25,13 @@ import jakarta.persistence.EntityNotFoundException;
 @RequiredArgsConstructor
 public class GerenteService {
 
-    @Autowired
+    private static final Logger logger = LoggerFactory.getLogger(GerenteService.class);
+
     private RabbitTemplate rabbitTemplate;
     private final GerenteRepository gerenteRepository;
     private final ModelMapper modelMapper;
 
-        public GerenteDTOOut criarGerente(CriarGerenteDTOIn gerenteDTO) {
+    public GerenteDTOOut criarGerente(CriarGerenteDTOIn gerenteDTO) {
         boolean existe = gerenteRepository.existsByCpf(gerenteDTO.getCpf());
         if (existe) {
             throw new EntityExistsException("Gerente já cadastrado no banco de dados");
@@ -36,6 +39,9 @@ public class GerenteService {
 
         Gerente gerente = modelMapper.map(gerenteDTO, Gerente.class);
         Gerente salvo = gerenteRepository.save(gerente);
+
+        gerenteRepository.flush();
+        logger.info(">>> FLUSH REALIZADO, entidade ID={} gravada!", salvo.getId());
 
         return modelMapper.map(salvo, GerenteDTOOut.class);
     }
@@ -71,4 +77,9 @@ public class GerenteService {
         rabbitTemplate.convertAndSend("GERENTE_REMOVIDO_QUEUE", event);
 
     }
+
+    public boolean cpfExists(String cpf) {
+        return gerenteRepository.existsByCpf(cpf);
+    }
+
 }

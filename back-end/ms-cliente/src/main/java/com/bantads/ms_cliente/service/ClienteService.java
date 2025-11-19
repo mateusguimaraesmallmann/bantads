@@ -3,7 +3,6 @@ package com.bantads.ms_cliente.service;
 import com.bantads.ms_cliente.feign.ContaClient;
 import com.bantads.ms_cliente.feign.dto.ContaCriadaDTOOut;
 import com.bantads.ms_cliente.feign.dto.CriarContaDTOIn;
-import com.bantads.ms_cliente.model.dto.input.CriarClienteDTOIn;
 import com.bantads.ms_cliente.model.dto.input.EditarClienteDTOIn;
 import com.bantads.ms_cliente.model.dto.output.ClienteAprovadoDTOOut;
 import com.bantads.ms_cliente.model.dto.output.ClienteDTOOut;
@@ -120,5 +119,5 @@ public class ClienteService {
     public boolean cpfExists(String cpf) {
         return clienteRepository.existsByCpf(cpf);
     }
-}
 
+}

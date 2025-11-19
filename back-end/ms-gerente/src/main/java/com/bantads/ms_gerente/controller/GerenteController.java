@@ -21,13 +21,6 @@ public class GerenteController {
 
     private final GerenteService gerenteService;
 
-    @PostMapping
-    public ResponseEntity<GerenteDTOOut> criarGerente(
-            @Valid @RequestBody CriarGerenteDTOIn criarGerenteDTOIn) {
-        GerenteDTOOut dto = gerenteService.criarGerente(criarGerenteDTOIn);
-        return ResponseEntity.ok(dto);
-    }
-
     @GetMapping("/{cpf}")
     public ResponseEntity<GerenteDTOOut> buscarPorCpf(@PathVariable String cpf) {
         GerenteDTOOut dto = gerenteService.buscarPorCpf(cpf);
@@ -40,11 +33,26 @@ public class GerenteController {
         return ResponseEntity.ok(lista);
     }
 
+    @GetMapping("/public/check-cpf/{cpf}")
+    public ResponseEntity<Void> checkCpfExists(@PathVariable String cpf) {
+        boolean exists = gerenteService.cpfExists(cpf); 
+        if (exists) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<GerenteDTOOut> criarGerente(@Valid @RequestBody CriarGerenteDTOIn criarGerenteDTOIn) {
+        GerenteDTOOut dto = gerenteService.criarGerente(criarGerenteDTOIn);
+        return ResponseEntity.ok(dto);
+    }
+
     @PutMapping("/{cpf}")
-    public ResponseEntity<GerenteDTOOut> atualizarGerente(
-            @PathVariable String cpf,
-            @Valid @RequestBody EditarGerenteDTOIn editarGerenteDTOIn) {
+    public ResponseEntity<GerenteDTOOut> atualizarGerente(@PathVariable String cpf, @Valid @RequestBody EditarGerenteDTOIn editarGerenteDTOIn) {
         GerenteDTOOut dto = gerenteService.atualizarGerente(cpf, editarGerenteDTOIn);
         return ResponseEntity.ok(dto);
     }
+
 }

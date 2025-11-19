@@ -10,6 +10,10 @@ import lombok.Setter;
 @Setter
 public class CriarGerenteDTOIn {
 
+    @Schema(description = "CPF do gerente (somente números)", example = "12345678901")
+    @NotBlank(message = "O CPF é obrigatório")
+    private String cpf;
+
     @Schema(description = "Nome completo do gerente", example = "Geniéve da Silva")
     @NotBlank(message = "O nome é obrigatório")
     private String nome;
@@ -19,11 +23,8 @@ public class CriarGerenteDTOIn {
     @Email(message = "O e-mail deve ser válido")
     private String email;
 
-    @Schema(description = "CPF do gerente (somente números)", example = "12345678901")
-    @NotBlank(message = "O CPF é obrigatório")
-    private String cpf;
-
     @Schema(description = "Telefone do gerente com DDD", example = "41987654321")
     @NotBlank(message = "O telefone é obrigatório")
     private String telefone;
+
 }
