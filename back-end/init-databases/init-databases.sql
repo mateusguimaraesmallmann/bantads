@@ -1,8 +1,3 @@
-CREATE DATABASE cliente;
-CREATE DATABASE conta;
-CREATE DATABASE gerente;
-CREATE DATABASE saga;
-
 CREATE DATABASE bantads;
 \connect bantads;
 
@@ -87,11 +82,11 @@ CREATE TABLE IF NOT EXISTS "bantads"."gerente"."gerente" (
   "telefone" VARCHAR(11)
 );
 
-INSERT INTO "bantads"."gerente"."gerente" (cpf, nome, email) VALUES
-('98574307084', 'Geniéve', 'ger1@bantads.com.br'),
-('64065268052', 'Godophredo', 'ger2@bantads.com.br'),
-('23862179060', 'Gyândula', 'ger3@bantads.com.br'),
-('40501740066', 'Adamântio', 'adm1@bantads.com.br')
+INSERT INTO "bantads"."gerente"."gerente" (cpf, nome, email, telefone) VALUES
+('98574307084', 'Geniéve', 'ger1@bantads.com.br', '66987804534'),
+('64065268052', 'Godophredo', 'ger2@bantads.com.br', '66989804534'),
+('23862179060', 'Gyândula', 'ger3@bantads.com.br', '66987805684'),
+('40501740066', 'Adamântio', 'adm1@bantads.com.br', '66945784534')
 ON CONFLICT (cpf) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS "bantads"."saga"."saga_instance" (

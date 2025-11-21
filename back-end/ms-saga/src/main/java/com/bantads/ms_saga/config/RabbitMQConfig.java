@@ -11,7 +11,6 @@ import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Configuration
 public class RabbitMQConfig {
@@ -35,12 +34,11 @@ public class RabbitMQConfig {
     public static final String CONTA_REASSIGN_GERENTE_KEY = "conta.command.reassign-gerente";
 
     //Gerente
+    public static final String GERENTE_CREATE_KEY = "gerente.command.create";
     public static final String GERENTE_DELETE_KEY = "gerente.command.delete";
     public static final String GERENTE_FIND_MIN_CLIENTS_KEY = "gerente.command.find-min-clients";
 
     public static final String SAGA_REPLY_KEY = "saga.reply.key";
-
-    //#region Beans
 
     @Bean
     public DirectExchange commandsExchange() {
@@ -60,20 +58,18 @@ public class RabbitMQConfig {
     @Bean
     public Binding sagaReplyBinding() {
         return BindingBuilder
-        .bind(sagaReplyQueue())
-        .to(repliesExchange())
-        .with(SAGA_REPLY);
+            .bind(sagaReplyQueue())
+            .to(repliesExchange())
+            .with(SAGA_REPLY);
     }
 
     @Bean
     Binding bindContaQuery(Queue msContaQueryQueue, TopicExchange sagaExchange) {
         return BindingBuilder.bind(msContaQueryQueue)
-                .to(sagaExchange)
-                .with("ms.conta.query.*");
+            .to(sagaExchange)
+            .with("ms.conta.query.*");
     }
 
-    //#region Serializador
- 
     @Bean
     public MessageConverter jsonMessageConverter() {
        ObjectMapper rabbitObjectMapper = new ObjectMapper();
@@ -87,4 +83,5 @@ public class RabbitMQConfig {
         rabbitTemplate.setMessageConverter(jsonMessageConverter);
         return rabbitTemplate;
     }
+
 }

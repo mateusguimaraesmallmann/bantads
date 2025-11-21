@@ -1,8 +1,6 @@
 package com.bantads.ms_saga.model.dto.output;
 
 import lombok.Data;
-import lombok.Setter;
-import lombok.Getter;
 
 @Data
 public class AprovarClienteDTOOut {

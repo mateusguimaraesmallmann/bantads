@@ -25,6 +25,7 @@ public class SagaOrchestrator {
     
     @Autowired private AutocadastroSaga autocadastroSaga;
     @Autowired private AlteracaoPerfilSaga alteracaoPerfilSaga;
+    @Autowired private InsercaoGerenteSaga insercaoGerenteSaga;
 
     @RabbitListener(queues = RabbitMQConfig.SAGA_REPLY_QUEUE)
     public void handleReply(Message message) {
@@ -89,6 +90,8 @@ public class SagaOrchestrator {
                 return autocadastroSaga;
             case "ALTERACAO_PERFIL":
                  return alteracaoPerfilSaga;
+            case "CADASTRO_GERENTE":
+                 return insercaoGerenteSaga;
             default:
                 throw new IllegalArgumentException("Nenhum SAGA handler definido para o tipo: " + sagaType);
         }

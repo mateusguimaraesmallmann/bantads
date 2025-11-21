@@ -1,4 +1,4 @@
-package com.bantads.ms_saga.client;
+package com.bantads.ms_saga.feign.cliente;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,10 +11,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.bantads.ms_saga.model.dto.input.CadastroClienteDTOIn;
 import com.bantads.ms_saga.model.dto.input.EditarClienteDTOIn;
-import com.bantads.ms_saga.model.dto.output.CadastroClienteDTOOut;
 import com.bantads.ms_saga.model.dto.output.ClienteDTOOut;
 import com.bantads.ms_saga.model.dto.output.EditarClienteDTOOut;
-import com.bantads.ms_saga.model.dto.output.GerenteDTOOut;
 
 @FeignClient(name = "ms-cliente", url = "${ms.cliente.url}")
 public interface ClienteClient {

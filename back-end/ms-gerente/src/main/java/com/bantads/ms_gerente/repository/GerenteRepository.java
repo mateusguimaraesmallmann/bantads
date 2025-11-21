@@ -11,4 +11,5 @@ public interface GerenteRepository extends JpaRepository<Gerente, UUID> {
     Optional<Gerente> findByCpf(String cpf);
 
     boolean existsByCpf(String cpf);
+
 }
