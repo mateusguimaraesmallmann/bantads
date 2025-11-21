@@ -1,4 +1,4 @@
-package com.bantads.ms_conta.controller.command;
+package com.bantads.ms_conta.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +15,7 @@ import com.bantads.ms_conta.model.dto.output.ContaCriadaDTOOut;
 import com.bantads.ms_conta.model.dto.output.DepositarSacarDTOOut;
 import com.bantads.ms_conta.model.dto.output.RecalcularLimiteDTOOut;
 import com.bantads.ms_conta.model.dto.output.TransferirDTOOut;
-import com.bantads.ms_conta.service.command.ContaCommandService;
+import com.bantads.ms_conta.service.ContaCommandService;
 
 import lombok.RequiredArgsConstructor;
 

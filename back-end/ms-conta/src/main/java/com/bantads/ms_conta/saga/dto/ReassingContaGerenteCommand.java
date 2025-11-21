@@ -1,15 +1,14 @@
-package com.bantads.ms_conta.model.dto.output;
+package com.bantads.ms_conta.saga.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ContaPorGerenteDTOOut {
+@AllArgsConstructor
+public class ReassingContaGerenteCommand {
     
     private Long gerenteId;
-    private long totalContas;
-
+    
 }

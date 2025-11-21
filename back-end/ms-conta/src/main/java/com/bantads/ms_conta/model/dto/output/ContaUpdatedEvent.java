@@ -1,15 +1,16 @@
 package com.bantads.ms_conta.model.dto.output;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
-public class ContaPorGerenteDTOOut {
+@AllArgsConstructor
+public class ContaUpdatedEvent {
     
+    private Long id;
+    private String numero;
     private Long gerenteId;
-    private long totalContas;
 
 }

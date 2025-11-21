@@ -14,6 +14,9 @@ public class InsercaoGerenteSagaState {
     private String email;
     private String telefone;
     private String senha;
+
+    private Long gerenteId;
+    private Long contaId;
  
     public InsercaoGerenteSagaState(CadastroGerenteRequest request) {
         this.cpf = request.getCpf();

@@ -40,9 +40,6 @@ public class GerenteService {
         Gerente gerente = modelMapper.map(gerenteDTO, Gerente.class);
         Gerente salvo = gerenteRepository.save(gerente);
 
-        gerenteRepository.flush();
-        logger.info(">>> FLUSH REALIZADO, entidade ID={} gravada!", salvo.getId());
-
         return modelMapper.map(salvo, GerenteDTOOut.class);
     }
     

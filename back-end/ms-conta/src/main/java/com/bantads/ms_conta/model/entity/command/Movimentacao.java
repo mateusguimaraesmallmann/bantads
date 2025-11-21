@@ -1,4 +1,4 @@
-package com.bantads.ms_conta.model.entity.jpa;
+package com.bantads.ms_conta.model.entity.command;
 
 import com.bantads.ms_conta.model.enums.TipoMovimentacao;
 import jakarta.persistence.*;
@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "movimentacao")
+@Table(name = "movimentacao", schema = "contacomando")
 public class Movimentacao {
 
     @Id
@@ -39,4 +39,5 @@ public class Movimentacao {
 
     private String contaOrigem;
     private String contaDestino;
+
 }

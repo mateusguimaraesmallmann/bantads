@@ -1,6 +1,7 @@
-package com.bantads.ms_conta.model.entity.jpa;
+package com.bantads.ms_conta.model.entity.command;
 
 import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "conta")
+@Table(name = "conta", schema = "contacomando")
 public class Conta {
 
     @Id
@@ -52,4 +53,5 @@ public class Conta {
         this.idGerente = dto.getIdGerente();
         this.dataCriacao = LocalDateTime.now();
     }
+
 }

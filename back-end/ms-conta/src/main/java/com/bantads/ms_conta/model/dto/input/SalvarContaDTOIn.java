@@ -3,14 +3,13 @@ package com.bantads.ms_conta.model.dto.input;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.Getter;
 
 import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
-@Schema(name = "SalvarContaMongoDTOIn", description = "Representa os dados de criação de uma conta bancária")
-public final class SalvarContaMongoDTOIn {
+@Schema(name = "SalvarContaDTOIn", description = "Representa os dados de criação de uma conta bancária")
+public class SalvarContaDTOIn {
 
     @Schema(description = "Saldo inicial da conta", example = "1000.00")
     private BigDecimal saldoInicial;

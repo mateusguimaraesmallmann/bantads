@@ -47,46 +47,37 @@ public class InsercaoGerenteSagaService {
             try {
                 logger.info("Etapa 2 (Assíncrona): Iniciando SAGA de Cadastro do Gerente...");
 
-                // 1. Criar o estado inicial do SAGA
                 InsercaoGerenteSagaState state = new InsercaoGerenteSagaState(request);
 
-                // 2. Persistir a instância do SAGA no banco
                 SagaInstance instance = sagaService.createSaga("CADASTRO_GERENTE", state);
                 logger.info("SAGA de Cadastro do Gerente. CorrelationId: {}", instance.getCorrelationId());
 
-                // 3. Criar o primeiro comando (Criar Gerente)
                 CreateGerenteCommand gerenteCmd = new CreateGerenteCommand(
                         request.getCpf(),
                         request.getNome(),
                         request.getEmail(),
                         request.getTelefone());
 
-                // 4. Enviar o primeiro comando ao RabbitMQ
                 sender.sendSagaCommand(
                         RabbitMQConfig.GERENTE_CREATE_KEY,
                         new SagaCommand<>(gerenteCmd),
                         instance.getCorrelationId());
 
-                // 5. Retornar "Created"
-                return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+                return ResponseEntity.status(HttpStatus.OK).body(Map.of(
                         "message", "Cadastro do gerente está sendo processado.",
                         "correlationId", instance.getCorrelationId()));
 
             } catch (Exception sagaException) {
-                // Erro ao TENTAR INICIAR o saga (ex: RabbitMQ down, DB do Saga down)
-                logger.error("Erro ao INICIAR o SAGA de Cadastro do Gerente: {}", sagaException.getMessage(),
-                        sagaException);
-
+                logger.error("Erro ao INICIAR o SAGA de Cadastro do Gerente: {}", sagaException.getMessage(), sagaException);
                 return ResponseEntity
                         .status(HttpStatus.INTERNAL_SERVER_ERROR)
                         .body("Erro interno ao iniciar o processo de cadastro.");
             }
 
         } catch (FeignException e) {
-            // Outro erro do Feign (ex: ms-cliente está offline)
             logger.error("Erro de comunicação com ms-gerente durante a pré-validação: {}", e.getMessage(), e);
             return ResponseEntity
-                    .status(HttpStatus.SERVICE_UNAVAILABLE) // 503
+                    .status(HttpStatus.SERVICE_UNAVAILABLE)
                     .body("Serviço de validação indisponível. Tente novamente mais tarde.");
 
         }

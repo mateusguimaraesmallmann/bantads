@@ -1,8 +1,9 @@
-package com.bantads.ms_conta.controller.query;
+package com.bantads.ms_conta.controller;
 
 import com.bantads.ms_conta.model.dto.output.ExtratoDTOOut;
 import com.bantads.ms_conta.model.dto.output.SaldoDTOOut;
-import com.bantads.ms_conta.service.query.ContaQueryService;
+import com.bantads.ms_conta.service.ContaQueryService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
