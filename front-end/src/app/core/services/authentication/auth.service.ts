@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Login } from '../../models/login.model';
 import { User } from '../../models/user.model';
 
-const BASE_URL = "http://localhost:3000/users"
+const BASE_URL = "http://localhost:3000"
 
 
 @Injectable({
@@ -26,40 +26,21 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  //doLogin(login: Login) : Observable<any>{
-  //console.log(login)
-  //return this.http.post<Login>(BASE_URL,
-    //JSON.stringify(login),
-    //this.httpOptions).pipe(
-      //map((resp: HttpResponse<Login>) => {
-        //if(resp != null){
-          //console.log(resp.body)
-          //return resp.body
-        //}else{
-          //return null;
-        //}
-      //}),
-      //catchError((err) => {
-        //return throwError(() => err);
-      //}))
-  //}
-
   doLogin(login: Login): Observable<any> {
-    return this.http.get<User[]>(`${BASE_URL}?email=${login.email}&password=${login.password}`).pipe(
-      map(users => {
-        if (users && users.length > 0){
-          const user = users[0];
-          if (user.status != "ACTIVE"){
-            console.log(user)
-            return alert("Usuário desativado ou ainda não foi aprovado.");
-          }
-          localStorage.setItem('user', JSON.stringify(user));
-          return user;
-        }
-        alert("Usuário ou senha inválidos!")
-        return throwError(() => new Error('Usuário ou senha inválidos'));
-      })
-    )
+      return this.http.post<any>(`${BASE_URL}/login`, {
+          login: login.email,
+          senha: login.password
+      }).pipe(
+          map(response => {
+              if (response && response.auth && response.token) {
+                  localStorage.setItem('token', response.token);
+                  localStorage.setItem('user', JSON.stringify(response.data));
+                  return response.data;
+              }
+              alert("Resposta inválida do servidor.")
+              return throwError(() => new Error('Resposta inválida do servidor'));
+          }),
+      );
   }
 
   logout() {

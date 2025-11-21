@@ -26,8 +26,8 @@ const authServiceProxy = httpProxy(process.env.MS_AUTH_URL, {
     proxyReqBodyDecorator: function(bodyContent, srcReq) {
         try {
             retBody = {};
-            retBody.login = bodyContent.login || bodyContent.user || bodyContent.email;
-            retBody.login = bodyContent.senha || bodyContent.password;
+            retBody.email = bodyContent.login || bodyContent.user || bodyContent.email;
+            retBody.senha = bodyContent.senha || bodyContent.password;
             bodyContent = retBody;
         } catch (e) {
             console.log(' ERRO: ', e);
