@@ -13,6 +13,7 @@ CREATE SCHEMA IF NOT EXISTS gerente;
 CREATE SCHEMA IF NOT EXISTS saga;
 
 CREATE TYPE enum_tipo_movimentacao AS ENUM ('depósito', 'saque', 'transferência');
+CREATE TYPE enum_status_conta AS ENUM ('active', 'inactive', 'rejected', 'pending');
 
 CREATE TABLE IF NOT EXISTS "bantads"."cliente"."endereco" (
   "id" SERIAL PRIMARY KEY,
@@ -50,11 +51,14 @@ ON CONFLICT (cpf) DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS "bantads"."contacomando"."conta" (
   "id" SERIAL PRIMARY KEY,
+  "numero" integer UNIQUE,
   "cliente_id" integer UNIQUE NOT NULL,
   "gerente_id" integer NOT NULL,
   "data_criacao" timestamptz NOT NULL DEFAULT NOW(),
   "saldo" DOUBLE PRECISION DEFAULT 0,
-  "limite" integer
+  "limite" integer,
+  "motivo_rejeicao" VARCHAR(255),
+  "status" enum_status_conta NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "bantads"."contacomando"."movimentacoes" (
@@ -70,13 +74,15 @@ CREATE TABLE IF NOT EXISTS "bantads"."contaleitura"."conta" (
   "id" integer PRIMARY KEY,
   "cliente_id" integer NOT NULL,
   "gerente_id" integer NOT NULL,
+  "numero" integer UNIQUE,
   "data_criacao" timestamptz,
   "saldo" DOUBLE PRECISION DEFAULT 0,
   "limite" integer,
   "data_movimentacao" timestamptz,
   "tipo" varchar(10),
   "conta_destino" integer,
-  "valor" DOUBLE PRECISION
+  "valor" DOUBLE PRECISION,
+  "status" enum_status_conta NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "bantads"."gerente"."gerente" (

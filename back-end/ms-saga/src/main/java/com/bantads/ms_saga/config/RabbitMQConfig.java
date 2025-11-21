@@ -28,9 +28,10 @@ public class RabbitMQConfig {
 
     //Auth
     public static final String AUTH_CREATE_KEY = "auth.command.create";
-    public static final String AUTH_DELETE_KEY = "auth.command.delete";
+    public static final String AUTH_DISABLE_KEY = "auth.command.disable";
 
     //Conta
+    public static final String CONTA_CREATE_KEY = "conta.command.create";
     public static final String CONTA_UPDATE_LIMITE_KEY = "conta.command.update-limite";
     public static final String CONTA_REASSIGN_GERENTE_KEY = "conta.command.reassign-gerente";
 

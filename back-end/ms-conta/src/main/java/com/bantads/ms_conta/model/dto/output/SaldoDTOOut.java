@@ -14,7 +14,7 @@ import java.util.List;
 public final class SaldoDTOOut {
 
     @Schema(description = "Número único da conta", example = "12345")
-    private Long conta;
+    private String conta;
 
     @Schema(description = "Saldo atual da conta", example = "1500.50")
     private BigDecimal saldo;

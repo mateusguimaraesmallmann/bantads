@@ -1,33 +1,34 @@
 package com.bantads.ms_auth.models;
 
-import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.Data;
 import java.util.Collection;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 
 import com.bantads.ms_auth.enums.Tipo;
+import com.bantads.ms_auth.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Data
 @Setter 
 @Getter
 @NoArgsConstructor 
 @AllArgsConstructor
-@Table(name = "users")
-@Entity(name = "users")
+@Document(collection = "users")
 public class User implements UserDetails {
 
     @Id
@@ -38,12 +39,16 @@ public class User implements UserDetails {
     private String email;
 
     @JsonIgnore
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String password;
     
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Tipo role;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -66,6 +71,6 @@ public class User implements UserDetails {
     
     @Override public boolean isCredentialsNonExpired() { return true; }
     
-    @Override public boolean isEnabled() { return true; }
+    public String userStatus() { return this.status.toString(); }
     
 }

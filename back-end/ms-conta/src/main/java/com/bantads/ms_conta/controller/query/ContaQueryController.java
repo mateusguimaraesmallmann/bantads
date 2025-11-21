@@ -22,10 +22,10 @@ public class ContaQueryController {
         return ResponseEntity.ok(contaService.buscarSaldo(numero));
     }
 
-    @GetMapping("/{numero}/extrato")
-    public ResponseEntity<ExtratoDTOOut> gerarExtrato(
-            @PathVariable Long numero
-    ) {
-        return ResponseEntity.ok(contaService.buscarExtrato(numero));
-    }
+    // @GetMapping("/{numero}/extrato")
+    // public ResponseEntity<ExtratoDTOOut> gerarExtrato(
+    //         @PathVariable Long numero
+    // ) {
+    //     return ResponseEntity.ok(contaService.buscarExtrato(numero));
+    // }
 }

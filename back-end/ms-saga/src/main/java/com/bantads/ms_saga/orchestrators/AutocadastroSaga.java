@@ -2,6 +2,7 @@ package com.bantads.ms_saga.orchestrators;
 
 import com.bantads.ms_saga.config.RabbitMQConfig;
 import com.bantads.ms_saga.dtos.commands.CreateAuthUserCommand;
+import com.bantads.ms_saga.dtos.commands.CreateContaCommand;
 import com.bantads.ms_saga.dtos.saga.SagaCommand;
 import com.bantads.ms_saga.dtos.saga.SagaReply;
 import com.bantads.ms_saga.dtos.saga.SagaStatus;
@@ -81,8 +82,9 @@ public class AutocadastroSaga implements ISagaStateMachine {
 
         CreateAuthUserCommand authCmd = new CreateAuthUserCommand(
             state.getEmail(), 
-            null,
-            "CLIENTE"      
+            "",
+            "CLIENTE",
+            "PENDING"   
         );
         
         logger.info("SAGA {}: Enviando Passo 2 (Auth).", instance.getCorrelationId());
@@ -101,8 +103,18 @@ public class AutocadastroSaga implements ISagaStateMachine {
              state.setAuthUserId(id);
         }
         
+        CreateContaCommand contaCmd = new CreateContaCommand(
+            state.getClienteId(),
+            state.getSalario()
+        );
+        
+        logger.info("SAGA {}: Enviando Passo 3 (Conta).", instance.getCorrelationId());
+        sender.sendSagaCommand(
+            RabbitMQConfig.CONTA_CREATE_KEY, 
+            new SagaCommand<>(contaCmd),
+            instance.getCorrelationId()
+        );
         sagaService.updateSagaState(instance, SagaStatus.SUCCEEDED, state);
-        logger.info("SAGA {} CONCLUÍDO COM SUCESSO.", instance.getCorrelationId());
         
     }
 }

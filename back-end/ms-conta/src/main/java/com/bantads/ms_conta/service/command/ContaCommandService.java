@@ -8,11 +8,11 @@ import java.util.Random;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import com.bantads.ms_conta.model.dto.cqrs.ContaCqrsDTO;
 import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
 import com.bantads.ms_conta.model.dto.input.DepositarSacarDTOIn;
 import com.bantads.ms_conta.model.dto.input.MudarGerenteDTOIn;
 import com.bantads.ms_conta.model.dto.input.RecalcularLimiteDTOIn;
-import com.bantads.ms_conta.model.dto.input.SalvarContaMongoDTOIn;
 import com.bantads.ms_conta.model.dto.input.TransferirDTOIn;
 import com.bantads.ms_conta.model.dto.output.ContaCriadaDTOOut;
 import com.bantads.ms_conta.model.dto.output.DepositarSacarDTOOut;
@@ -20,10 +20,12 @@ import com.bantads.ms_conta.model.dto.output.RecalcularLimiteDTOOut;
 import com.bantads.ms_conta.model.dto.output.TransferirDTOOut;
 import com.bantads.ms_conta.model.entity.jpa.Conta;
 import com.bantads.ms_conta.model.entity.jpa.Movimentacao;
+import com.bantads.ms_conta.model.enums.Status;
 import com.bantads.ms_conta.model.enums.TipoMovimentacao;
 import com.bantads.ms_conta.queue.producer.ContaProducer;
 import com.bantads.ms_conta.repository.jpa.ContaJpaRepository;
 import com.bantads.ms_conta.repository.jpa.MovimentacaoJpaRepository;
+import com.bantads.ms_conta.saga.dto.CreateContaCommand;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -39,40 +41,52 @@ public class ContaCommandService {
     private final ContaProducer contaProducer;
     private final ModelMapper modelMapper;
 
-    public ContaCriadaDTOOut criarConta(CriarContaDTOIn contaDTOIn) {
-        boolean existe = contaJpaRepository.existsByIdCliente(contaDTOIn.getIdCliente());
-        if (existe) {
-            throw new EntityExistsException("Conta já cadastrada no banco de dados para esse cliente");
+    //region Criar Conta
+    @Transactional
+    public ContaCriadaDTOOut criarConta(CreateContaCommand command) {
+        BigDecimal limite = BigDecimal.ZERO;
+        if (command.getSalario() != null && command.getSalario().compareTo(new BigDecimal("2000.00")) >= 0){
+            limite = command.getSalario().divide(new BigDecimal(2));
         }
 
-        String numero;
-        do {
-            numero = gerarNumeroConta();
-        } while (contaJpaRepository.existsByNumero(numero));
+        //Verifica se já existe uma conta para o cliente
+        Optional<Conta> contaExistenteOpt = contaJpaRepository.findByIdCliente(command.getIdCliente());
+        Conta contaSalva;
+        if (contaExistenteOpt.isPresent()){
+            Conta contaExistente = contaExistenteOpt.get();
+            contaExistente.setLimite(limite);
 
-        Conta conta = new Conta(contaDTOIn);
-        conta.setNumero(numero);
+            //Altera o status da conta para pendente e limpa o motivo antigo da reprovação
+            if (contaExistente.getStatus() == Status.REJECTED || contaExistente.getStatus() == Status.INACTIVE){
+                contaExistente.setStatus(Status.PENDING);
+                contaExistente.setMotivoReprovacao(null);
+            }
 
-        Conta salvo = contaJpaRepository.save(conta);
+            if (contaExistente.getNumero() == null){
+                contaExistente.setNumero(gerarNumeroConta());
+            }
 
-        enviarContaParaFilaMongo(contaDTOIn, numero);
+            contaSalva = contaJpaRepository.save(contaExistente);
 
-        return modelMapper.map(salvo, ContaCriadaDTOOut.class);
+        } else {
+           //TODO: Adicionar lógica para atribuir um gerente
+           contaSalva = new Conta();
+        }
+
+        ContaCqrsDTO cqrsDto = new ContaCqrsDTO(contaSalva);
+        contaProducer.enviarConta(cqrsDto);
+
+        return modelMapper.map(contaSalva, ContaCriadaDTOOut.class);
     }
 
-    private void enviarContaParaFilaMongo(CriarContaDTOIn contaDTOIn, String numero) {
-        SalvarContaMongoDTOIn salvarContaMongoDTOIn = new SalvarContaMongoDTOIn(
-                contaDTOIn.getSaldoInicial(),
-                Long.parseLong(numero),
-                contaDTOIn.getIdCliente());
-        contaProducer.enviarConta(salvarContaMongoDTOIn);
-    }
 
+    //region Gerar Número
     public String gerarNumeroConta() {
         int numero = 1000 + new Random().nextInt(9000);
         return String.valueOf(numero);
     }
 
+    //region Depositar
     @Transactional
     public DepositarSacarDTOOut depositar(String numeroConta, DepositarSacarDTOIn depositarSacarDTOIn) {
         Conta conta = contaJpaRepository.findByNumero(numeroConta)
@@ -96,6 +110,7 @@ public class ContaCommandService {
         );
     }
 
+    //region Sacar
     @Transactional
     public DepositarSacarDTOOut sacar(String numeroConta, DepositarSacarDTOIn depositarSacarDTOIn) {
         Conta conta = contaJpaRepository.findByNumero(numeroConta)
@@ -123,6 +138,7 @@ public class ContaCommandService {
         );
     }
 
+    //region Transferir
     @Transactional
     public TransferirDTOOut transferir(String numeroConta, TransferirDTOIn transferirDTOIn) {
         Conta origem = contaJpaRepository.findByNumero(numeroConta)
@@ -163,6 +179,7 @@ public class ContaCommandService {
         );
     }
 
+    //region Mudar Gerente
     public void mudarGerente(MudarGerenteDTOIn command) {
         Optional<Conta> conta = contaJpaRepository.findByNumero(command.getNumeroConta());
         if (conta.isPresent() && !conta.get().getIdGerente().equals(command.getGerenteId())) {
@@ -193,6 +210,7 @@ public class ContaCommandService {
         return movimentacao;
     }
 
+    //region Recalcular Limite
     public RecalcularLimiteDTOOut recalcularLimite(RecalcularLimiteDTOIn dto){
         final BigDecimal salarioMinimoParaLimite = new BigDecimal("2000.00");
 
