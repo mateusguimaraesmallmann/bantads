@@ -2,12 +2,16 @@ package com.bantads.ms_conta.service.command;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 
+import com.bantads.ms_conta.config.RabbitConfig;
+import com.bantads.ms_conta.model.dto.GerenteCargaDTO;
 import com.bantads.ms_conta.model.dto.cqrs.ContaCqrsDTO;
 import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
 import com.bantads.ms_conta.model.dto.input.DepositarSacarDTOIn;
@@ -40,6 +44,7 @@ public class ContaCommandService {
     private final MovimentacaoJpaRepository movimentacaoJpaRepository;
     private final ContaProducer contaProducer;
     private final ModelMapper modelMapper;
+    private final RabbitTemplate rabbitTemplate;
 
     //region Criar Conta
     @Transactional
@@ -69,8 +74,18 @@ public class ContaCommandService {
             contaSalva = contaJpaRepository.save(contaExistente);
 
         } else {
-           //TODO: Adicionar lógica para atribuir um gerente
-           contaSalva = new Conta();
+           Long idGerente = atribuirGerente();
+
+           Conta novaConta = new Conta();
+           novaConta.setIdCliente(command.getIdCliente());
+           novaConta.setIdGerente(idGerente);
+           novaConta.setLimite(limite);
+           novaConta.setSaldo(BigDecimal.ZERO);
+           novaConta.setDataCriacao(LocalDateTime.now());
+           novaConta.setStatus(Status.PENDING);
+           novaConta.setNumero(null);
+
+           contaSalva = contaJpaRepository.save(novaConta);
         }
 
         ContaCqrsDTO cqrsDto = new ContaCqrsDTO(contaSalva);
@@ -177,6 +192,28 @@ public class ContaCommandService {
                 depositarSacarDTOOut.getSaldo(),
                 movimentacaoOrigem.getValor()
         );
+    }
+
+    //region Atribuir Gerente
+    private Long atribuirGerente(){
+        try{
+            List<GerenteCargaDTO> cargaAtual = contaJpaRepository.findCargaGerentes();
+
+            Object response = rabbitTemplate.convertSendAndReceive(RabbitConfig.GERENTE_ASSIGNMENT_QUEUE, cargaAtual);
+
+            if (response != null){
+                if (response instanceof Integer){
+                    return ((Integer)response).longValue();
+                }
+                if (response instanceof Long){
+                    return (Long) response;
+                }
+            } 
+        } catch (Exception e){
+             System.out.println("Erro na comunicação com ms-gerente: " + e.getMessage());
+         }
+
+         return 1L;
     }
 
     //region Mudar Gerente
