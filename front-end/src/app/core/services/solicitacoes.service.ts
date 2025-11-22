@@ -8,64 +8,36 @@ import { ClientDetailsCpf } from '../models/client-details.model';
 })
 export class SolicitacoesService {
 
-  private LIST_API_URL = 'http://localhost:3000/clients';
-  private USER_URL = 'http://localhost:3000/users';
+  private CLIENTES_API_URL = 'http://localhost:3000/clientes';
 
   constructor(private http: HttpClient) { }
 
   listRequests() : Observable<ClientDetailsCpf[]> {
-    return this.http.get<ClientDetailsCpf[]>(`${this.LIST_API_URL}?status=PENDENT`);
+    return this.http.get<ClientDetailsCpf[]>(`${this.CLIENTES_API_URL}?filtro=para_aprovar`);
   }
 
-  //Altera o status da conta do cliente para aprovado (no caso, das solicitações, a conta é ativada pelo método activateAccount)
   approveRequest(cpf: string) : Observable<any>{
-    return this.http.get<any[]>(`${this.LIST_API_URL}?cpf=${cpf}`).pipe(
-      switchMap(clientes =>{
-        if(clientes.length === 0){
-          return of({error: 'Cliente não encontrado.'});
-        }
-
-        const cliente = clientes[0];
-        const idCliente = cliente.id;
-        this.activateAccount(cliente.cpf).subscribe({
-          next: (response) => {
-            console.log("Deu boa!");
-          },
-          error: (err) => {
-            console.log("Erro: ", err);
-          }
-        });
-        return this.http.patch(`${this.LIST_API_URL}/${idCliente}`, {status: 'APPROVED'})
-      })
-    )
+    const url = `${this.CLIENTES_API_URL}/${cpf}/aprovar`;
+    return this.http.post(url, {});
   }
 
   //Ativa a conta do usuário
   activateAccount(cpf: string): Observable<any>{
-    return this.http.get<any[]>(`${this.USER_URL}?cpf=${cpf}`).pipe(
+    return this.http.get<any[]>(`${this.CLIENTES_API_URL}?cpf=${cpf}`).pipe(
       switchMap(users => {
         if (users.length === 0){
           return of ({error: "Usuário não encontrado."});
         }
         const userId = users[0].id;
 
-        return this.http.patch(`${this.USER_URL}/${userId}`, {status: "ACTIVE"});
+        return this.http.patch(`${this.CLIENTES_API_URL}/${userId}`, {status: "ACTIVE"});
       })
     )
   }
 
   denyRequest(cpf: string) : Observable<any>{
-    return this.http.get<any[]>(`${this.LIST_API_URL}?cpf=${cpf}`).pipe(
-      switchMap(clientes =>{
-        if(clientes.length === 0){
-          return of({error: 'Cliente não encontrado.'});
-        }
-
-        const cliente = clientes[0];
-        const idCliente = cliente.id;
-
-        return this.http.patch(`${this.LIST_API_URL}/${idCliente}`, {status: 'DENIED'});
-      })
-    )
+    const url = `${this.CLIENTES_API_URL}/${cpf}/rejeitar`;
+    const motivoRejeicao = { motivo: "Não atende aos critérios do banco." };
+    return this.http.post(url, motivoRejeicao);
   }
 }

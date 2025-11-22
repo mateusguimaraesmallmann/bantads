@@ -9,12 +9,12 @@ import { ExtratoResponse } from '../models/transaction-history.model';
 
 export class UserService {
 
-  private apiUrl = '';
+  private apiUrl = 'http://localhost:3000/contas';
 
   constructor(private http: HttpClient) { }
 
-  consultarExtratoPorCpf(cpfUsuario:string):Observable<ExtratoResponse>{
-    const url = `${this.apiUrl}/${cpfUsuario}`;
+  consultarExtratoPorCpf(numeroConta:string):Observable<ExtratoResponse>{
+    const url = `${this.apiUrl}/${numeroConta}/extrato`;
     return this.http.get<ExtratoResponse>(url);
   }
 
