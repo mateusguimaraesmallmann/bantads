@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import com.bantads.ms_gerente.model.dto.output.GerenteRemovidoEvent;
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 
@@ -23,12 +22,11 @@ import jakarta.persistence.EntityNotFoundException;
 @RequiredArgsConstructor
 public class GerenteService {
 
-    @Autowired
     private RabbitTemplate rabbitTemplate;
     private final GerenteRepository gerenteRepository;
     private final ModelMapper modelMapper;
 
-        public GerenteDTOOut criarGerente(CriarGerenteDTOIn gerenteDTO) {
+    public GerenteDTOOut criarGerente(CriarGerenteDTOIn gerenteDTO) {
         boolean existe = gerenteRepository.existsByCpf(gerenteDTO.getCpf());
         if (existe) {
             throw new EntityExistsException("Gerente já cadastrado no banco de dados");
@@ -71,4 +69,9 @@ public class GerenteService {
         rabbitTemplate.convertAndSend("GERENTE_REMOVIDO_QUEUE", event);
 
     }
+
+    public boolean cpfExists(String cpf) {
+        return gerenteRepository.existsByCpf(cpf);
+    }
+
 }

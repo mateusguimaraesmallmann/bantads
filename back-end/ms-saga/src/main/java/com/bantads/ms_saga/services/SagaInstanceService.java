@@ -41,4 +41,5 @@ public class SagaInstanceService {
         instance.setCurrentState(newState);
         repository.save(instance);
     }
+
 }

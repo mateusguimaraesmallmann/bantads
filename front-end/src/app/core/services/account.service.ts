@@ -5,8 +5,8 @@ import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { Account } from '../models/account.model';
 import { Manager } from '../models/manager';
 
-const MANAGER_URL = 'http://localhost:3000/managers';
-const ACCOUNTS_URL = 'http://localhost:3000/accounts';
+const MANAGER_URL = 'http://localhost:3000/gerentes';
+const ACCOUNTS_URL = 'http://localhost:3000/contas';
 
 @Injectable({
   providedIn: 'root'

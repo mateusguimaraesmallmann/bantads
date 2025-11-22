@@ -1,8 +1,3 @@
-CREATE DATABASE cliente;
-CREATE DATABASE conta;
-CREATE DATABASE gerente;
-CREATE DATABASE saga;
-
 CREATE DATABASE bantads;
 \connect bantads;
 
