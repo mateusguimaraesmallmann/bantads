@@ -25,7 +25,7 @@ public class ContaQueryService {
     private final ModelMapper modelMapper;
 
     public SaldoDTOOut buscarSaldo(Long numeroConta) {
-        ContaLeitura conta = contaLeituraRepository.findByNumero(numeroConta)
+        ContaLeitura conta = contaLeituraRepository.findByNumero(String.valueOf(numeroConta))
                 .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
 
 

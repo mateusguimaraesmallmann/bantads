@@ -8,5 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface ContaLeituraRepository extends JpaRepository<ContaLeitura, Long> {
-    Optional<ContaLeitura> findByNumero(Long numero);
+    Optional<ContaLeitura> findByNumero(String numero);
 }

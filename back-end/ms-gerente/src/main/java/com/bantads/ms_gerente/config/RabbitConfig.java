@@ -1,5 +1,6 @@
 package com.bantads.ms_gerente.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -21,7 +22,10 @@ public class RabbitConfig {
 
     @Bean
     public MessageConverter jsonMessageConverter() {
-        return new Jackson2JsonMessageConverter(new ObjectMapper());
+        ObjectMapper rabbitObjectMapper = new ObjectMapper();
+        // Ignora propriedades desconhecidas
+        rabbitObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return new Jackson2JsonMessageConverter(rabbitObjectMapper);
     }
 
     @Bean

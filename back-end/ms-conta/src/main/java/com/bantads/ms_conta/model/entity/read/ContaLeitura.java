@@ -21,20 +21,22 @@ public class ContaLeitura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name="cliente_id", nullable = false)
     private Long idCliente;
 
-    @Column(nullable = false)
+    @Column(name="gerente_id", nullable = true)
     private Long idGerente;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String numero;
 
     private BigDecimal saldo;
     private BigDecimal limite;
     private String status;
+
+    @Column(name="data_criacao", nullable=false)
     private LocalDateTime dataCriacao;
     
-    @Column(nullable = true)
+    @Column(name="motivo_rejeicao", nullable = true)
     private String motivoReprovacao;
 }

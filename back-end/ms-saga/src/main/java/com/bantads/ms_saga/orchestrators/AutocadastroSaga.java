@@ -86,7 +86,7 @@ public class AutocadastroSaga implements ISagaStateMachine {
             "CLIENTE",
             "PENDING"   
         );
-        
+        System.out.println("Auth Command: " + authCmd);
         logger.info("SAGA {}: Enviando Passo 2 (Auth).", instance.getCorrelationId());
         sender.sendSagaCommand(
             RabbitMQConfig.AUTH_CREATE_KEY,

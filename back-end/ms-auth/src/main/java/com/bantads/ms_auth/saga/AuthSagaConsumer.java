@@ -6,6 +6,8 @@ import com.bantads.ms_auth.saga.dto.CreateAuthUserCommand;
 import com.bantads.ms_auth.saga.dto.SagaCommand;
 import com.bantads.ms_auth.saga.dto.SagaReply;
 import com.bantads.ms_auth.services.CreateAuthService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +23,9 @@ import java.util.Map;
 public class AuthSagaConsumer {
 
     private static final Logger logger = LoggerFactory.getLogger(AuthSagaConsumer.class);
-    private final CreateAuthService authSagaService;
+    private final CreateAuthService createAuthService;
     private final RabbitTemplate rabbitTemplate;
+    private final ObjectMapper objectMapper;
 
     @RabbitListener(queues = RabbitMQConfig.AUTH_COMMAND_QUEUE)
     public void handleAuthCommand(SagaCommand<CreateAuthUserCommand> commandWrapper, Message message) {
@@ -30,25 +33,39 @@ public class AuthSagaConsumer {
         String routingKey = message.getMessageProperties().getReceivedRoutingKey();
 
         if (RabbitMQConfig.AUTH_CREATE_KEY.equals(routingKey)) {
-            handleCreateAuth(commandWrapper.getPayload(), correlationId);
+            handleCreateAuth(commandWrapper, correlationId);
         }
     }
 
-    private void handleCreateAuth(CreateAuthUserCommand command, String correlationId) {
+    private void handleCreateAuth(SagaCommand<?> commandWrapper, String correlationId) {
         try {
-            logger.info("Recebido comando de criação de Auth para: {}", command.getEmail());
+            Object payloadRaw = commandWrapper.getPayload();
+            CreateAuthUserCommand command;
 
-            User usuarioCriado = authSagaService.criarUsuarioInativo(command);
+            if (payloadRaw instanceof Map) {
+                command = objectMapper.convertValue(payloadRaw, CreateAuthUserCommand.class);
+            } else if (payloadRaw instanceof CreateAuthUserCommand) {
+                command = (CreateAuthUserCommand) payloadRaw;
+            } else {
+                throw new IllegalArgumentException("Payload inválido: " + payloadRaw.getClass());
+            }
 
-            Map<String, String> payload = Map.of("id", usuarioCriado.getId(), "email", usuarioCriado.getEmail());
+            logger.info("AuthSagaConsumer: Recebido comando para criar conta: {}", command.getEmail());
+
+            User usuarioCriado = createAuthService.criarUsuarioInativo(command);
+
+            Map<String, String> payload = Map.of(
+                "id", usuarioCriado.getId(), 
+                "email", usuarioCriado.getEmail()
+            );
             
             SagaReply<Map<String, String>> reply = SagaReply.success(payload);
-
             enviarResposta(reply, correlationId);
-            logger.info("Usuário Auth criado com sucesso. Resposta enviada.");
+            
+            logger.info("AuthSagaConsumer: Conta criada/atualizada. ID: {}", usuarioCriado.getId());
 
         } catch (Exception e) {
-            logger.error("Erro ao criar usuário Auth: {}", e.getMessage());
+            logger.error("AuthSagaConsumer: Erro ao processar criação: {}", e.getMessage());
             SagaReply<Object> reply = SagaReply.failure(e.getMessage());
             enviarResposta(reply, correlationId);
         }

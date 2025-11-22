@@ -26,7 +26,6 @@ public class SagaInstance {
     @Column(nullable = false)
     private SagaStatus currentState;
 
-    @Lob
     @Column(columnDefinition = "TEXT")
     private String payload;
     @Column(nullable = false)
