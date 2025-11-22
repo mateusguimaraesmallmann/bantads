@@ -1,6 +1,7 @@
 package com.bantads.ms_conta.model.entity.jpa;
 
 import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
+import com.bantads.ms_conta.model.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,10 +25,13 @@ public class Conta {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 4)
+    @Column(name="numero", nullable = true, length = 4)
     private String numero;
 
-    @Column(nullable = false)
+    @Column(name="motivo_rejeicao", nullable=true)
+    private String motivoReprovacao;
+
+    @Column(name="data_criacao", nullable = false)
     private LocalDateTime dataCriacao;
 
     @Column(nullable = false, precision = 15, scale = 2)
@@ -36,11 +40,15 @@ public class Conta {
     @Column(nullable = false, precision = 15, scale = 2)
     private BigDecimal limite;
 
-    @Column(nullable = false)
+    @Column(name="cliente_id", nullable = false)
     private Long idCliente;
 
-    @Column(nullable = false)
+    @Column(name="gerente_id", nullable = true)
     private Long idGerente;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Status status;
 
     @OneToMany(mappedBy = "conta", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Movimentacao> movimentacoes = new ArrayList<>();

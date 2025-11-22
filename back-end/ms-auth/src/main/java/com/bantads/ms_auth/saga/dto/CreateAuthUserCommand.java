@@ -1,4 +1,4 @@
-package com.bantads.ms_saga.dtos.commands;
+package com.bantads.ms_auth.saga.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class CreateAuthUserCommand {
     private String email;
-    private String password; 
+    private String password;
     private String role;
-    private String status;
 }

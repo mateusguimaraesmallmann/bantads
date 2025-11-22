@@ -1,6 +1,7 @@
 package com.bantads.ms_auth.configurations;
 
 import com.bantads.ms_auth.enums.Tipo;
+import com.bantads.ms_auth.enums.Status;
 import com.bantads.ms_auth.models.User;
 import com.bantads.ms_auth.repositorys.UserRepository;
 import org.springframework.boot.CommandLineRunner;
@@ -22,24 +23,24 @@ public class MongoDBInitializerConfiguration {
         return args -> {
             log.info("Iniciando a criação de usuários iniciais no MongoDB...");
 
-            if (!mongoTemplate.collectionExists(User.class)) {
-                mongoTemplate.createCollection(User.class);
+            if (!mongoTemplate.collectionExists("users")) {
+                mongoTemplate.createCollection("users");
             }
 
             userRepository.deleteAll();
             log.info("Usuários antigos deletados. Inserindo novos usuários...");
 
-            userRepository.save(new User(null, "cli1@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE));
-            userRepository.save(new User(null, "cli2@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE));
-            userRepository.save(new User(null, "cli3@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE));
-            userRepository.save(new User(null, "cli4@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE));
-            userRepository.save(new User(null, "cli5@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE));
+            userRepository.save(new User(null, "cli1@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "cli2@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "cli3@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "cli4@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "cli5@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
 
-            userRepository.save(new User(null, "ger1@bantads.com.br", passwordEncoder.encode("tads"), Tipo.GERENTE));
-            userRepository.save(new User(null, "ger2@bantads.com.br", passwordEncoder.encode("tads"), Tipo.GERENTE));
-            userRepository.save(new User(null, "ger3@bantads.com.br", passwordEncoder.encode("tads"), Tipo.GERENTE));
+            userRepository.save(new User(null, "ger1@bantads.com.br", passwordEncoder.encode("tads"), Tipo.GERENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "ger2@bantads.com.br", passwordEncoder.encode("tads"), Tipo.GERENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "ger3@bantads.com.br", passwordEncoder.encode("tads"), Tipo.GERENTE, Status.ACTIVE));
 
-            userRepository.save(new User(null, "adm1@bantads.com.br", passwordEncoder.encode("tads"), Tipo.ADMINISTRADOR));
+            userRepository.save(new User(null, "adm1@bantads.com.br", passwordEncoder.encode("tads"), Tipo.ADMINISTRADOR, Status.ACTIVE));
 
             log.info("Usuários iniciais do MongoDB inseridos com sucesso!");
         };

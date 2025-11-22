@@ -6,6 +6,9 @@ import com.bantads.ms_saga.dtos.saga.SagaStatus;
 import com.bantads.ms_saga.entity.SagaInstance;
 import com.bantads.ms_saga.repository.SagaInstanceRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.transaction.Transactional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.core.Message;
@@ -28,6 +31,7 @@ public class SagaOrchestrator {
     @Autowired private InsercaoGerenteSaga insercaoGerenteSaga;
 
     @RabbitListener(queues = RabbitMQConfig.SAGA_REPLY_QUEUE)
+    @Transactional
     public void handleReply(Message message) {
         String correlationIdStr = message.getMessageProperties().getCorrelationId();
         SagaReply<?> reply = null;

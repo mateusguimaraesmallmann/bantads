@@ -7,8 +7,8 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = "com.bantads.ms_conta")
-@EnableJpaRepositories(basePackages = "com.bantads.ms_conta.repository.jpa")
-@EntityScan(basePackages = "com.bantads.ms_conta.model.entity.jpa")
+@EnableJpaRepositories(basePackages = "com.bantads.ms_conta.repository")
+@EntityScan(basePackages = "com.bantads.ms_conta.model.entity")
 @EnableRabbit
 public class MsContaApplication {
 

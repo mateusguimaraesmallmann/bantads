@@ -3,13 +3,14 @@ package com.bantads.ms_saga.config;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.support.converter.DefaultJackson2JavaTypeMapper;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Configuration
@@ -27,9 +28,10 @@ public class RabbitMQConfig {
 
     //Auth
     public static final String AUTH_CREATE_KEY = "auth.command.create";
-    public static final String AUTH_DELETE_KEY = "auth.command.delete";
+    public static final String AUTH_DISABLE_KEY = "auth.command.disable";
 
     //Conta
+    public static final String CONTA_CREATE_KEY = "conta.command.create";
     public static final String CONTA_UPDATE_LIMITE_KEY = "conta.command.update-limite";
     public static final String CONTA_REASSIGN_GERENTE_KEY = "conta.command.reassign-gerente";
 
@@ -58,9 +60,9 @@ public class RabbitMQConfig {
     @Bean
     public Binding sagaReplyBinding() {
         return BindingBuilder
-            .bind(sagaReplyQueue())
-            .to(repliesExchange())
-            .with(SAGA_REPLY);
+        .bind(sagaReplyQueue())
+        .to(repliesExchange())
+        .with(SAGA_REPLY_KEY);
     }
 
     @Bean
@@ -70,11 +72,23 @@ public class RabbitMQConfig {
             .with("ms.conta.query.*");
     }
 
-    @Bean
+    //#region Serializador
+ 
+   @Bean
     public MessageConverter jsonMessageConverter() {
        ObjectMapper rabbitObjectMapper = new ObjectMapper();
        rabbitObjectMapper.registerModule(new JavaTimeModule());
-       return new Jackson2JsonMessageConverter(rabbitObjectMapper);
+       rabbitObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+       Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter(rabbitObjectMapper);
+       converter.setClassMapper(new DefaultJackson2JavaTypeMapper() {
+           @Override
+           public Class<?> toClass(MessageProperties properties) {
+               properties.getHeaders().remove("__TypeId__");
+               return com.bantads.ms_saga.dtos.saga.SagaReply.class; 
+           }
+       });
+       
+       return converter;
    }
 
     @Bean
