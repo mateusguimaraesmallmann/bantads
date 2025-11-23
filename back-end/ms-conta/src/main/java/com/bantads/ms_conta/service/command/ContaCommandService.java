@@ -200,7 +200,7 @@ public class ContaCommandService {
         Conta origem = contaJpaRepository.findByNumero(numeroConta)
                 .orElseThrow(() -> new EntityNotFoundException("Conta de origem não encontrada"));
 
-        Conta destino = contaJpaRepository.findByNumero(numeroConta)
+        Conta destino = contaJpaRepository.findByNumero(transferirDTOIn.getDestino()) 
                 .orElseThrow(() -> new EntityNotFoundException("Conta de destino não encontrada"));
 
         if (origem.getSaldo().compareTo(transferirDTOIn.getValor()) < 0) {
