@@ -2,7 +2,9 @@ package com.bantads.ms_conta.service.command;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 
@@ -27,6 +29,7 @@ import com.bantads.ms_conta.queue.producer.ContaProducer;
 import com.bantads.ms_conta.repository.jpa.ContaJpaRepository;
 import com.bantads.ms_conta.repository.jpa.MovimentacaoJpaRepository;
 import com.bantads.ms_conta.saga.dto.CreateContaCommand;
+import com.bantads.ms_conta.saga.dto.SagaCommand;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
@@ -90,6 +93,48 @@ public class ContaCommandService {
         return modelMapper.map(contaSalva, ContaCriadaDTOOut.class);
     }
 
+    //region Ativar Conta
+    @Transactional
+    public void ativarConta(Long idCliente, String nomeCliente, String emailCliente) {
+        Conta conta = contaJpaRepository.findByIdCliente(idCliente)
+            .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada!"));
+
+        String novoNumero = gerarNumeroConta();
+        conta.setNumero(novoNumero);
+        String novaSenha = gerarSenhaAleatoria();
+
+        conta.setStatus(Status.ACTIVE);
+        contaJpaRepository.save(conta);
+
+        // Parâmetros do e-mail após ativação da conta
+        Map<String, String> emailPayload = new HashMap<>();
+        emailPayload.put("email", emailCliente);
+        emailPayload.put("assunto", "BANTADS - Conta Aprovada!");
+        emailPayload.put("mensagem", String.format(
+            "Olá %s, sua conta foi aprovada!\nNúmero da Conta: %s\nSenha Provisória: %s", 
+            nomeCliente, novoNumero, novaSenha));
+
+        rabbitTemplate.convertAndSend("conta-ativada", emailPayload);
+
+        // Envio do payload com e-mail e senha para o ms-auth atualizar seu registro
+        Map<String, Object> authData = new HashMap<>();
+        authData.put("email", emailCliente);
+        authData.put("novaSenha", novaSenha);
+
+        SagaCommand<Map<String, Object>> command = new SagaCommand<>();
+        command.setPayload(authData);
+
+        rabbitTemplate.convertAndSend("auth-update-password", command);
+
+    }
+
+    //region Gerar Senha
+    // Gera a senha aqui e encaminha para o ms-auth atualizar no seu registro via RabbitMQ
+    private String gerarSenhaAleatoria() {
+        // Gera número entre 0 e 9999 e formata com zeros à esquerda (ex: 0042)
+        Random random = new Random();
+        return String.format("%04d", random.nextInt(10000)); 
+    }
 
     //region Gerar Número
     public String gerarNumeroConta() {

@@ -120,6 +120,14 @@ app.get('/clientes/public/check-cpf/:cpf', (req, res, next) => {
     clienteServiceProxy(req, res, next);
 });
 
+app.post('/clientes/:cpf/aprovar', verifyJWT, (req, res, next) => {
+    clienteServiceProxy(req, res, next);
+});
+
+app.post('/clientes/:cpf/rejeitar', verifyJWT, (req, res, next) => {
+    clienteServiceProxy(req, res, next);
+});
+
 app.get('/clientes', verifyJWT, (req, res, next) => {
     clienteServiceProxy(req, res, next);
 });

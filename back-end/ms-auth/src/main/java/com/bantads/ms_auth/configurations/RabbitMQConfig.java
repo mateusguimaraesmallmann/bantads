@@ -31,6 +31,11 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue updateAuthPasswordQueue() {
+        return new Queue("auth-update-password");
+    }
+
+    @Bean
     public Binding bindingAuthCreate(Queue authCommandQueue, DirectExchange sagaExchange) {
         return BindingBuilder.bind(authCommandQueue).to(sagaExchange).with(AUTH_CREATE_KEY);
     }

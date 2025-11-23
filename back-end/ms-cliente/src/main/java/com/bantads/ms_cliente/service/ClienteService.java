@@ -17,10 +17,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -33,6 +36,7 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final ModelMapper modelMapper;
     private final ContaClient contaClient;
+    private final RabbitTemplate rabbitTemplate;
 
     @Transactional
     public ClienteDTOOut criarClientePorSaga(Cliente cliente) {
@@ -76,31 +80,21 @@ public class ClienteService {
         return modelMapper.map(atualizado, ClienteDTOOut.class);
     }
 
+    @Transactional
     public ClienteAprovadoDTOOut aprovarCliente(String cpf) {
         Cliente cliente = clienteRepository.findByCpf(cpf)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
 
-        if (!cliente.getStatus().equals(StatusCliente.EM_ANALISE)) {
-            throw new RuntimeException("Cliente não está em análise de aprovação");
-        }
-
-        BigDecimal limite = calcularLimite(cliente.getSalario());
-        Long idGerente =  new Random().nextLong();
-
-        CriarContaDTOIn criarContaDTOIn = new CriarContaDTOIn(BigDecimal.valueOf(0), limite, cliente.getId(), idGerente);
-        ContaCriadaDTOOut contaDTOOut = contaClient.criarConta(criarContaDTOIn);
-
         cliente.setStatus(StatusCliente.APROVADO);
         clienteRepository.save(cliente);
 
-        return new ClienteAprovadoDTOOut(
-                cliente.getId(),
-                contaDTOOut.getNumero(),
-                contaDTOOut.getSaldo(),
-                contaDTOOut.getLimite(),
-                contaDTOOut.getIdGerente(),
-                contaDTOOut.getDataCriacao()
-                );
+        Map<String, Object> evento = new HashMap<>();
+        evento.put("idCliente", cliente.getId());
+        evento.put("nome", cliente.getNome());
+        evento.put("email", cliente.getEmail());
+
+        rabbitTemplate.convertAndSend("cliente-aprovado", evento);
+        return modelMapper.map(cliente, ClienteAprovadoDTOOut.class);
     }
 
     private BigDecimal calcularLimite(BigDecimal salario) {
