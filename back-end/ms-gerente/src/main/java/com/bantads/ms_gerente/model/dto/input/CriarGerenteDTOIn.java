@@ -26,4 +26,8 @@ public class CriarGerenteDTOIn {
     @Schema(description = "Telefone do gerente com DDD", example = "41987654321")
     @NotBlank(message = "O telefone é obrigatório")
     private String telefone;
+
+    @Schema(description = "Senha de 4 dígitos", example = "tads")
+    @NotBlank(message = "Senha é obrigatória")
+    private String senha;
 }

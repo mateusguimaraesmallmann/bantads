@@ -138,7 +138,7 @@ export class ListManagerComponent implements OnInit{
     this.deleteIndex = null;
   }
 
-  //#region Cria o usuário
+  //#region Cria/Atualiza
   save(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
