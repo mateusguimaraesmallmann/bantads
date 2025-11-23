@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { SolicitacoesService } from '../../../../../core/services/solicitacoes.service';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-deny-client',
-  imports: [],
+  imports: [CommonModule, FormsModule],
   templateUrl: './deny-client.component.html',
   styleUrl: './deny-client.component.css'
 })
