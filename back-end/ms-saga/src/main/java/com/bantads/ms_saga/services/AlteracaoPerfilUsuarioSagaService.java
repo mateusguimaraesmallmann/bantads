@@ -1,6 +1,5 @@
 package com.bantads.ms_saga.services;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -24,31 +23,25 @@ public class AlteracaoPerfilUsuarioSagaService {
     @Autowired private RabbitMQSender sender;
 
     public ResponseEntity<?> alterarPerfil(String cpf, AlteracaoPerfilRequest request) {
-        
-        BigDecimal salarioAntigo = null; 
-
+    
         try {
-            // 1. Criar o estado
-            AlteracaoPerfilSagaState state = new AlteracaoPerfilSagaState(cpf, request, salarioAntigo);
-            
-            // 2. Persistir a instância SAGA
+            AlteracaoPerfilSagaState state = new AlteracaoPerfilSagaState(cpf, request);
             SagaInstance instance = sagaService.createSaga("ALTERACAO_PERFIL", state);
+            request.setCpf(cpf);
             logger.info("Iniciando SAGA de Alteração de Perfil. CorrelationId: {}", instance.getCorrelationId());
-
-            // 3. Enviar o primeiro comando (Atualizar Cliente)
+            
             sender.sendSagaCommand(
                 RabbitMQConfig.CLIENTE_UPDATE_KEY,
                 new SagaCommand<>(request),
                 instance.getCorrelationId()
             );
 
-            // 4. Retornar "Accepted"
             return ResponseEntity.accepted().body(Map.of(
                 "message", "Sua solicitação de alteração está sendo processada.",
                 "correlationId", instance.getCorrelationId()
             ));
 
-        } catch (Exception e) {
+        }catch (Exception e) {
             logger.error("Erro ao INICIAR o SAGA de Alteração de Perfil: {}", e.getMessage(), e);
             return ResponseEntity.status(500).body("Erro interno ao processar a solicitação.");
         }

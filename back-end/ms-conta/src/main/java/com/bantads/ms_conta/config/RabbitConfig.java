@@ -26,6 +26,10 @@ public class RabbitConfig {
     public static final String CONTA_CREATE_KEY = "conta.command.create";
     public static final String SAGA_REPLY_KEY = "saga.reply.key";
     
+    public static final String CONTA_UPDATE_LIMITE_QUEUE = "ms-conta.update-limite";
+    public static final String CONTA_UPDATE_LIMITE_KEY = "ms-conta.update-limite";
+    public static final String SAGA_REPLY_QUEUE = "saga.reply.queue";
+
     @Bean
     public Queue contaQueue() {
         return new Queue(QUEUE_NAME, true);
@@ -90,4 +94,15 @@ public class RabbitConfig {
         rabbitTemplate.setReplyTimeout(5000);
         return rabbitTemplate;
     }
+    @Bean
+    public Queue contaUpdateLimiteQueue() {
+        return new Queue(CONTA_UPDATE_LIMITE_QUEUE, true);
+    }
+    @Bean
+    public Binding bindingContaUpdateLimite(Queue contaUpdateLimiteQueue, DirectExchange commandsExchange) {
+        return BindingBuilder
+                .bind(contaUpdateLimiteQueue)
+                .to(commandsExchange)
+                .with(CONTA_UPDATE_LIMITE_KEY);
+    }    
 }

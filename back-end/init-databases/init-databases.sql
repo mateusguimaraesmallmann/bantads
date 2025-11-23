@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS "cliente"."endereco" (
   "logradouro" VARCHAR(255),
   "numero" VARCHAR(10),
   "complemento" VARCHAR(255),
+  "tipo_logradouro" VARCHAR(50)
 );
 
 CREATE TABLE IF NOT EXISTS "cliente"."cliente" (
@@ -58,6 +59,7 @@ CREATE TABLE IF NOT EXISTS "cliente"."cliente" (
   "nome" VARCHAR(255) NOT NULL,
   "salario" DOUBLE PRECISION DEFAULT 0,
   "telefone" VARCHAR(11),
+  "status" VARCHAR(20),
   "endereco_id" INTEGER REFERENCES "cliente"."endereco" ("id")
 );
 
@@ -70,12 +72,12 @@ INSERT INTO "cliente"."endereco" (id, cep, estado, cidade, bairro, logradouro, n
 (5, '30140071', 'MG', 'Belo Horizonte', 'Savassi', 'Getúlio Vargas', '300', 'Avenida');
 
 -- Dados Iniciais 
-INSERT INTO "cliente"."cliente" (id, cpf, nome, email, salario, limite_sugerido, endereco_id, status) VALUES
-(1, '12912861012', 'Catharyna', 'cli1@bantads.com.br', 10000.00, 5000.00, 1, 'APROVADO'),
-(2, '09506382000', 'Cleuddônio', 'cli2@bantads.com.br', 20000.00, 10000.00, 2, 'APROVADO'),
-(3, '85733854057', 'Catianna', 'cli3@bantads.com.br', 3000.00, 1500.00, 3, 'APROVADO'),
-(4, '58872160006', 'Cutardo', 'cli4@bantads.com.br', 500.00, 0.00, 4, 'APROVADO'),
-(5, '76179646090', 'Coândrya', 'cli5@bantads.com.br', 1500.00, 0.00, 5, 'APROVADO');
+INSERT INTO "cliente"."cliente" (id, cpf, nome, email, salario, endereco_id, status) VALUES
+(1, '12912861012', 'Catharyna', 'cli1@bantads.com.br', 10000.00, 1, 'APROVADO'),
+(2, '09506382000', 'Cleuddônio', 'cli2@bantads.com.br', 20000.00, 2, 'APROVADO'),
+(3, '85733854057', 'Catianna', 'cli3@bantads.com.br', 3000.00, 3, 'APROVADO'),
+(4, '58872160006', 'Cutardo', 'cli4@bantads.com.br', 500.00, 4, 'APROVADO'),
+(5, '76179646090', 'Coândrya', 'cli5@bantads.com.br', 1500.00, 5, 'APROVADO');
 
 -- Ajusta sequências
 SELECT setval('cliente.endereco_id_seq', (SELECT MAX(id) FROM cliente.endereco));
@@ -107,11 +109,11 @@ CREATE TABLE IF NOT EXISTS "contacomando"."movimentacoes" (
 
 -- Dados Iniciais 
 INSERT INTO "contacomando"."conta" (id, cliente_id, gerente_id, numero, saldo, limite, data_criacao, status) VALUES
-(1, 1, 1, '1291', 800.00, 5000.00, '2000-01-01', 'ATIVA'),
-(2, 2, 2, '0950', -10000.00, 10000.00, '1990-10-10', 'ATIVA'),
-(3, 3, 3, '8573', -1000.00, 1500.00, '2012-12-12', 'ATIVA'), 
-(4, 4, 1, '5887', 150000.00, 0.00, '2022-02-22', 'ATIVA'), 
-(5, 5, 2, '7617', 1500.00, 0.00, '2025-01-01', 'ATIVA');
+(1, 1, 1, '1291', 800.00, 5000.00, '2000-01-01', 'ACTIVE'),
+(2, 2, 2, '0950', -10000.00, 10000.00, '1990-10-10', 'ACTIVE'),
+(3, 3, 3, '8573', -1000.00, 1500.00, '2012-12-12', 'ACTIVE'), 
+(4, 4, 1, '5887', 150000.00, 0.00, '2022-02-22', 'ACTIVE'), 
+(5, 5, 2, '7617', 1500.00, 0.00, '2025-01-01', 'ACTIVE');
 
 -- Dados Iniciais 
 INSERT INTO "contacomando"."movimentacoes" (data_movimentacao, tipo, conta_id, conta_destino, valor) VALUES

@@ -13,14 +13,11 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import com.bantads.ms_conta.config.RabbitConfig;
 import com.bantads.ms_conta.model.dto.GerenteCargaDTO;
 import com.bantads.ms_conta.model.dto.cqrs.ContaCqrsDTO;
-import com.bantads.ms_conta.model.dto.input.CriarContaDTOIn;
 import com.bantads.ms_conta.model.dto.input.DepositarSacarDTOIn;
 import com.bantads.ms_conta.model.dto.input.MudarGerenteDTOIn;
-import com.bantads.ms_conta.model.dto.input.RecalcularLimiteDTOIn;
 import com.bantads.ms_conta.model.dto.input.TransferirDTOIn;
 import com.bantads.ms_conta.model.dto.output.ContaCriadaDTOOut;
 import com.bantads.ms_conta.model.dto.output.DepositarSacarDTOOut;
-import com.bantads.ms_conta.model.dto.output.RecalcularLimiteDTOOut;
 import com.bantads.ms_conta.model.dto.output.TransferirDTOOut;
 import com.bantads.ms_conta.model.entity.jpa.Conta;
 import com.bantads.ms_conta.model.entity.jpa.Movimentacao;
@@ -31,7 +28,6 @@ import com.bantads.ms_conta.repository.jpa.ContaJpaRepository;
 import com.bantads.ms_conta.repository.jpa.MovimentacaoJpaRepository;
 import com.bantads.ms_conta.saga.dto.CreateContaCommand;
 
-import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -248,28 +244,28 @@ public class ContaCommandService {
     }
 
     //region Recalcular Limite
-    public RecalcularLimiteDTOOut recalcularLimite(RecalcularLimiteDTOIn dto){
+    @Transactional
+    public void atualizarLimitePorSalario(Long idCliente, BigDecimal novoSalario) {
         final BigDecimal salarioMinimoParaLimite = new BigDecimal("2000.00");
 
-        Conta conta = contaJpaRepository.findByIdCliente(dto.getIdDoCliente())
-                    .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada"));
-            
+        Conta conta = contaJpaRepository.findByIdCliente(idCliente)
+            .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada para o cliente ID: " + idCliente));
+
         BigDecimal novoLimiteCalculado;
-        if (dto.getNovoSalario().compareTo(salarioMinimoParaLimite) > -1) { 
-            novoLimiteCalculado = dto.getNovoSalario().divide(new BigDecimal("2"));
+        if (novoSalario.compareTo(salarioMinimoParaLimite) >= 0) {
+            novoLimiteCalculado = novoSalario.divide(new BigDecimal("2"));
         } else {
             novoLimiteCalculado = BigDecimal.ZERO;
         }
-
-        BigDecimal limiteFinal = novoLimiteCalculado; 
-        if (conta.getSaldo().compareTo(BigDecimal.ZERO) == -1) { 
-            BigDecimal saldoNegativo = conta.getSaldo().abs(); 
-            if (novoLimiteCalculado.compareTo(conta.getSaldo()) < 0) {
-                limiteFinal = saldoNegativo;
+        if (conta.getSaldo().compareTo(BigDecimal.ZERO) < 0) {
+            BigDecimal dividaAtual = conta.getSaldo().abs(); 
+            
+            if (novoLimiteCalculado.compareTo(dividaAtual) < 0) {
+                novoLimiteCalculado = dividaAtual;
             }
         }
-        conta.setLimite(limiteFinal);
-        return new RecalcularLimiteDTOOut(conta.getIdGerente(), conta.getLimite(), conta.getSaldo());
+        conta.setLimite(novoLimiteCalculado);
+        contaJpaRepository.save(conta);
     }
 
 }

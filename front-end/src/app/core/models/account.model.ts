@@ -24,9 +24,13 @@ export interface ClienteCompleto {
   nome: string;
   email: string;
   salario: number;
-  endereco: string;
+  logradouro: string;
+  numero: number;
+  complemento: string;
+  cep: number;
   cidade: string;
   estado: string;
+  bairro:string;   
   conta: string; 
   saldo: number;
   limite: number;

@@ -30,11 +30,14 @@ public class ClienteSagaService {
         dto.setTelefone(cliente.getTelefone());
         dto.setSalario(cliente.getSalario());
         if (cliente.getEndereco() != null) {
-            dto.setEndereco(cliente.getEndereco().getLogradouro());
+            dto.setCep(cliente.getEndereco().getCep());
+            dto.setLogradouro(cliente.getEndereco().getLogradouro());
+            dto.setNumero(cliente.getEndereco().getNumero());
+            dto.setComplemento(cliente.getEndereco().getComplemento());
             dto.setCidade(cliente.getEndereco().getCidade());
             dto.setEstado(cliente.getEndereco().getEstado());
+            dto.setBairro(cliente.getEndereco().getBairro());
         }
-
         try {
             ContaResponse conta = contaClient.buscarPorIdCliente(cliente.getId());
             

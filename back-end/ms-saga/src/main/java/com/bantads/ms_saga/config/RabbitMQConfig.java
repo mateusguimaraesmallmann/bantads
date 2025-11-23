@@ -22,7 +22,8 @@ public class RabbitMQConfig {
     //#region Routing Keys
     //Clientes
     public static final String CLIENTE_CREATE_KEY = "cliente.command.create";
-    public static final String CLIENTE_UPDATE_KEY = "cliente.command.update";
+    public static final String CLIENTE_UPDATE_KEY = "ms-cliente.update-profile"; 
+
     public static final String CLIENTE_SET_GERENTE_KEY = "cliente.command.set-gerente";
     public static final String CLIENTE_DELETE_KEY = "cliente.command.delete";
 
@@ -32,7 +33,7 @@ public class RabbitMQConfig {
 
     //Conta
     public static final String CONTA_CREATE_KEY = "conta.command.create";
-    public static final String CONTA_UPDATE_LIMITE_KEY = "conta.command.update-limite";
+    public static final String CONTA_UPDATE_LIMITE_KEY = "ms-conta.update-limite"; 
     public static final String CONTA_REASSIGN_GERENTE_KEY = "conta.command.reassign-gerente";
 
     //Gerente

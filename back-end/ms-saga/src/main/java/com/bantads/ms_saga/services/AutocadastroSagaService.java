@@ -29,11 +29,10 @@ public class AutocadastroSagaService {
     @Autowired private RabbitMQSender sender;
     @Autowired private ClienteClient clienteClient;
 
-    public ResponseEntity<?> autoCadastro(AutocadastroRequest request) {
+    public ResponseEntity<?> autoCadastro(String cpf,AutocadastroRequest request) {
         
         try {
-            logger.info("Etapa 1 (Síncrona): Verificando CPF {}", request.getCpf());
-            clienteClient.checkCpfExists(request.getCpf()); //
+            clienteClient.checkCpfExists(cpf); 
 
             logger.warn("Falha na pré-validação: CPF {} já existe.", request.getCpf());
             return ResponseEntity

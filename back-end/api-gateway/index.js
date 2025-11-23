@@ -123,6 +123,12 @@ app.get('/clientes/:cpfCliente', verifyJWT, (req, res, next) => {
     sagaServiceProxy(req, res, next);
 });
 
+app.put('/clientes/:cpfCliente', verifyJWT, (req, res, next) => {
+    const cpf = req.params.cpfCliente;
+    req.url = `/saga/alteracao-perfil/${cpf}`;    
+    sagaServiceProxy(req, res, next);
+});
+
 app.get('/gerentes', verifyJWT, (req, res, next) => {
     gerentesServiceProxy(req, res, next);
 });

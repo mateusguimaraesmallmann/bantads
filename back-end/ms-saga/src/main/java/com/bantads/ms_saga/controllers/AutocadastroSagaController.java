@@ -5,6 +5,7 @@ import com.bantads.ms_saga.services.AutocadastroSagaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,8 +19,8 @@ public class AutocadastroSagaController {
     private AutocadastroSagaService autocadastroSagaService;
 
     @PostMapping
-    public ResponseEntity<?> autoCadastro(@RequestBody AutocadastroRequest request) {
-        return autocadastroSagaService.autoCadastro(request);
+    public ResponseEntity<?> autoCadastro(@PathVariable String cpf, @RequestBody AutocadastroRequest dados) {
+        return autocadastroSagaService.autoCadastro(cpf, dados);
     }
 
 }

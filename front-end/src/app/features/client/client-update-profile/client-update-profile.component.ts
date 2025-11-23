@@ -104,17 +104,18 @@ export class UpdateProfileComponent implements OnInit{
       });
   }
 
-  popularFormulario(response: ClienteCompleto
-    ){
+  popularFormulario(response: ClienteCompleto)
+  {
+    console.log(response);
     this.clientUpdateForm.patchValue ({
       nome: response.nome,
       email: response.email,
       salario: response.salario,
-      //cep: response.cep,
-      logradouro: response.cidade,
-      // numero: response.numero,
-      // complemento: response.complemento,
-      // bairro: response.bairro,
+      cep: response.cep,
+      logradouro: response.logradouro,
+      numero: response.numero,
+      complemento: response.complemento,
+      bairro: response.bairro,
       cidade: response.cidade,
       estado: response.estado
       });
@@ -131,7 +132,6 @@ export class UpdateProfileComponent implements OnInit{
 
     const userUpdate: ClientUpdate = {
       nome:formValues.nome,
-      cpf:this.cpfUsuario,
       email:formValues.email,
       salario:formValues.salario,
       cep:formValues.cep,
@@ -145,8 +145,8 @@ export class UpdateProfileComponent implements OnInit{
 
     this.status = 'loading';
 
-    this.userService.atualizarUsuario(userUpdate, userUpdate.cpf).subscribe({
-      next: (response) => this.processarSucesso(),
+    this.userService.atualizarUsuario(userUpdate, this.cpfUsuario).subscribe({
+      next: (response) => this.processarSucesso(response),
       error: (err) => this.processarErro(err)
     });
   }
@@ -155,7 +155,8 @@ export class UpdateProfileComponent implements OnInit{
     this.router.navigate(['/client-home']);
   }
 
-  processarSucesso(): void {
+  processarSucesso(response:any): void {
+    console.log(response);
     this.status = 'success';
   }
 

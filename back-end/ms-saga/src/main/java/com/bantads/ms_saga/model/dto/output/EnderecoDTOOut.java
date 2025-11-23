@@ -9,6 +9,7 @@ public final class EnderecoDTOOut {
     private String cep;
     private String cidade;
     private String estado;
+    private String bairro;
     
     public String getTipoLogradouro() {
         return tipoLogradouro;
@@ -52,6 +53,11 @@ public final class EnderecoDTOOut {
     public void setEstado(String estado) {
         this.estado = estado;
     }
-
-    
+    public String getBairro() {
+        return bairro;
+    }
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
+    }
+  
 }

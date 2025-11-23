@@ -9,7 +9,6 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class DadosClienteResponseDTO {
 
     private String cpf;
@@ -17,10 +16,15 @@ public class DadosClienteResponseDTO {
     private String telefone;
     private String email;
     private BigDecimal salario;
-    private String endereco;
+    private String tipoLogradouro;
+    private String logradouro;
+    private String numero;
+    private String complemento;
+    private String cep;
     private String cidade;
     private String estado;
-    
+    private String bairro;    
+
     @JsonProperty("conta")
     private String numeroConta;
 
@@ -42,6 +46,14 @@ public class DadosClienteResponseDTO {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+    public String getBairro() {
+        return bairro;
+    }
+
+    public void setBairro(String bairro) {
+        this.bairro = bairro;
     }
 
     public String getNome() {
@@ -76,12 +88,44 @@ public class DadosClienteResponseDTO {
         this.salario = salario;
     }
 
-    public String getEndereco() {
-        return endereco;
+    public String getTipoLogradouro() {
+        return tipoLogradouro;
     }
 
-    public void setEndereco(String endereco) {
-        this.endereco = endereco;
+    public void setTipoLogradouro(String tipoLogradouro) {
+        this.tipoLogradouro = tipoLogradouro;
+    }
+
+    public String getLogradouro() {
+        return logradouro;
+    }
+
+    public void setLogradouro(String logradouro) {
+        this.logradouro = logradouro;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public String getComplemento() {
+        return complemento;
+    }
+
+    public void setComplemento(String complemento) {
+        this.complemento = complemento;
+    }
+
+    public String getCep() {
+        return cep;
+    }
+
+    public void setCep(String cep) {
+        this.cep = cep;
     }
 
     public String getCidade() {
@@ -147,6 +191,5 @@ public class DadosClienteResponseDTO {
     public void setEmailGerente(String emailGerente) {
         this.emailGerente = emailGerente;
     }
-
 
 }

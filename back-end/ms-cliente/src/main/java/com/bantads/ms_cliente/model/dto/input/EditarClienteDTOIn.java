@@ -33,7 +33,13 @@ public final class EditarClienteDTOIn {
     @DecimalMin(value = "0.0", inclusive = false, message = "O salário deve ser maior que zero")
     private BigDecimal salario;
 
+    private String cpf;
+
     @Schema(exampleClasses = {EnderecoDTOOut.class}, description = "Endereço do cliente")
     private EnderecoDTOOut endereco;
+
+    public String getString(){
+        return cpf;
+    }
 
 }

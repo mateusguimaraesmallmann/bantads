@@ -3,11 +3,12 @@ package com.bantads.ms_cliente.service;
 import com.bantads.ms_cliente.feign.ContaClient;
 import com.bantads.ms_cliente.feign.dto.ContaCriadaDTOOut;
 import com.bantads.ms_cliente.feign.dto.CriarContaDTOIn;
-import com.bantads.ms_cliente.model.dto.input.CriarClienteDTOIn;
 import com.bantads.ms_cliente.model.dto.input.EditarClienteDTOIn;
 import com.bantads.ms_cliente.model.dto.output.ClienteAprovadoDTOOut;
 import com.bantads.ms_cliente.model.dto.output.ClienteDTOOut;
+import com.bantads.ms_cliente.model.dto.output.EnderecoDTOOut;
 import com.bantads.ms_cliente.model.entity.Cliente;
+import com.bantads.ms_cliente.model.entity.Endereco;
 import com.bantads.ms_cliente.model.enums.StatusCliente;
 import com.bantads.ms_cliente.repository.ClienteRepository;
 
@@ -120,5 +121,39 @@ public class ClienteService {
     public boolean cpfExists(String cpf) {
         return clienteRepository.existsByCpf(cpf);
     }
+
+    @Transactional 
+    public Long atualizarPerfil(String cpf, EditarClienteDTOIn request) {
+        
+        Cliente cliente = clienteRepository.findByCpf(cpf)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado com o CPF: " + cpf));
+
+        cliente.setNome(request.getNome());
+        cliente.setEmail(request.getEmail());
+        cliente.setSalario(request.getSalario());
+
+        if (request.getEndereco() != null) {
+            atualizarEndereco(cliente, request.getEndereco());
+        }
+        clienteRepository.save(cliente);
+        return cliente.getId();
+    }
+
+    private void atualizarEndereco(Cliente cliente, EnderecoDTOOut dtoEndereco) {
+        Endereco endereco = cliente.getEndereco();
+    
+        if (endereco == null) {
+            endereco = new Endereco();
+            cliente.setEndereco(endereco);
+        }
+        endereco.setTipoLogradouro(dtoEndereco.getTipoLogradouro());
+        endereco.setLogradouro(dtoEndereco.getLogradouro());
+        endereco.setNumero(dtoEndereco.getNumero());
+        endereco.setComplemento(dtoEndereco.getComplemento());
+        endereco.setBairro(dtoEndereco.getBairro());
+        endereco.setCidade(dtoEndereco.getCidade());
+        endereco.setEstado(dtoEndereco.getEstado());
+        endereco.setCep(dtoEndereco.getCep());
+    }    
 }
 
