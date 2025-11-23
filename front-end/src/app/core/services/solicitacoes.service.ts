@@ -68,9 +68,9 @@ export class SolicitacoesService {
     )
   }
 
-  denyRequest(cpf: string) : Observable<any>{
+  denyRequest(cpf: string, motivo: string) : Observable<any>{
     const url = `${this.CLIENTES_API_URL}/${cpf}/rejeitar`;
-    const motivoRejeicao = { motivo: "Não atende aos critérios do banco." };
+    const motivoRejeicao = { motivo: motivo };
     return this.http.post(url, motivoRejeicao);
   }
 }

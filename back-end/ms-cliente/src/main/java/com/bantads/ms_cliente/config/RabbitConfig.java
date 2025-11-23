@@ -9,6 +9,7 @@ import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.bantads.ms_cliente.saga.dto.SagaCommand;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -69,13 +70,6 @@ public class RabbitConfig {
     }
 
     @Bean
-        public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter jsonMessageConverter) {
-            final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-            rabbitTemplate.setMessageConverter(jsonMessageConverter);
-            return rabbitTemplate;
-        }
-
-    @Bean
     public MessageConverter jsonMessageConverter() {
         ObjectMapper rabbitObjectMapper = new ObjectMapper();
         rabbitObjectMapper.registerModule(new JavaTimeModule());
@@ -86,10 +80,17 @@ public class RabbitConfig {
             @Override
             public Class<?> toClass(MessageProperties properties) {
                 properties.getHeaders().remove("__TypeId__"); 
-                return Object.class; 
+                return SagaCommand.class; 
             }
         });
 
         return converter;
-    }        
+    }  
+
+    @Bean
+        public RabbitTemplate rabbitTemplate(ConnectionFactory connectionFactory, MessageConverter jsonMessageConverter) {
+            final RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
+            rabbitTemplate.setMessageConverter(jsonMessageConverter);
+            return rabbitTemplate;
+        }      
 }

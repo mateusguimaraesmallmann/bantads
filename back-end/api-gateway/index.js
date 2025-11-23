@@ -156,16 +156,20 @@ app.get("/clientes", verifyJWT, (req, res, next) => {
   clienteServiceProxy(req, res, next);
 });
 
+app.get("/clientes/id/:idCliente", verifyJWT, (req, res, next) => {
+  clienteServiceProxy(req, res, next);
+});
+
 //CRIAÇÃO DE CONTA (AUTOCADASTRO)
 app.post("/autocadastro", (req, res, next) => {
   req.url = "/saga/autocadastro";
   sagaServiceProxy(req, res, next);
 });
 
-app.post("/clientes", (req, res, next) => {
-  req.url = "/saga/autocadastro";
-  sagaServiceProxy(req, res, next);
-});
+// app.post("/clientes", (req, res, next) => {
+//   req.url = "/saga/autocadastro";
+//   sagaServiceProxy(req, res, next);
+// });
 
 app.get("/clientes/:cpfCliente", verifyJWT, (req, res, next) => {
   const cpf = req.params.cpfCliente;
