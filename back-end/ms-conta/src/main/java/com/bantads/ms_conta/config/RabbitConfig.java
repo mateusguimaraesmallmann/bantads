@@ -31,6 +31,9 @@ public class RabbitConfig {
     public static final String CONTA_UPDATE_LIMITE_KEY = "ms-conta.update-limite";
     public static final String SAGA_REPLY_QUEUE = "saga.reply.queue";
 
+    public static final String CONTA_SYNC_QUEUE = "conta-sync-queue";
+    public static final String CONTA_SYNC_EXCHANGE = "conta.sync.exchange";
+    public static final String CONTA_SYNC_KEY = "conta.sync.update";    
     @Bean
     public Queue contaQueue() {
         return new Queue(QUEUE_NAME, true);
@@ -123,5 +126,23 @@ public class RabbitConfig {
                 .bind(contaUpdateLimiteQueue)
                 .to(commandsExchange)
                 .with(CONTA_UPDATE_LIMITE_KEY);
-    }    
+    } 
+    
+    @Bean
+    public Queue contaSyncQueue() {
+        return new Queue(CONTA_SYNC_QUEUE, true);
+    }
+
+    @Bean
+    public TopicExchange syncExchange() {
+        return new TopicExchange(CONTA_SYNC_EXCHANGE);
+    }
+
+    @Bean
+    public Binding bindingContaSync() {
+        return BindingBuilder
+            .bind(contaSyncQueue())
+            .to(syncExchange())
+            .with(CONTA_SYNC_KEY);
+    }       
 }

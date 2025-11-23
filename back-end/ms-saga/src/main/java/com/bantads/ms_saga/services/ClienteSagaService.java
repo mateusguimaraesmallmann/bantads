@@ -1,9 +1,19 @@
 package com.bantads.ms_saga.services;
 
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.bantads.ms_saga.config.RabbitMQConfig;
+import com.bantads.ms_saga.dtos.request.AlteracaoPerfilRequest;
 import com.bantads.ms_saga.dtos.saga.DadosClienteResponseDTO;
+import com.bantads.ms_saga.dtos.saga.SagaCommand;
+import com.bantads.ms_saga.dtos.state.AlteracaoPerfilSagaState;
+import com.bantads.ms_saga.entity.SagaInstance;
 import com.bantads.ms_saga.feign.cliente.ClienteClient;
 import com.bantads.ms_saga.feign.conta.ContaClient;
 import com.bantads.ms_saga.feign.gerente.GerenteClient;
@@ -19,6 +29,9 @@ public class ClienteSagaService {
     @Autowired private ClienteClient clienteClient;
     @Autowired private ContaClient contaClient;
     @Autowired private GerenteClient gerenteClient;
+    private static final Logger logger = LoggerFactory.getLogger(ClienteSagaService.class);
+    @Autowired private SagaInstanceService sagaService;
+    @Autowired private RabbitMQSender sender;    
 
     public DadosClienteResponseDTO montarClienteCompleto(String cpf) {
         DadosClienteResponseDTO dto = new DadosClienteResponseDTO();
@@ -58,4 +71,29 @@ public class ClienteSagaService {
         }
         return dto;
     }
+
+    public ResponseEntity<?> alterarPerfil(String cpf, AlteracaoPerfilRequest request) {
+    
+        try {
+            AlteracaoPerfilSagaState state = new AlteracaoPerfilSagaState(cpf, request);
+            SagaInstance instance = sagaService.createSaga("ALTERACAO_PERFIL", state);
+            request.setCpf(cpf);
+            logger.info("Iniciando SAGA de Alteração de Perfil. CorrelationId: {}", instance.getCorrelationId());
+            
+            sender.sendSagaCommand(
+                RabbitMQConfig.CLIENTE_UPDATE_KEY,
+                new SagaCommand<>(request),
+                instance.getCorrelationId()
+            );
+
+            return ResponseEntity.accepted().body(Map.of(
+                "message", "Sua solicitação de alteração está sendo processada.",
+                "correlationId", instance.getCorrelationId()
+            ));
+
+        }catch (Exception e) {
+            logger.error("Erro ao INICIAR o SAGA de Alteração de Perfil: {}", e.getMessage(), e);
+            return ResponseEntity.status(500).body("Erro interno ao processar a solicitação.");
+        }
+    }    
 }

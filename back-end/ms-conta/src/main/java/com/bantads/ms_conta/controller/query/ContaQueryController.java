@@ -1,7 +1,6 @@
 package com.bantads.ms_conta.controller.query;
 
 import java.util.List;
-import com.bantads.ms_conta.model.dto.output.ExtratoDTOOut;
 import com.bantads.ms_conta.model.dto.output.SaldoDTOOut;
 import com.bantads.ms_conta.model.entity.read.ContaLeitura;
 import com.bantads.ms_conta.service.query.ContaQueryService;
