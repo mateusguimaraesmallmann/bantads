@@ -28,11 +28,11 @@
                                 <tbody>
                                     <tr *ngFor="let client of topClients| slice:0:3; let i=index">
                                         <td>#{{i + 1}}</td>
-                                        <td>{{client.cpf ?? '' | mask: "000.000.000-00"}}</td>
+                                        <td>{{client.cpf | mask: "000.000.000-00"}}</td>
                                         <td>{{client.clientName}}</td>
                                         <td>{{client.city}}</td>
                                         <td>{{client.state}}</td>
-                                        <td>{{client.balance ?? '' | currency: 'BRL'}}</td>
+                                        <td>{{client.balance | currency: 'BRL'}}</td>
                                     </tr>
                                 </tbody>
                             </table>

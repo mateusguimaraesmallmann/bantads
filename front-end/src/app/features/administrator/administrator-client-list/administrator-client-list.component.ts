@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../../../core/components/header/header.component';
 import { ClientDetails } from '../../../core/models/client-details.model';
 import { NAVITEMS } from '../navItemsAdm';
-import { AdministratorService } from '../../../core/services/administrator.service'; 
+import { AdministratorService } from '../../../core/services/administrator.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -32,6 +32,7 @@ export class AdministratorListaClientesComponent implements OnInit {
 
     const dadosDaApi: ClientDetails[] = [
       {
+        id:1,
         cpf: "12912861012",
         nome: "Catharyna",
         email: "cli1@bantads.com.br",
@@ -44,6 +45,7 @@ export class AdministratorListaClientesComponent implements OnInit {
         limite: 5000
       },
       {
+        id:2,
         cpf: "09506382000",
         nome: "Cleuddônio",
         email: "cli2@bantads.com.br",
@@ -56,6 +58,7 @@ export class AdministratorListaClientesComponent implements OnInit {
         limite: 10000.00
       },
       {
+        id:3,
         cpf: "85733854057",
         nome: "Catianna",
         email: "cli3@bantads.com.br",
@@ -74,7 +77,7 @@ export class AdministratorListaClientesComponent implements OnInit {
     // const subscription= this.adminService.listarTodosOsClientesAdministrator().subscribe({
     //   next: (response) => this.processarSucesso(() => this.listarTodosClientes(response, subscription)),
     //   error: (err) => this.processarErro(err, subscription)
-    // });    
+    // });
   }
 
   public listarTodosClientes(clientes : ClientDetails[], subscription:Subscription){
@@ -107,5 +110,5 @@ export class AdministratorListaClientesComponent implements OnInit {
   processarErro(error:any, subscription:Subscription){
     console.log("deu ruim" + error);
     subscription.unsubscribe();
-  }    
+  }
 }

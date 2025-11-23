@@ -1,4 +1,5 @@
 export interface ClientDetails {
+  id: number;
   cpf: string;
   nome: string;
   email: string;
@@ -21,9 +22,9 @@ export interface ClientDetailsCpf {
   estado: string;
   salario: number;
   conta: string;
-  saldo: number; 
+  saldo: number;
   limite: number;
-  gerente: string; 
+  gerente: string;
   gerente_nome: string;
   gerente_email: string;
 }

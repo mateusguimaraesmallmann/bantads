@@ -5,7 +5,7 @@ import { HeaderComponent } from '../../../core/components/header/header.componen
 import { NAVITEMS } from '../navItems';
 import { ClientDetails } from '../../../core/models/client-details.model';
 import { RouterModule } from '@angular/router';
-import { ManagerService } from '../../../core/services/manager.service'; 
+import { ManagerService } from '../../../core/services/manager.service';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -34,6 +34,7 @@ export class ManagerListaClientesComponent implements OnInit {
   private carregarClientes(): void {
     const dadosDaApi: ClientDetails[] = [
       {
+        id: 1,
         cpf: "12912861012",
         nome: "Catharyna",
         email: "cli1@bantads.com.br",
@@ -46,6 +47,7 @@ export class ManagerListaClientesComponent implements OnInit {
         limite: 5000
       },
       {
+        id:2,
         cpf: "09506382000",
         nome: "Cleuddônio",
         email: "cli2@bantads.com.br",
@@ -58,6 +60,7 @@ export class ManagerListaClientesComponent implements OnInit {
         limite: 10000.00
       },
       {
+        id:3,
         cpf: "85733854057",
         nome: "Catianna",
         email: "cli3@bantads.com.br",

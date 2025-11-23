@@ -81,5 +81,16 @@ public class ContaQueryService {
         return contaLeituraRepository.findByIdCliente(idCliente)
                 .orElseThrow(() -> new EntityNotFoundException("usuario não encontrado"));            
     }
+
+    public List<ContaLeitura> buscarContasPorIdGerente(Long idGerente){
+        return contaLeituraRepository.findByIdGerenteAndStatus(idGerente, "PENDING");
+    }
+ 
+    public List<ContaLeitura> listarTodas() {
+        return contaLeituraRepository.findAll()
+            .stream()
+            .map(c -> modelMapper.map(c, ContaLeitura.class))
+            .collect(Collectors.toList());
+    }
 }
 

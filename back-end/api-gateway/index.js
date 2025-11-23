@@ -103,6 +103,13 @@ app.post('/login',  (req, res, next) => {
     authServiceProxy(req,res,next)
 });
 
+app.get('/clientes/:cpfCliente', verifyJWT, (req, res, next) => {
+    const cpf = req.params.cpfCliente;
+    req.url = `/clientes/saga/${cpf}`;    
+    sagaServiceProxy(req, res, next);
+});
+
+
 //CRIAÇÃO DE CONTA (AUTOCADASTRO)
 app.post('/autocadastro', (req, res, next) => {
     req.url = '/saga/autocadastro'; 
@@ -117,10 +124,18 @@ app.get('/clientes', verifyJWT, (req, res, next) => {
     clienteServiceProxy(req, res, next);
 });
 
+app.get('/clientes/id/:idCliente', verifyJWT, (req, res, next) => {
+    clienteServiceProxy(req, res, next);
+})
+
 app.get('/clientes/:cpfCliente', verifyJWT, (req, res, next) => {
     const cpf = req.params.cpfCliente;
     req.url = `/clientes/saga/${cpf}`;    
     sagaServiceProxy(req, res, next);
+});
+
+app.get('/gerentes/:cpf', verifyJWT, (req, res, next) => {
+    gerentesServiceProxy(req, res, next);
 });
 
 app.put('/clientes/:cpfCliente', verifyJWT, (req, res, next) => {
@@ -133,9 +148,14 @@ app.get('/gerentes', verifyJWT, (req, res, next) => {
     gerentesServiceProxy(req, res, next);
 });
 
-app.get('/gerentes/:cpfGerente', verifyJWT, (req, res, next) => {
-    gerentesServiceProxy(req, res, next);    
+app.get('/contas/gerente/:idGerente/pendentes', verifyJWT, (req, res, next) => {
+    contaServiceProxy(req, res, next);
 });
+
+app.get('/contas', verifyJWT, (req, res, next) => {
+    contaServiceProxy(req, res, next);
+});
+
 
 app.post('/gerentes', verifyJWT, (req, res, next) => {
     gerentesServiceProxy(req, res, next);

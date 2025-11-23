@@ -1,22 +1,25 @@
 export interface Account {
   number: number;
-  clientCpf: string | null;
+  clientId: number;
   clientName: string | null;
   balance: number;
   limit: number;
   managerCpf: string | null;
   managerName: string | null;
   createdAt: Date;
+  status: string;
 }
 
 
 //Interface para carregar os clientes com mais saldo na conta
 export interface topClientAccount{
-  cpf: string | null,
-  clientName: string | null,
-  city: string | null,
-  state: string | null,
-  balance: number | null
+  clientId: number,
+  cpf: string,
+  clientName: string,
+  city: string,
+  state: string,
+  balance: number
+  status: string
 }
 
 export interface ClienteCompleto {
@@ -31,10 +34,10 @@ export interface ClienteCompleto {
   cidade: string;
   estado: string;
   bairro:string;   
-  conta: string; 
+  conta: string;
   saldo: number;
   limite: number;
-  gerente: string; 
+  gerente: string;
   gerente_nome: string;
   gerente_email: string;
 }
