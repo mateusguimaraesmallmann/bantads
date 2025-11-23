@@ -11,6 +11,7 @@ export class DenyClientComponent {
 
   cpfCliente: string = '';
   requestSuccess: boolean = false;
+  motivoRejeicao: string = '';
 
   constructor(public bsModalRef: BsModalRef, private solicitacoesService: SolicitacoesService){}
 
@@ -19,7 +20,12 @@ export class DenyClientComponent {
   }
 
   denyRequest(){
-    this.solicitacoesService.denyRequest(this.cpfCliente).subscribe({
+    if (!this.motivoRejeicao){
+      alert('Motivo da Rejeição é Obrigatório!');
+      return;
+    }
+
+    this.solicitacoesService.denyRequest(this.cpfCliente, this.motivoRejeicao).subscribe({
       next: (response) => {
         this.requestSuccess = true;
         this.bsModalRef.hide();

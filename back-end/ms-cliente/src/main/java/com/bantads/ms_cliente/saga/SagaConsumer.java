@@ -10,6 +10,8 @@ import com.bantads.ms_cliente.saga.dto.SagaCommand;
 import com.bantads.ms_cliente.saga.dto.SagaFailureReply;
 import com.bantads.ms_cliente.saga.dto.SagaReply;
 import com.bantads.ms_cliente.service.ClienteService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +35,8 @@ public class SagaConsumer {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @RabbitListener(queues = RabbitConfig.CLIENTE_COMMAND_QUEUE)
     public void handleSagaCommand(SagaCommand<CreateClientCommand> command, Message message) {
@@ -55,7 +59,8 @@ public class SagaConsumer {
         try {
             logger.info("ms-cliente: Comando 'CreateCliente' recebido. CorrelationId: {}", correlationId);
             
-            CreateClientCommand payload = command.getPayload();
+            Object rawPayload = command.getPayload();
+            CreateClientCommand payload = objectMapper.convertValue(rawPayload, CreateClientCommand.class);
 
             Cliente cliente = new Cliente();
             cliente.setCpf(payload.getCpf());

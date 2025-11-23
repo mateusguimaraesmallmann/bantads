@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bantads.ms_cliente.model.dto.input.EditarClienteDTOIn;
+import com.bantads.ms_cliente.model.dto.input.MotivoReprovacaoDTO;
 import com.bantads.ms_cliente.model.dto.output.ClienteAprovadoDTOOut;
 import com.bantads.ms_cliente.model.dto.output.ClienteDTOOut;
 import com.bantads.ms_cliente.service.ClienteService;
@@ -70,8 +71,9 @@ public class ClienteController {
 
     @PostMapping("/{cpf}/rejeitar")
     public ResponseEntity<Object> rejeitarCliente(
-            @PathVariable String cpf) {
-        Object dto = clienteService.rejeitarCliente(cpf);
+            @PathVariable String cpf,
+            @RequestBody MotivoReprovacaoDTO motivoReprovacao) {
+        Object dto = clienteService.rejeitarCliente(cpf, motivoReprovacao.getMotivoReprovacao());
         return ResponseEntity.ok(dto);
     }
 }

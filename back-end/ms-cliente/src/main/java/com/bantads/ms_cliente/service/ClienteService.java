@@ -11,6 +11,7 @@ import com.bantads.ms_cliente.model.entity.Cliente;
 import com.bantads.ms_cliente.model.entity.Endereco;
 import com.bantads.ms_cliente.model.enums.StatusCliente;
 import com.bantads.ms_cliente.repository.ClienteRepository;
+import com.bantads.ms_cliente.saga.dto.SagaCommand;
 
 import jakarta.persistence.EntityExistsException;
 import jakarta.persistence.EntityNotFoundException;
@@ -38,6 +39,7 @@ public class ClienteService {
     private final ContaClient contaClient;
     private final RabbitTemplate rabbitTemplate;
 
+    //region Criar Cliente
     @Transactional
     public ClienteDTOOut criarClientePorSaga(Cliente cliente) {
         boolean existe = clienteRepository.existsByCpf(cliente.getCpf());
@@ -64,12 +66,14 @@ public class ClienteService {
 
     }
 
+    //region Listar Clientes
     public List<ClienteDTOOut> listarTodos() {
         return clienteRepository.findAll()
                 .stream()
                 .map(c -> modelMapper.map(c, ClienteDTOOut.class))
                 .collect(Collectors.toList());
     }
+
 
     public ClienteDTOOut atualizarCliente(String cpf, EditarClienteDTOIn clienteDTO) {
         Cliente existente = clienteRepository.findByCpf(cpf)
@@ -80,6 +84,7 @@ public class ClienteService {
         return modelMapper.map(atualizado, ClienteDTOOut.class);
     }
 
+    //region Aprovar Cliente
     @Transactional
     public ClienteAprovadoDTOOut aprovarCliente(String cpf) {
         Cliente cliente = clienteRepository.findByCpf(cpf)
@@ -103,7 +108,9 @@ public class ClienteService {
                         : BigDecimal.ZERO;
     }
 
-    public Object rejeitarCliente(String cpf) {
+    //region Rejeitar Cliente
+    @Transactional
+    public Object rejeitarCliente(String cpf, String motivo) {
         Cliente cliente = clienteRepository.findByCpf(cpf)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
 
@@ -112,15 +119,34 @@ public class ClienteService {
         }
 
         cliente.setStatus(StatusCliente.REJEITADO);
+        clienteRepository.save(cliente);
 
-        // TODO: Adicionar motivo da reprovação (MS Conta)
-        return new Object();
+        Map<String, Object> evento = new HashMap<>();
+        evento.put("idCliente", cliente.getId());
+        evento.put("nome", cliente.getNome());
+        evento.put("email", cliente.getEmail());
+        evento.put("motivoReprovacao", motivo);
+
+        rabbitTemplate.convertAndSend("cliente-rejeitado", evento);
+
+        // Notifica o ms-auth para atualizar o status no Mongo para INACTIVE
+        Map<String, String> authPayload = new HashMap<>();
+        authPayload.put("email", cliente.getEmail());
+        authPayload.put("status", "REJECTED");
+
+        SagaCommand<Map<String, String>> command = new SagaCommand<>();
+        command.setPayload(authPayload);
+
+        rabbitTemplate.convertAndSend("auth-status-queue", command);
+        
+        return modelMapper.map(cliente, ClienteAprovadoDTOOut.class);
     }
 
     public boolean cpfExists(String cpf) {
         return clienteRepository.existsByCpf(cpf);
     }
 
+    //region Atualizar Perfil Cliente
     @Transactional 
     public Long atualizarPerfil(String cpf, EditarClienteDTOIn request) {
         

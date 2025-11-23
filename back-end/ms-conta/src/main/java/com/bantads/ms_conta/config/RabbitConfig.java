@@ -1,5 +1,6 @@
 package com.bantads.ms_conta.config;
 
+import com.bantads.ms_conta.saga.dto.SagaCommand;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -67,6 +68,11 @@ public class RabbitConfig {
     public Queue clienteAprovadoQueue() {
         return new Queue("cliente-aprovado");
     }
+
+    @Bean
+    public Queue clienteRejeitadoQueue() {
+        return new Queue("cliente-rejeitado");
+    }
     
     @Bean
     public Queue contaAtivadaQueue() {
@@ -93,15 +99,13 @@ public class RabbitConfig {
         rabbitObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
         
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter(rabbitObjectMapper);
-
         converter.setClassMapper(new DefaultJackson2JavaTypeMapper() {
             @Override
             public Class<?> toClass(MessageProperties properties) {
-                properties.getHeaders().remove("__TypeId__");
-                return Object.class;
+                properties.getHeaders().remove("__TypeId__"); 
+                return Object.class; 
             }
         });
-
         return converter;
     }
 

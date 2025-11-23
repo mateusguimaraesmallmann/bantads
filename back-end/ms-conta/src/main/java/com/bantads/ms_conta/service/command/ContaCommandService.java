@@ -112,7 +112,7 @@ public class ContaCommandService {
         emailPayload.put("email", emailCliente);
         emailPayload.put("assunto", "BANTADS - Conta Aprovada!");
         emailPayload.put("mensagem", String.format(
-            "Olá %s, sua conta foi aprovada!\nNúmero da Conta: %s\nSenha Provisória: %s", 
+            "Olá %s, sua conta foi aprovada!\nNúmero da Conta: %s\nSenha: %s", 
             nomeCliente, novoNumero, novaSenha));
 
         rabbitTemplate.convertAndSend("conta-ativada", emailPayload);
@@ -127,6 +127,29 @@ public class ContaCommandService {
 
         rabbitTemplate.convertAndSend("auth-update-password", command);
 
+    }
+
+    //region Desativar Conta
+    @Transactional
+    public void desativarConta(Long idCliente, String nomeCliente, String emailCliente, String motivoReprovacao) {
+        Conta conta = contaJpaRepository.findByIdCliente(idCliente)
+            .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada!"));
+
+
+        conta.setMotivoReprovacao(motivoReprovacao);
+        conta.setStatus(Status.INACTIVE);
+        contaJpaRepository.save(conta);
+
+        // Parâmetros do e-mail, passando o motivo da reprovação junto
+        Map<String, String> emailPayload = new HashMap<>();
+        emailPayload.put("email", emailCliente);
+        emailPayload.put("assunto", "BANTADS - Solicitação Negada");
+        emailPayload.put("message", String.format(
+            "Olá %s, informamos que infelizmente sua solicitação de conta não foi aprovada palo seguinte motivo: %s",
+            nomeCliente, motivoReprovacao
+        ));
+
+        rabbitTemplate.convertAndSend("conta-ativada", emailPayload);
     }
 
     //region Gerar Senha

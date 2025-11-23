@@ -19,8 +19,8 @@ public class AutocadastroSagaController {
     private AutocadastroSagaService autocadastroSagaService;
 
     @PostMapping
-    public ResponseEntity<?> autoCadastro(@PathVariable String cpf, @RequestBody AutocadastroRequest dados) {
-        return autocadastroSagaService.autoCadastro(cpf, dados);
+    public ResponseEntity<?> autoCadastro(@RequestBody AutocadastroRequest dados) {
+        return autocadastroSagaService.autoCadastro(dados.getCpf(), dados);
     }
 
 }

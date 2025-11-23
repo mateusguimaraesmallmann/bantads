@@ -19,6 +19,9 @@ public class RabbitMQConfig {
     
     public static final String REPLIES_EXCHANGE = "saga.reply.exchange";
     public static final String SAGA_REPLY_KEY = "saga.reply.key";
+    
+    // Queue para reprovar cliente
+    public static final String AUTH_STATUS_QUEUE = "auth-status-queue";
 
     @Bean
     public DirectExchange sagaExchange() {
@@ -33,6 +36,11 @@ public class RabbitMQConfig {
     @Bean
     public Queue updateAuthPasswordQueue() {
         return new Queue("auth-update-password");
+    }
+
+    @Bean
+    public Queue authStatusQueue() {
+        return new Queue(AUTH_STATUS_QUEUE, true);
     }
 
     @Bean
