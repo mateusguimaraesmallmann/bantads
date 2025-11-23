@@ -27,7 +27,7 @@ export class ClientHomeComponent implements OnInit {
   ngOnInit(): void{
     this.infos = this.authService.getCurrentUser();
     this.processarInformacoes();
-}
+  }
 
    options = [
   { name: 'Alteração de Perfil', route: '/update-profile' },
@@ -55,7 +55,13 @@ action(option: any) {
       next: (response:ClienteCompleto) => {
         console.log("Carregou os dados da conta!", response);
         this.clienteCompleto = response;
-      },
+
+        if (this.infos) {
+          (this.infos as any).conta = response.conta; 
+          (this.infos as any).saldo = response.saldo; 
+          localStorage.setItem('user', JSON.stringify(this.infos));        
+      }
+    },
       error: (err:ClienteCompleto) => {
         console.error("Erro: ", err);
       }

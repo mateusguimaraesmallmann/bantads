@@ -9,8 +9,8 @@ import java.util.Optional;
 import java.util.Random;
 
 import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Service;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.stereotype.Service;
 
 import com.bantads.ms_conta.config.RabbitConfig;
 import com.bantads.ms_conta.model.dto.GerenteCargaDTO;
@@ -20,6 +20,8 @@ import com.bantads.ms_conta.model.dto.input.MudarGerenteDTOIn;
 import com.bantads.ms_conta.model.dto.input.TransferirDTOIn;
 import com.bantads.ms_conta.model.dto.output.ContaCriadaDTOOut;
 import com.bantads.ms_conta.model.dto.output.DepositarSacarDTOOut;
+import com.bantads.ms_conta.model.dto.output.ExtratoDTO;
+import com.bantads.ms_conta.model.dto.output.MovimentacaoExtratoDTO;
 import com.bantads.ms_conta.model.dto.output.TransferirDTOOut;
 import com.bantads.ms_conta.model.entity.jpa.Conta;
 import com.bantads.ms_conta.model.entity.jpa.Movimentacao;
@@ -156,8 +158,7 @@ public class ContaCommandService {
     // Gera a senha aqui e encaminha para o ms-auth atualizar no seu registro via RabbitMQ
     private String gerarSenhaAleatoria() {
         // Gera número entre 0 e 9999 e formata com zeros à esquerda (ex: 0042)
-        Random random = new Random();
-        return String.format("%04d", random.nextInt(10000)); 
+        return "tads"; 
     }
 
     //region Gerar Número
@@ -182,6 +183,21 @@ public class ContaCommandService {
                 TipoMovimentacao.DEPOSITO);
 
         contaJpaRepository.save(conta);
+        ContaSyncDTO syncDTO = new ContaSyncDTO(
+            conta.getId(),
+            conta.getIdCliente(),
+            conta.getIdGerente(),
+            conta.getNumero(),
+            conta.getSaldo(),
+            conta.getLimite(),
+            conta.getDataCriacao(),
+            conta.getStatus()
+        );
+        rabbitTemplate.convertAndSend(
+            RabbitConfig.CONTA_SYNC_EXCHANGE,
+            RabbitConfig.CONTA_SYNC_KEY,
+            syncDTO
+        );
 
         return new DepositarSacarDTOOut(
                 conta.getNumero(),
@@ -210,6 +226,21 @@ public class ContaCommandService {
                 TipoMovimentacao.SAQUE);
 
         contaJpaRepository.save(conta);
+        ContaSyncDTO syncDTO = new ContaSyncDTO(
+            conta.getId(),
+            conta.getIdCliente(),
+            conta.getIdGerente(),
+            conta.getNumero(),
+            conta.getSaldo(),
+            conta.getLimite(),
+            conta.getDataCriacao(),
+            conta.getStatus()
+        );
+        rabbitTemplate.convertAndSend(
+            RabbitConfig.CONTA_SYNC_EXCHANGE,
+            RabbitConfig.CONTA_SYNC_KEY,
+            syncDTO
+        );        
 
         return new DepositarSacarDTOOut(
                 conta.getNumero(),
@@ -226,35 +257,51 @@ public class ContaCommandService {
 
         Conta destino = contaJpaRepository.findByNumero(transferirDTOIn.getDestino()) 
                 .orElseThrow(() -> new EntityNotFoundException("Conta de destino não encontrada"));
-
         if (origem.getSaldo().compareTo(transferirDTOIn.getValor()) < 0) {
             throw new IllegalArgumentException("Saldo insuficiente na conta de origem");
         }
 
-        criarMovimentacao(
-                destino,
-                origem.getNumero(),
-                destino.getNumero(),
-                transferirDTOIn.getValor(),
-                TipoMovimentacao.TRANSFERENCIA);
+        origem.setSaldo(origem.getSaldo().subtract(transferirDTOIn.getValor()));
+        destino.setSaldo(destino.getSaldo().add(transferirDTOIn.getValor()));
 
-        Movimentacao movimentacaoOrigem = criarMovimentacao(
-                origem,
-                origem.getNumero(),
-                destino.getNumero(),
-                transferirDTOIn.getValor(),
-                TipoMovimentacao.TRANSFERENCIA);
+        criarMovimentacao(destino, origem.getNumero(), destino.getNumero(), 
+            transferirDTOIn.getValor(), TipoMovimentacao.TRANSFERENCIA);
 
-        DepositarSacarDTOIn depositarSacarDTOIn = new DepositarSacarDTOIn(transferirDTOIn.getValor());
+        Movimentacao movimentacaoOrigem = criarMovimentacao(origem, origem.getNumero(), destino.getNumero(), 
+            transferirDTOIn.getValor(), TipoMovimentacao.TRANSFERENCIA);
 
-        DepositarSacarDTOOut depositarSacarDTOOut = sacar(origem.getNumero(), depositarSacarDTOIn);
-        depositar(destino.getNumero(), depositarSacarDTOIn);
+        contaJpaRepository.save(origem);
+        contaJpaRepository.save(destino);
+
+        ContaSyncDTO syncOrigemDTO = new ContaSyncDTO(
+            origem.getId(),
+            origem.getIdCliente(),
+            origem.getIdGerente(),
+            origem.getNumero(),
+            origem.getSaldo(), 
+            origem.getLimite(),
+            origem.getDataCriacao(),
+            origem.getStatus()
+        );
+        rabbitTemplate.convertAndSend(RabbitConfig.CONTA_SYNC_EXCHANGE, RabbitConfig.CONTA_SYNC_KEY, syncOrigemDTO);
+
+        ContaSyncDTO syncDestinoDTO = new ContaSyncDTO(
+            destino.getId(),
+            destino.getIdCliente(),
+            destino.getIdGerente(),
+            destino.getNumero(),
+            destino.getSaldo(),
+            destino.getLimite(),
+            destino.getDataCriacao(),
+            destino.getStatus()
+        );
+        rabbitTemplate.convertAndSend(RabbitConfig.CONTA_SYNC_EXCHANGE, RabbitConfig.CONTA_SYNC_KEY, syncDestinoDTO);        
 
         return new TransferirDTOOut(
                 movimentacaoOrigem.getContaOrigem(),
                 movimentacaoOrigem.getData(),
                 movimentacaoOrigem.getContaDestino(),
-                depositarSacarDTOOut.getSaldo(),
+                origem.getSaldo(),
                 movimentacaoOrigem.getValor()
         );
     }
@@ -351,6 +398,30 @@ public class ContaCommandService {
             RabbitConfig.CONTA_SYNC_KEY,
             syncDTO
         );        
+    }
+
+    //region extrato
+    public ExtratoDTO consultarExtrato(String numeroConta) {
+
+        Conta conta = contaJpaRepository.findByNumero(numeroConta)
+            .orElseThrow(() -> new EntityNotFoundException("Conta não encontrada: " + numeroConta));
+        List<Movimentacao> movimentacoes = movimentacaoJpaRepository.findByConta_NumeroOrderByDataDesc(numeroConta);
+
+        List<MovimentacaoExtratoDTO> listaDtos = movimentacoes.stream()
+            .map(m -> new MovimentacaoExtratoDTO(
+                m.getData(),
+                m.getTipo().name().toLowerCase(), 
+                m.getContaOrigem() != null ? m.getContaOrigem() : "", 
+                m.getContaDestino() != null ? m.getContaDestino() : "",
+                m.getValor()
+            ))
+            .toList();
+
+        return new ExtratoDTO(
+            conta.getNumero(),
+            conta.getSaldo(),
+            listaDtos
+        );
     }
 
 }

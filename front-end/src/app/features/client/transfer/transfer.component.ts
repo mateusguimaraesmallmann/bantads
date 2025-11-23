@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MoneyPipe } from "../../../shared/pipes/pipe-money";
 import { AuthService } from '../../../core/services/authentication/auth.service';
+import { TransactionService } from '../../../core/services/transaction.service';
 
 declare var bootstrap: any;
 
@@ -20,8 +21,13 @@ export class TransferComponent {
   dataHora: Date = new Date();
 
   mensagemValor: string = '';
+  infos:any;
+  erroTransferencia: string = '';
+  constructor(private router: Router, private authService: AuthService, private transationService:TransactionService) {}
 
-  constructor(private router: Router, private authService: AuthService) {}
+  ngOnInit(): void{
+    this.infos = this.authService.getCurrentUser();
+  }
 
   onSubmit(form: any): void {
     if (!form.valid) return;
@@ -31,8 +37,7 @@ export class TransferComponent {
       return;
     }
 
-    const currentUser = this.authService.getCurrentUser();
-    if (!currentUser || (currentUser.balance ?? 0) < this.valorTransferencia) {
+    if (!this.infos || (this.infos.saldo ?? 0) < this.valorTransferencia) {
       this.mensagemValor = 'Saldo insuficiente.';
       return;
     }
@@ -54,35 +59,36 @@ export class TransferComponent {
       const confirmModal = new bootstrap.Modal(confirmModalEl);
       confirmModal.show();
     }
-
-    console.log(
-      `Transferência de ${this.valorTransferencia} para conta ${this.contaDestino}`
-    );
   }
 
   confirmarTransferencia(): void {
-    const currentUser = this.authService.getCurrentUser();
-    if (currentUser) {
-      currentUser.balance = (currentUser.balance ?? 0) - this.valorTransferencia;
-      localStorage.setItem('user', JSON.stringify(currentUser));
-    }
-
-    const confirmModalEl = document.getElementById('confirmTransferModal');
+  const confirmModalEl = document.getElementById('confirmTransferModal');
     if (confirmModalEl) {
       const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
       confirmModal?.hide();
     }
-
-    const successModalEl = document.getElementById('successTransferModal');
-    if (successModalEl) {
-      const successModal = new bootstrap.Modal(successModalEl);
-      successModal.show();
-    }
-
-    console.log(
-      `Transferência confirmada: ${this.valorFormatado} para conta ${this.contaDestino} em ${this.dataHora}`
-    );
+    this.processarTransferencia();
   }
+  
+  processarTransferencia(){
+    this.transationService.transferir(this.infos.conta,this.contaDestino, this.valorTransferencia).subscribe({
+      next: (response: any) => {
+        console.log("Transferencia realizada!", response);
+        this.infos.saldo = (this.infos.saldo ?? 0) - this.valorTransferencia;
+        localStorage.setItem('user', JSON.stringify(this.infos));
+
+        const successModalEl = document.getElementById('successTransferModal');
+        if (successModalEl) {
+          const successModal = new bootstrap.Modal(successModalEl);
+          successModal.show();
+        }
+      },
+      error: (err: any) => {
+      console.error("Erro na transferência:", err);
+      this.erroTransferencia = "Erro ao realizar transferência. Verifique os dados e tente novamente.";
+    }
+    })
+  }  
 
   formatarValor(event: any): void {
     let valor = event.target.value.replace(/\D/g, '');

@@ -64,7 +64,6 @@
                   <tr>
                     <th>Data/Hora</th>
                     <th>Operação</th>
-                    <th>Origem/Destino</th>
                     <th>Valor</th>
                   </tr>
                 </thead>
@@ -72,7 +71,6 @@
                   <tr *ngFor="let transaction of day.transacoes" [ngClass]="{'text-danger': transaction.tipo === 'saida', 'text-success': transaction.tipo === 'entrada'}">
                     <td>{{ transaction.dataHora }}</td>
                     <td>{{ transaction.operacao }}</td>
-                    <td>{{ transaction.cliente || 'N/A' }}</td>
                     <td class="fw-bold">{{ transaction.valor | money }}</td>
                   </tr>
                 </tbody>

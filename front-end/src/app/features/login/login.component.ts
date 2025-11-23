@@ -31,6 +31,7 @@ export class LoginComponent {
   }
 
   submit(): any {
+  this.hasError = false;
   if (this.form.invalid) {
     this.form.markAllAsTouched();
     return;

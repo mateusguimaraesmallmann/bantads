@@ -10,5 +10,6 @@ import java.util.List;
 public interface MovimentacaoJpaRepository extends JpaRepository<Movimentacao, Long> {
 
     List<Movimentacao> findByContaId(Long contaId);
+    List<Movimentacao> findByConta_NumeroOrderByDataDesc(String numeroConta);
 
 }

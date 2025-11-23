@@ -9,6 +9,11 @@
       <div class="pane pane-form w-100">
         <h3 class="h4 text-center mb-4 fw-semibold">Realizar Saque</h3>
 
+        <div *ngIf="erroSaque" class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Erro!</strong> {{ erroSaque }}
+          <button type="button" class="btn-close" aria-label="Close" (click)="erroSaque = ''"></button>
+        </div>
+
         <form (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label for="valor" class="form-label fw-semibold">Valor do Saque</label>
@@ -33,14 +38,14 @@
        <div class="modal-header">
          <h5 class="modal-title" id="confirmWithdrawModalLabel">Confirmar Saque</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-        </div>
-        <div class="modal-body text-center">
-          <p class="fw-semibold">Você confirma o saque de {{ valorSaque | money }}?</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-          <button type="button" class="btn btn-danger" (click)="confirmarSaque()">Confirmar</button>
-        </div>
+       </div>
+       <div class="modal-body text-center">
+         <p class="fw-semibold">Você confirma o saque de {{ valorSaque | money }}?</p>
+       </div>
+       <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+         <button type="button" class="btn btn-danger" (click)="confirmarSaque()">Confirmar</button>
+       </div>
     </div>
   </div>
 </div>
@@ -56,13 +61,13 @@
                <p class="fw-semibold">Saque de {{ valorSaque | money }} realizado com sucesso!</p>
             </div>
             <div class="modal-footer">
-                <button
-                type="button"
-                class="btn btn-danger"
-                data-bs-dismiss="modal"
-                (click)="voltar()">
-                OK </button>
-              </div>
+               <button
+               type="button"
+               class="btn btn-danger"
+               data-bs-dismiss="modal"
+               (click)="voltar()">
+               OK </button>
+             </div>
         </div>
     </div>
 </div>

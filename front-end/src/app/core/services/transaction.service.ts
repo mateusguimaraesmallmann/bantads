@@ -13,10 +13,10 @@ export class TransactionService {
 
   constructor(private http: HttpClient) { }
 
-  //consultarExtratoPorCpf(numeroConta:string):Observable<ExtratoResponse>{
-  //  const url = `${this.apiUrl}/${numeroConta}/extrato`;
-  //  return this.http.get<ExtratoResponse>(url);
-  //}
+  consultarExtratoPorCpf(numeroConta:string):Observable<ExtratoResponse>{
+   const url = `${this.apiUrl}/${numeroConta}/extrato`;
+   return this.http.get<ExtratoResponse>(url);
+  }
 
   consultarSaldo(numeroConta: string): Observable<SaldoResponse> {
     const url = `${this.apiUrl}/${numeroConta}/saldo`;

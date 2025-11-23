@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { MoneyPipe } from '../../../shared/pipes/pipe-money';
 import { AuthService } from '../../../core/services/authentication/auth.service';
+import { TransactionService } from '../../../core/services/transaction.service';
 
 declare var bootstrap: any;
 
@@ -17,8 +18,14 @@ export class WithdrawComponent {
   valorSaque: number = 0;
   valorFormatado: string = '';
   mensagem: string = '';
+  infos: any;
+  erroSaque: string = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private transationService: TransactionService) {}
+  
+  ngOnInit(): void {
+    this.infos = this.authService.getCurrentUser();
+  }
 
   onSubmit(): void {
     if (this.valorSaque <= 0 || isNaN(this.valorSaque)) {
@@ -26,8 +33,7 @@ export class WithdrawComponent {
       return;
     }
 
-    const currentUser = this.authService.getCurrentUser();
-    if (!currentUser || (currentUser.balance ?? 0) < this.valorSaque) {
+    if (!this.infos || (this.infos.saldo ?? 0) < this.valorSaque) {
       this.mensagem = 'Saldo insuficiente.';
       return;
     }
@@ -48,23 +54,41 @@ export class WithdrawComponent {
   }
 
   confirmarSaque(): void {
-    const currentUser = this.authService.getCurrentUser();
-    if (currentUser) {
-      currentUser.balance = (currentUser.balance ?? 0) - this.valorSaque;
-      localStorage.setItem('user', JSON.stringify(currentUser));
-    }
-
     const confirmModalEl = document.getElementById('confirmWithdrawModal');
     if (confirmModalEl) {
       const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
       confirmModal?.hide();
     }
+    this.processarSaque();
+  }
 
-    const successModalEl = document.getElementById('successWithdrawModal');
-    if (successModalEl) {
-      const successModal = new bootstrap.Modal(successModalEl);
-      successModal.show();
-    }
+  processarSaque() {
+    this.erroSaque = ''; 
+
+    this.transationService.sacar(this.infos.conta, this.valorSaque).subscribe({
+      next: (response: any) => {
+        console.log("Saque realizado!", response);
+        const currentUser = this.authService.getCurrentUser();
+        if (currentUser) {
+          currentUser.balance = (currentUser.balance ?? 0) - this.valorSaque;
+          localStorage.setItem('user', JSON.stringify(currentUser));
+        }
+
+        const successModalEl = document.getElementById('successWithdrawModal');
+        if (successModalEl) {
+          const successModal = new bootstrap.Modal(successModalEl);
+          successModal.show();
+        }
+      },
+      error: (err: any) => {
+        console.error("Erro no saque:", err);
+        this.erroSaque = "Erro ao realizar saque. Tente novamente.";
+        
+        if (err.error && err.error.message) {
+           this.erroSaque = err.error.message;
+        }
+      }
+    })
   }
 
   formatarValor(event: any): void {
@@ -86,5 +110,3 @@ export class WithdrawComponent {
     this.router.navigate(['/client-home']);
   }
 }
-
-

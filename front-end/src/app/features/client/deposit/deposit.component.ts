@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/authentication/auth.service';
+import { TransactionService } from '../../../core/services/transaction.service';
 
 declare var bootstrap: any;
 
@@ -17,50 +18,67 @@ export class DepositComponent {
   valorDeposito: number = 0;
   valorFormatado: string = '';
   mensagem: string = '';
+  infos: any;
+  erroDeposito: string = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private transationService: TransactionService) {}
+  
+  ngOnInit(): void {
+    this.infos = this.authService.getCurrentUser();
+  }
 
   onSubmit(): void {
-     if (this.valorDeposito <= 0 || isNaN(this.valorDeposito)) {
+    if (this.valorDeposito <= 0 || isNaN(this.valorDeposito)) {
       this.mensagem = 'Por favor, insira um valor válido.';
       return;
-      }
+    }
 
-      this.mensagem = '';
-      this.valorFormatado = this.valorDeposito.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL'
-      });
+    this.mensagem = '';
+    this.valorFormatado = this.valorDeposito.toLocaleString('pt-BR', {
+      style: 'currency',
+      currency: 'BRL'
+    });
 
-      const confirmModalEl = document.getElementById('confirmDepositModal');
-        if (confirmModalEl) {
-        const confirmModal = new bootstrap.Modal(confirmModalEl);
-        confirmModal.show();
-      }
+    const confirmModalEl = document.getElementById('confirmDepositModal');
+    if (confirmModalEl) {
+      const confirmModal = new bootstrap.Modal(confirmModalEl);
+      confirmModal.show();
+    }
 
-      console.log('Depósito de:', this.valorFormatado);
+    console.log('Depósito de:', this.valorFormatado);
   }
 
   confirmarDeposito(): void {
-  const confirmModalEl = document.getElementById('confirmDepositModal');
-  if (confirmModalEl) {
-    const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
-    confirmModal?.hide();
+    const confirmModalEl = document.getElementById('confirmDepositModal');
+    if (confirmModalEl) {
+      const confirmModal = bootstrap.Modal.getInstance(confirmModalEl);
+      confirmModal?.hide();
+    }
+    this.processarDeposito();
   }
 
-  const currentUser = this.authService.getCurrentUser();
-  if (currentUser) {
-    currentUser.balance = (currentUser.balance ?? 0) + this.valorDeposito;
+  processarDeposito() {
+    this.erroDeposito = ''; 
 
-    localStorage.setItem('user', JSON.stringify(currentUser));
+    this.transationService.depositar(this.infos.conta, this.valorDeposito).subscribe({
+      next: (response: any) => {
+        console.log("Deposito realizado!", response);
+        const successModalEl = document.getElementById('depositModal');
+        if (successModalEl) {
+          const successModal = new bootstrap.Modal(successModalEl);
+          successModal.show();
+        }
+      },
+      error: (err: any) => {
+        console.error("Erro no depósito:", err);
+        this.erroDeposito = "Erro ao realizar depósito. Tente novamente.";
+        
+        if (err.error && err.error.message) {
+            this.erroDeposito = err.error.message;
+        }
+      }
+    })
   }
-
-  const successModalEl = document.getElementById('depositModal');
-  if (successModalEl) {
-    const successModal = new bootstrap.Modal(successModalEl);
-    successModal.show();
-  }
-}
 
   formatarValor(event: any): void {
     let valor = event.target.value.replace(/\D/g, '');
@@ -79,5 +97,3 @@ export class DepositComponent {
     this.router.navigate(['/client-home']);
   }
 }
-
-

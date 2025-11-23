@@ -1,6 +1,7 @@
 package com.bantads.ms_conta.controller.command;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,6 +12,7 @@ import com.bantads.ms_conta.model.dto.input.DepositarSacarDTOIn;
 import com.bantads.ms_conta.model.dto.input.TransferirDTOIn;
 import com.bantads.ms_conta.model.dto.output.ContaCriadaDTOOut;
 import com.bantads.ms_conta.model.dto.output.DepositarSacarDTOOut;
+import com.bantads.ms_conta.model.dto.output.ExtratoDTO;
 import com.bantads.ms_conta.model.dto.output.TransferirDTOOut;
 import com.bantads.ms_conta.saga.dto.CreateContaCommand;
 import com.bantads.ms_conta.service.command.ContaCommandService;
@@ -49,4 +51,9 @@ public class ContaCommandController {
             @RequestBody TransferirDTOIn dto) {
         return ResponseEntity.ok(contaService.transferir(numero, dto));
     }
+
+    @GetMapping("/{numero}/extrato")
+    public ResponseEntity<ExtratoDTO> consultarExtrato(@PathVariable String numero) {
+        return ResponseEntity.ok(contaService.consultarExtrato(numero));
+    }    
 }

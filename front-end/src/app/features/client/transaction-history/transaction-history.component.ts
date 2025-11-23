@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import {ItemExtratoResponse,ExtratoResponse,Transacoes,TodasTransacoes} from '../../../core/models/transaction-history.model';
 import { Router } from '@angular/router';
 import { MoneyPipe } from '../../../shared/pipes/pipe-money';
+import { TransactionService } from '../../../core/services/transaction.service';
+import { AuthService } from '../../../core/services/authentication/auth.service';
 
 @Component({
   selector: 'app-transaction-history',
@@ -26,14 +28,16 @@ export class TransactionHistoryComponent implements OnInit{
   public listaDeTransacoes: TodasTransacoes[] = [];
   public isLoading: boolean = false;
   public hasSearched: boolean = false;
+  infos : any;
 
-  constructor(private datePipe: DatePipe, private router: Router) {}
+  constructor(private datePipe: DatePipe, private router: Router, private transactionHistory: TransactionService, private authService:AuthService) {}
 
   ngOnInit(): void {
+    this.infos = this.authService.getCurrentUser();
     this.definirDatasPadrao();
+    this.buscarExtratos();
   }
 
-  //inicializa valores das datas
   private definirDatasPadrao(): void {
     const hoje = new Date();
     const trintaDiasAtras = new Date();
@@ -42,51 +46,39 @@ export class TransactionHistoryComponent implements OnInit{
     this.dataInicial = this.formatarDataParaInput(trintaDiasAtras);
   }
 
-  //formatação para a vizualização
   private formatarDataParaInput(data: Date): string {
     return this.datePipe.transform(data, 'yyyy-MM-dd') || '';
   }
 
-  //gera dados de exemplo
   public buscarExtratos(): void {
     this.isLoading = true;
     this.hasSearched = true;
     this.listaDeTransacoes = [];
-    const dados: ExtratoResponse = {
-      conta: "8722",
-      saldo: 1933.32,
-      movimentacoes: [
-        { data: "2025-08-24T09:15:00Z", tipo: "SAQUE", origem: null, destino: null, valor: -100.00 },
-        { data: "2025-08-22T15:45:10Z", tipo: "TRANSFERENCIA", origem: "8722", destino: "Maria Silva", valor: -200.00 },
-        { data: "2025-08-22T10:30:00Z", tipo: "DEPOSITO", origem: null, destino: null, valor: 500.00 },
-        { data: "2025-08-20T11:00:00Z", tipo: "TRANSFERENCIA", origem: "João Souza", destino: "8722", valor: 1733.32 },
-      ]
-    };
-    // this.transactionHistory.findTransactionHistory().subscribe({
-    // next: (response) => this.listarTransacoes(response),
-    // error: (err) => this.handleError(err)
-    // });
-    this.listarTransacoes(dados);
+    this.transactionHistory.consultarExtratoPorCpf(this.infos.conta).subscribe({
+    next: (response) => this.listarTransacoes(response),
+    error: (err) => console.log(err)
+    });
     this.isLoading = false;
   }
 
 
-  // obtém as transações do usuário e as agrupa
-  // por dia
   private listarTransacoes(response: ExtratoResponse): void {
     this.numeroDaConta = response.conta;
     this.balanco = response.saldo;
-    this.dadosCarregados = true
+    this.dadosCarregados = true;
 
     if (response.movimentacoes.length === 0) {
       this.listaDeTransacoes = [];
+      this.isLoading = false;
       return;
     }
 
     const diasAgrupados: { dataChave: string, transacoes: Transacoes[] }[] = [];
 
     for (const movimentacao of response.movimentacoes) {
-      const dataChave = movimentacao.data.split('T')[0];
+      const dataOriginal = movimentacao.data;
+      const dataChave = dataOriginal.split('T')[0]; 
+      
       let diaExistente = diasAgrupados.find(dia => dia.dataChave === dataChave);
 
       if (!diaExistente) {
@@ -94,47 +86,58 @@ export class TransactionHistoryComponent implements OnInit{
         diasAgrupados.push(diaExistente);
       }
 
+      const ehSaida = movimentacao.origem === this.infos.conta;
+
       const transacao: Transacoes = {
         dataHora: this.datePipe.transform(movimentacao.data, 'dd/MM/yyyy HH:mm:ss') || '',
         valor: movimentacao.valor,
-        tipo: movimentacao.valor > 0 ? 'entrada' : 'saida',
-        operacao: this.formatarOperacao(movimentacao),
-        cliente: this.formatarCliente(movimentacao)
+        tipo: ehSaida ? 'saida' : 'entrada',
+        operacao: movimentacao.tipo.toLocaleUpperCase()
       };
 
       diaExistente.transacoes.push(transacao);
     }
-
     const diasOrdenados = diasAgrupados.sort((a, b) => b.dataChave.localeCompare(a.dataChave));
-    let saldoAtual = response.saldo;
+    
+    let saldoNoFinalDoDia = response.saldo;
     const extratosCalculados: TodasTransacoes[] = [];
 
     for (const dia of diasOrdenados) {
       const transacoesDoDia = dia.transacoes;
-      const totalDoDia = transacoesDoDia.reduce((soma, t) => soma + t.valor, 0);
+      let variacaoDoDia = 0;
 
-      extratosCalculados.push({
-        data: this.datePipe.transform(dia.dataChave, 'dd/MM/yyyy', 'UTC') || '',
-        saldoConsolidado: saldoAtual,
-        transacoes: transacoesDoDia.sort((a, b) =>
-          new Date(b.dataHora.split(' ')[0].split('/').reverse().join('-') + 'T' + b.dataHora.split(' ')[1]).getTime() -
-          new Date(a.dataHora.split(' ')[0].split('/').reverse().join('-') + 'T' + a.dataHora.split(' ')[1]).getTime()
-        )
+      for (const t of transacoesDoDia) {
+        if (t.tipo === 'entrada') {
+          variacaoDoDia += t.valor;
+        } else {
+          variacaoDoDia -= t.valor;
+        }
+      }
+      
+      transacoesDoDia.sort((a, b) => {
+        const [dataA, horaA] = a.dataHora.split(' ');
+        const [diaA, mesA, anoA] = dataA.split('/');
+        const dataObjA = new Date(`${anoA}-${mesA}-${diaA}T${horaA}`);
+
+        const [dataB, horaB] = b.dataHora.split(' ');
+        const [diaB, mesB, anoB] = dataB.split('/');
+        const dataObjB = new Date(`${anoB}-${mesB}-${diaB}T${horaB}`);
+
+        return dataObjB.getTime() - dataObjA.getTime();
       });
-      saldoAtual -= totalDoDia;
+
+      if (dia.dataChave >= this.dataInicial && dia.dataChave <= this.dataFinal) {
+        extratosCalculados.push({
+          data: this.datePipe.transform(dia.dataChave, 'dd/MM/yyyy', 'UTC') || '',
+          saldoConsolidado: saldoNoFinalDoDia,
+          transacoes: transacoesDoDia
+        });
+      }
+      saldoNoFinalDoDia -= variacaoDoDia;
     }
 
-    this.listaDeTransacoes = extratosCalculados.reverse();
+    this.listaDeTransacoes = extratosCalculados;
     this.isLoading = false;
-  }
-
-  //identifica o tipo da operação e retorna
-  //qual o sentido em caso de transferência
-  private formatarOperacao(movimentacao: ItemExtratoResponse): string {
-    if (movimentacao.tipo === 'TRANSFERENCIA') {
-      return movimentacao.valor > 0 ? 'Transferência Recebida' : 'Transferência Enviada';
-    }
-    return movimentacao.tipo.charAt(0) + movimentacao.tipo.slice(1).toLowerCase();
   }
 
   //identifica o cliente da operação e retorna

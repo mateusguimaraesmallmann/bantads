@@ -9,6 +9,11 @@
       <div class="pane pane-form w-100">
         <h3 class="h4 text-center mb-4 fw-semibold">Realizar Depósito</h3>
 
+        <div *ngIf="erroDeposito" class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Erro!</strong> {{ erroDeposito }}
+          <button type="button" class="btn-close" aria-label="Close" (click)="erroDeposito = ''"></button>
+        </div>
+
         <form (ngSubmit)="onSubmit()">
           <div class="mb-3">
             <label for="valor" class="form-label fw-semibold">Valor do Depósito</label>
@@ -16,9 +21,9 @@
                    (input)="formatarValor($event)"
                    class="form-control"
                    required>
-                   <div *ngIf="mensagem" class="text-danger mt-1">
-                      {{ mensagem }}
-                    </div>
+            <div *ngIf="mensagem" class="text-danger mt-1">
+              {{ mensagem }}
+            </div>
           </div>
 
           <button type="submit" class="btn btn-primary w-100">Depositar</button>
@@ -28,7 +33,6 @@
   </div>
 </div>
 
-<!-- Modal de confirmação -->
 <div class="modal fade" id="confirmDepositModal" tabindex="-1" aria-labelledby="confirmDepositModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -47,7 +51,6 @@
   </div>
 </div>
 
-<!-- Modal de sucesso -->
 <div class="modal fade" id="depositModal" tabindex="-1" aria-labelledby="depositModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -59,13 +62,7 @@
         <p class="fw-semibold">Depósito de {{ valorDeposito | money }} realizado com sucesso!</p>
       </div>
       <div class="modal-footer">
-        <button
-          type="button"
-          class="btn btn-primary"
-          data-bs-dismiss="modal"
-          (click)="voltar()">
-          OK
-        </button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="voltar()">OK</button>
       </div>
     </div>
   </div>

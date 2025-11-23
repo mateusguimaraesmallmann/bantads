@@ -6,10 +6,15 @@
         <img src="assets/logo.png" alt="BANTADS" class="brand-img" />
       </div>
 
-      <div class="pane pane-form">
-        <h1 class="h4 text-center mb-4 fw-semibold">Log In</h1>
+        <div class="pane pane-form">
+          <h1 class="h4 text-center mb-4 fw-semibold">Log In</h1>
 
-        <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+          <div *ngIf="hasError" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Erro!</strong> Usuário ou senha inválidos.
+            <button type="button" class="btn-close" aria-label="Close" (click)="hasError = false"></button>
+          </div>
+
+          <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
           <div class="mb-3">
             <label for="email" class="form-label">Email</label>
             <input id="email" type="email" class="form-control"

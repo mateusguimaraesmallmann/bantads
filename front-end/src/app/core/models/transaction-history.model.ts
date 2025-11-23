@@ -16,7 +16,6 @@ export interface Transacoes {
   dataHora: string;
   operacao: string;
   tipo: 'entrada' | 'saida';
-  cliente: string | null;
   valor: number;
 }
 

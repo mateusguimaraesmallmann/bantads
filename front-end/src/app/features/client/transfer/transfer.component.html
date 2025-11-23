@@ -9,6 +9,11 @@
       <div class="pane pane-form w-100">
         <h3 class="h4 text-center mb-4 fw-semibold">Realizar Transferência</h3>
 
+        <div *ngIf="erroTransferencia" class="alert alert-danger alert-dismissible fade show" role="alert">
+          <strong>Erro!</strong> {{ erroTransferencia }}
+          <button type="button" class="btn-close" aria-label="Close" (click)="erroTransferencia = ''"></button>
+        </div>
+
         <form #form="ngForm" (ngSubmit)="onSubmit(form)">
           <div class="mb-3">
             <label for="contaDestino" class="form-label fw-semibold">Conta Destino</label>

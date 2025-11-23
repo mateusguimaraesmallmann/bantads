@@ -197,19 +197,19 @@ app.get("/contas/saldo", verifyJWT, (req, res, next) => {
   contaServiceProxy(req, res, next);
 });
 
-app.get("/contas/depositar", verifyJWT, (req, res, next) => {
+app.post("/contas/:conta/depositar", verifyJWT, (req, res, next) => {
   contaServiceProxy(req, res, next);
 });
 
-app.get("/contas/sacar", verifyJWT, (req, res, next) => {
+app.post("/contas/:conta/sacar", verifyJWT, (req, res, next) => {
   contaServiceProxy(req, res, next);
 });
 
-app.get("/contas/transferir", verifyJWT, (req, res, next) => {
+app.post("/contas/:conta/transferir", verifyJWT, (req, res, next) => {
   contaServiceProxy(req, res, next);
 });
 
-app.get("/contas/extrato", verifyJWT, (req, res, next) => {
+app.get("/contas/:conta/extrato", verifyJWT, (req, res, next) => {
   contaServiceProxy(req, res, next);
 });
 
