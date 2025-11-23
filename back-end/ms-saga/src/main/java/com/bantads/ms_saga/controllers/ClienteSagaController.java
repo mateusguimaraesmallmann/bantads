@@ -1,5 +1,6 @@
 package com.bantads.ms_saga.controllers;
 
+import com.bantads.ms_saga.dtos.request.AlteracaoPerfilRequest;
 import com.bantads.ms_saga.dtos.saga.DadosClienteResponseDTO;
 import com.bantads.ms_saga.services.ClienteSagaService;
 import feign.FeignException;
@@ -14,7 +15,7 @@ public class ClienteSagaController {
 
     @Autowired
     private ClienteSagaService clienteSagaService;
-
+  
     @GetMapping("/{cpf}")
     public ResponseEntity<?> consultarDadosCompletos(@PathVariable String cpf) {
         try {
@@ -31,4 +32,9 @@ public class ClienteSagaController {
             return ResponseEntity.internalServerError().body("Erro interno ao montar relatório.");
         }
     }
+
+    @PutMapping("/{cpf}")
+    public ResponseEntity<?> alterarPerfil(@PathVariable String cpf, @RequestBody AlteracaoPerfilRequest request) {
+        return clienteSagaService.alterarPerfil(cpf,request);
+    }    
 }

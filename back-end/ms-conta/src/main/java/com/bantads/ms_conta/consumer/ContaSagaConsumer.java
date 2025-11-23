@@ -8,14 +8,18 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.amqp.support.AmqpHeaders;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
 
+import com.bantads.ms_conta.saga.dto.ContaSyncDTO;
 import com.bantads.ms_conta.saga.dto.SagaFailureReply;
 import com.bantads.ms_conta.saga.dto.SagaReply;
 import com.bantads.ms_conta.saga.dto.UpdateLimiteCommand;
 import com.bantads.ms_conta.config.RabbitConfig;
 import com.bantads.ms_conta.model.dto.input.MudarGerenteDTOIn;
+import com.bantads.ms_conta.model.entity.read.ContaLeitura;
+import com.bantads.ms_conta.repository.read.ContaLeituraRepository;
 import com.bantads.ms_conta.service.command.ContaCommandService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,6 +32,8 @@ public class ContaSagaConsumer {
     private final ContaCommandService contaService;
     private final ObjectMapper objectMapper;
     private final RabbitTemplate rabbitTemplate;
+
+    @Autowired private ContaLeituraRepository leituraRepository;
 
     public ContaSagaConsumer(ContaCommandService contaService, 
                              ObjectMapper objectMapper,
@@ -108,4 +114,29 @@ public class ContaSagaConsumer {
             logger.error("Erro ao enviar resposta", e);
         }
     }
+
+    @RabbitListener(queues = RabbitConfig.CONTA_SYNC_QUEUE)
+    public void sincronizarConta(Message message) { 
+        try {
+            String body = new String(message.getBody(), StandardCharsets.UTF_8);
+            ContaSyncDTO dto = objectMapper.readValue(body, ContaSyncDTO.class);
+            logger.info("SYNC: Recebida atualização para conta do Cliente ID: {}", dto.getIdCliente());
+            ContaLeitura contaLeitura = leituraRepository.findByIdCliente(dto.getIdCliente())
+                    .orElse(new ContaLeitura()); 
+            contaLeitura.setIdCliente(dto.getIdCliente());
+            contaLeitura.setIdGerente(dto.getIdGerente());
+            contaLeitura.setNumero(dto.getNumero());
+            contaLeitura.setDataCriacao(dto.getDataCriacao());
+            contaLeitura.setSaldo(dto.getSaldo());
+            contaLeitura.setLimite(dto.getLimite()); 
+            contaLeitura.setStatus(dto.getStatus().toString()); 
+            
+            leituraRepository.save(contaLeitura);
+            
+            logger.info("SYNC: Conta de leitura sincronizada com sucesso.");
+            
+        } catch (Exception e) {
+            e.printStackTrace(); 
+        }
+    }    
 }

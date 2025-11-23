@@ -28,6 +28,7 @@ import com.bantads.ms_conta.model.enums.TipoMovimentacao;
 import com.bantads.ms_conta.queue.producer.ContaProducer;
 import com.bantads.ms_conta.repository.jpa.ContaJpaRepository;
 import com.bantads.ms_conta.repository.jpa.MovimentacaoJpaRepository;
+import com.bantads.ms_conta.saga.dto.ContaSyncDTO;
 import com.bantads.ms_conta.saga.dto.CreateContaCommand;
 import com.bantads.ms_conta.saga.dto.SagaCommand;
 
@@ -311,6 +312,22 @@ public class ContaCommandService {
         }
         conta.setLimite(novoLimiteCalculado);
         contaJpaRepository.save(conta);
+        ContaSyncDTO syncDTO = new ContaSyncDTO(
+            conta.getId(),
+            conta.getIdCliente(),
+            conta.getIdGerente(),
+            conta.getNumero(),
+            conta.getSaldo(),
+            conta.getLimite(),
+            conta.getDataCriacao(),
+            conta.getStatus()
+        );
+
+        rabbitTemplate.convertAndSend(
+            RabbitConfig.CONTA_SYNC_EXCHANGE,
+            RabbitConfig.CONTA_SYNC_KEY,
+            syncDTO
+        );        
     }
 
 }
