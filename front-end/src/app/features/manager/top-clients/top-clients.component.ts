@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from '../../../core/components/header/header.component';
 import { NgxMaskPipe, provideNgxMask } from 'ngx-mask';
@@ -18,7 +18,7 @@ import { forkJoin } from 'rxjs';
   templateUrl: './top-clients.component.html',
   styleUrl: './top-clients.component.css'
 })
-export class TopClientsComponent {
+export class TopClientsComponent implements OnInit {
     navItems = NAVITEMS;
 
     constructor(private accountService: AccountService, private userService: UserService){
@@ -31,40 +31,43 @@ export class TopClientsComponent {
 
     topClients: topClientAccount[] = []
 
-    ngOnInit(){
+  ngOnInit(){
       forkJoin({
         accounts: this.accountService.returnAllAccounts(),
         clients: this.userService.returnAllClients()
       }).subscribe({
         next: ({accounts, clients}) => {
-          const clientMap = new Map<string, ClientDetails>();
-          for (const client of clients){
-            clientMap.set(client.cpf, client);
-          }
 
-          this.topClients = accounts.map(account => {
-            //Bate os dados do CPF da conta com os obtidos da tabela de clientes
-            const clientData = clientMap.get(account.clientCpf!);
+          // 1. Cria Mapa: ID do Cliente -> Dados do Cliente
+          const clientMap = new Map<number, ClientDetails>();
+          clients.forEach(client => {
+             if(client.id) clientMap.set(client.id, client);
+          });
+          this.topClients = accounts
+            // 2. Filtra apenas contas ATIVAS
 
-            //Se não for vazio
-            if (clientData){
-              return {
-                cpf: account.clientCpf,
-                clientName: account.clientName,
-                city: clientData.cidade,
-                state: clientData.estado,
-                balance: account.balance
-              }
-            }
-
-            return null;
-          })
-          .filter((client) => client != null)
-          .sort((a, b) => b.balance - a.balance)
+            .map(account => {
+               // 3. Busca dados do cliente usando o ID (idCliente vem do ms-conta)
+               console.log(this.topClients)
+               const clientData = clientMap.get(account.clientId);
+               if (clientData) {
+                 return {
+                   cpf: clientData.cpf,
+                   clientName: clientData.nome,
+                   city: clientData.cidade || 'N/A', // Proteção contra null
+                   state: clientData.estado || 'N/A',
+                   balance: account.balance
+                 };
+               }
+               return null;
+            })
+            // Remove os nulos (casos onde não achou o cliente)
+            .filter((item): item is topClientAccount => item !== null)
+            // 4. Ordena pelo Saldo Decrescente e pega os 3 primeiros
+            .sort((a, b) => b.balance - a.balance)
+            .slice(0, 3);
         },
-        error: (err) => {
-          console.log("Deu ruim pra carregar os melhores clientes: ", err);
-        }
-      })
+        error: (err) => console.error("Erro ao carregar top clients: ", err)
+      });
     }
 }

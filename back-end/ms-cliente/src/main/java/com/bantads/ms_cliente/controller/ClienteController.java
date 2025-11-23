@@ -32,6 +32,12 @@ public class ClienteController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/id/{id}")
+    public ResponseEntity<ClienteDTOOut> buscarPorId(@PathVariable Long id) {
+        ClienteDTOOut dto = clienteService.buscarPorId(id);
+        return ResponseEntity.ok(dto);
+    }
+
     @GetMapping("/public/check-cpf/{cpf}")
     public ResponseEntity<Void> checkCpfExists(@PathVariable String cpf) {
         boolean exists = clienteService.cpfExists(cpf); 

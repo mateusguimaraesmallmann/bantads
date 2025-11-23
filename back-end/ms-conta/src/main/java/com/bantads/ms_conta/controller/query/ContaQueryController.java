@@ -1,5 +1,6 @@
 package com.bantads.ms_conta.controller.query;
 
+import java.util.List;
 import com.bantads.ms_conta.model.dto.output.ExtratoDTOOut;
 import com.bantads.ms_conta.model.dto.output.SaldoDTOOut;
 import com.bantads.ms_conta.model.entity.read.ContaLeitura;
@@ -18,6 +19,12 @@ public class ContaQueryController {
 
     private final ContaQueryService contaService;
 
+    @GetMapping
+    public List<ContaLeitura> listarTodas() {
+        List <ContaLeitura> contas = contaService.listarTodas();
+        return contas;
+    }
+
     @GetMapping("/{numero}/saldo")
     public ResponseEntity<SaldoDTOOut> buscarSaldo(@PathVariable Long numero) {
         return ResponseEntity.ok(contaService.buscarSaldo(numero));
@@ -26,6 +33,11 @@ public class ContaQueryController {
     @GetMapping("/{idCliente}")
     public ResponseEntity<ContaLeitura> buscarInfosContaPorIdCliente(@PathVariable Long idCliente) {
         return ResponseEntity.ok(contaService.buscarInfosContaPorIdCliente(idCliente));
+    }
+
+    @GetMapping("/gerente/{idGerente}/pendentes")
+    public ResponseEntity<List<ContaLeitura>> buscarContasPorGerente(@PathVariable Long idGerente) {
+        return ResponseEntity.ok(contaService.buscarContasPorIdGerente(idGerente));
     }
 
     

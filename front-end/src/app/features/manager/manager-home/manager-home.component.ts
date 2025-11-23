@@ -9,9 +9,10 @@ import { NAVITEMS } from '../navItems';
 import { ClientDetailsCpf } from '../../../core/models/client-details.model';
 import { SolicitacoesService } from '../../../core/services/solicitacoes.service';
 import { AuthService } from '../../../core/services/authentication/auth.service';
+import { ManagerService } from '../../../core/services/manager.service';
 import { User } from '../../../core/models/user.model';
 import { HttpClient } from '@angular/common/http';
-import { take } from 'rxjs';
+import { of, switchMap, take } from 'rxjs';
 
 @Component({
   selector: 'app-manager-home',
@@ -26,7 +27,10 @@ import { take } from 'rxjs';
 export class ManagerHomeComponent implements OnInit {
     currentUser: User | null = null;
 
-    constructor(private modalService: BsModalService, private solicitacoesService: SolicitacoesService, private authService: AuthService){}
+    constructor(private modalService: BsModalService,
+                private solicitacoesService: SolicitacoesService,
+                private authService: AuthService,
+                private managerService: ManagerService){}
     bsModalRef?: BsModalRef;
 
     navItems = NAVITEMS;
@@ -35,14 +39,25 @@ export class ManagerHomeComponent implements OnInit {
 
     ngOnInit(): void{
       this.currentUser = this.authService.getCurrentUser();
-      this.solicitacoesService.listRequests().subscribe({
-        next: (data) =>{
-          this.solicitacoes = data;
-        },
-        error: (err) =>{
-          console.error('Erro ao buscar as solicitações: ', err);
-        }
-      });
+
+      if (this.currentUser && this.currentUser.cpf){
+        this.managerService.getManagerByCpf(this.currentUser.cpf).pipe(
+          switchMap(gerente => {
+            if (gerente && gerente.id){
+              console.log("Gerente encontrado: ", gerente.id);
+              return this.solicitacoesService.listRequestsByManager(gerente.id) ?? of([]);
+            }
+            return of([]);
+          })
+        ).subscribe({
+          next: (data) => {
+            this.solicitacoes = data;
+          },
+          error: (error) => {
+            console.error("Erro ao buscar solicitações: ", error);
+          }
+        })
+      }
     }
 
     responseManager(id: String, cpfCliente: string){

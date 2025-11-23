@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, of, switchMap } from 'rxjs';
+import { forkJoin, Observable, of, switchMap, map } from 'rxjs';
 import { ClientDetailsCpf } from '../models/client-details.model';
 
 @Injectable({
@@ -8,9 +8,42 @@ import { ClientDetailsCpf } from '../models/client-details.model';
 })
 export class SolicitacoesService {
 
+  private BASE_URL = "http://localhost:3000";
   private CLIENTES_API_URL = 'http://localhost:3000/clientes';
 
   constructor(private http: HttpClient) { }
+
+  listRequestsByManager(managerId: number): Observable<ClientDetailsCpf[]> | null {
+    return this.http.get<any[]>(`${this.BASE_URL}/contas/gerente/${managerId}/pendentes`).pipe(
+      switchMap(contas => {
+        console.log(contas)
+        if (!contas || contas.length === 0) return of([]);
+
+        const requests = contas.map(conta =>
+          this.http.get<any>(`${this.BASE_URL}/clientes/id/${conta.idCliente}`).pipe(
+            map(cliente => ({
+              cpf: cliente.cpf,
+              nome: cliente.nome,
+              telefone: cliente.telefone,
+              email: cliente.email,
+              endereco: cliente.endereco ? `${cliente.endereco.logradouro}, ${cliente.endereco.numero}` : '',
+              cidade: cliente.endereco ? cliente.endereco.cidade : '',
+              estado: cliente.endereco ? cliente.endereco.estado : '',
+              salario: cliente.salario,
+              conta: conta.numero ? conta.numero : 'Pendente',
+              saldo: conta.saldo,
+              limite: conta.limite,
+              gerente: managerId.toString(),
+              gerente_nome: '',
+              gerente_email: ''
+            } as ClientDetailsCpf))
+          )
+        );
+
+        return forkJoin(requests);
+      })
+    );
+  }
 
   listRequests() : Observable<ClientDetailsCpf[]> {
     return this.http.get<ClientDetailsCpf[]>(`${this.CLIENTES_API_URL}?filtro=para_aprovar`);

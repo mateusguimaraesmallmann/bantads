@@ -44,6 +44,12 @@ export class ManagerService {
 
   readonly gerentes = computed(() => this._gerentes());
 
+  //region Busca por CPF
+  getManagerByCpf(cpf: string): Observable<Manager> {
+    const cleanCpf = cpf.replace(/\D/g, '');
+    return this.http.get<Manager>(`${MANAGER_URL}/${cleanCpf}`);
+  }
+
   //#region Cria Gerente
   //addManager(manager: ManagerDto): Observable<Manager>{
   //    return this.http.get<User[]>(`${USER_URL}?cpf=${manager.cpf}`).pipe(

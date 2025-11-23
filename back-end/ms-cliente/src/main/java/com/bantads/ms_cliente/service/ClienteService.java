@@ -52,6 +52,13 @@ public class ClienteService {
         return modelMapper.map(cliente, ClienteDTOOut.class);
     }
 
+    public ClienteDTOOut buscarPorId(Long id) {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado!"));
+        return modelMapper.map(cliente, ClienteDTOOut.class);
+
+    }
+
     public List<ClienteDTOOut> listarTodos() {
         return clienteRepository.findAll()
                 .stream()
@@ -77,8 +84,6 @@ public class ClienteService {
         }
 
         BigDecimal limite = calcularLimite(cliente.getSalario());
-
-        // TODO: Obter id do gerente pela sessão ativa que aprovou o cliente
         Long idGerente =  new Random().nextLong();
 
         CriarContaDTOIn criarContaDTOIn = new CriarContaDTOIn(BigDecimal.valueOf(0), limite, cliente.getId(), idGerente);

@@ -15,27 +15,27 @@ export class AccountService {
 
   constructor(private http: HttpClient) { }
 
-  public generateAccount(user: NewUser): Observable<Account> {
-    return this.assignManager().pipe(
-      switchMap(managerInfo => {
-        return this.generateUniqueAccountNumber().pipe(
-          switchMap(accountNumber => {
-            const newAccount: Account = {
-              number: accountNumber,
-              clientCpf: user.cpf!,
-              clientName: user.nome!,
-              balance: 0.0,
-              limit: this.calculateLimit(user.salario || 0),
-              managerCpf: managerInfo.managerCpf,
-              managerName: managerInfo.managerName,
-              createdAt: new Date()
-            };
-            return this.http.post<Account>(ACCOUNTS_URL, newAccount);
-          })
-        );
-      })
-    );
-  }
+  // public generateAccount(user: NewUser): Observable<Account> {
+  //   return this.assignManager().pipe(
+  //     switchMap(managerInfo => {
+  //       return this.generateUniqueAccountNumber().pipe(
+  //         switchMap(accountNumber => {
+  //           const newAccount: Account = {
+  //             number: accountNumber,
+  //             clientCpf: user.cpf!,
+  //             clientName: user.nome!,
+  //             balance: 0.0,
+  //             limit: this.calculateLimit(user.salario || 0),
+  //             managerCpf: managerInfo.managerCpf,
+  //             managerName: managerInfo.managerName,
+  //             createdAt: new Date()
+  //           };
+  //           return this.http.post<Account>(ACCOUNTS_URL, newAccount);
+  //         })
+  //       );
+  //     })
+  //   );
+  // }
 
   //#region Contas
   public returnAccountData(cpfClient: string): Observable<Account | null> {
