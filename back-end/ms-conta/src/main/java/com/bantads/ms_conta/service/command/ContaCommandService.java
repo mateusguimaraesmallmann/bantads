@@ -158,8 +158,10 @@ public class ContaCommandService {
     // Gera a senha aqui e encaminha para o ms-auth atualizar no seu registro via RabbitMQ
     private String gerarSenhaAleatoria() {
         // Gera número entre 0 e 9999 e formata com zeros à esquerda (ex: 0042)
-        return "tads"; 
+        Random random = new Random();
+        return String.format("%04d", random.nextInt(10000)); 
     }
+
 
     //region Gerar Número
     public String gerarNumeroConta() {
