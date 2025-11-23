@@ -48,8 +48,9 @@ public class AuthorizationService implements UserDetailsService {
         manager = context.getBean(AuthenticationManager.class);
         var authenticationToken = new UsernamePasswordAuthenticationToken(loginRequestDTO.email(), loginRequestDTO.senha());
         var authentication = this.manager.authenticate(authenticationToken);
+        var usuarioAutenticado = (User) authentication.getPrincipal();
         var tokenJWT = tokenService.generateToken((User) authentication.getPrincipal());
-        return new TokenDTO(tokenJWT);
+        return new TokenDTO(tokenJWT, usuarioAutenticado.getRole().toString(), usuarioAutenticado.getStatus().toString(),usuarioAutenticado.getCpf().toString());
     }
     
 }

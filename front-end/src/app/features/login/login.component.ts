@@ -42,11 +42,11 @@ export class LoginComponent {
   this.authService.doLogin(payload).subscribe({
     next: (user) => {
       if (user) {
-        if (user.role === 'ADMIN') {
+        if (user.role === 'ADMINISTRADOR') {
           window.location.href = '/administrator-home';
-        } else if (user.role === 'MANAGER') {
+        } else if (user.role === 'GERENTE') {
           window.location.href = '/manager-home';
-        } else if (user.role === 'CLIENT') {
+        } else if (user.role === 'CLIENTE') {
           window.location.href = '/client-home';
         }
       } else {

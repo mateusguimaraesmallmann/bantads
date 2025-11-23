@@ -9,6 +9,8 @@ public interface GerenteRepository extends JpaRepository<Gerente, Long> {
     
     Optional<Gerente> findByCpf(String cpf);
 
+    Optional<Gerente> findById(Long id);
+
     boolean existsByCpf(String cpf);
 
     List<Gerente> findAll();

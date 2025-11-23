@@ -20,7 +20,7 @@ import java.util.Map;
 @RequestMapping("/saga/alteracao-perfil")
 public class AlteracaoPerfilSagaController {
     
-    private static final Logger logger = LoggerFactory.getLogger(AlteracaoPerfilSagaController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ClienteSagaController.class);
 
     @Autowired private SagaInstanceService sagaService;
     @Autowired private RabbitMQSender sender;

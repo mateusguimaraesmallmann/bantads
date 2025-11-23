@@ -5,37 +5,28 @@ import { User } from '../../../core/models/user.model';
 import { AuthService } from '../../../core/services/authentication/auth.service';
 import { MoneyPipe } from '../../../shared/pipes/pipe-money';
 import { AccountService } from '../../../core/services/account.service';
-import { Account } from '../../../core/models/account.model';
+import { Account, ClienteCompleto } from '../../../core/models/account.model';
+import { UserService } from '../../../core/services/user.service';
+import { ClientUpdate } from '../../../core/models/client-update.model';
 
 @Component({
   selector: 'app-client-home',
   standalone: true,
   imports: [CommonModule, MoneyPipe],
   templateUrl: './client-home.component.html',
-  styleUrl: './client-home.component.css'
+  styleUrl: './client-home.component.css',
 })
 export class ClientHomeComponent implements OnInit {
-  currentUser: User | null = null;
-  currentAccount: Account | null = null;
+  infos: any;
+  clienteCompleto?: ClienteCompleto ;
 
-  constructor (private authService: AuthService, private accountService: AccountService, private router: Router){
+  constructor (private authService: AuthService, private router: Router, private userService : UserService){
 
   }
 
   ngOnInit(): void{
-    this.currentUser = this.authService.getCurrentUser();
-
-    if (this.currentUser && this.currentUser.cpf){
-      this.accountService.returnAccountData(this.currentUser.cpf).subscribe({
-        next: (response) => {
-          this.currentAccount = response;
-          console.log("Carregou os dados da conta!", response, this.currentAccount);
-        },
-        error: (err) => {
-          console.error("Erro: ", err);
-        }
-      })
-  }
+    this.infos = this.authService.getCurrentUser();
+    this.processarInformacoes();
 }
 
    options = [
@@ -57,5 +48,17 @@ action(option: any) {
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  processarInformacoes(){
+    this.userService.consultarClienteSaga(this.infos.cpf).subscribe({
+      next: (response:ClienteCompleto) => {
+        console.log("Carregou os dados da conta!", response);
+        this.clienteCompleto = response;
+      },
+      error: (err:ClienteCompleto) => {
+        console.error("Erro: ", err);
+      }
+    })
   }
 }

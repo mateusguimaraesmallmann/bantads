@@ -1,17 +1,17 @@
 <div class="cliente-home">
   <div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-5" *ngIf="currentUser != null">
-      <h2 class="text-white">Bem-vindo(a), {{ currentUser.name }}</h2>
+    <div class="d-flex justify-content-between align-items-center mb-5" *ngIf="clienteCompleto != null">
+      <h2 class="text-white">Bem-vindo(a), {{ clienteCompleto.nome }}</h2>
 
       <button class="btn btn-outline-light" (click)="logout()">Sair</button>
     </div>
 
-    <div class="auth-shell mx-auto" *ngIf="currentAccount != null">
+    <div class="auth-shell mx-auto" *ngIf="clienteCompleto != null">
       <div class="pane pane-logo d-flex flex-column align-items-center justify-content-center text-center">
         <h3 class="fw-semibold">Saldo da Conta</h3>
         <h4 class="fw-bold fs-1"
-            [ngClass]="{ 'text-success': currentAccount.balance >= 0, 'text-danger': currentAccount.balance < 0 }">
-          {{ currentAccount.balance | money }}
+            [ngClass]="{ 'text-success': clienteCompleto.saldo >= 0, 'text-danger': clienteCompleto.saldo < 0 }">
+          {{ clienteCompleto.saldo | money }}
         </h4>
       </div>
 

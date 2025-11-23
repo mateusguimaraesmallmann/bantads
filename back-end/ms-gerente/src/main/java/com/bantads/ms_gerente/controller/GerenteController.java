@@ -55,4 +55,10 @@ public class GerenteController {
         return ResponseEntity.ok(dto);
     }
 
+    @GetMapping("/obter-por-id/{id}")
+    public ResponseEntity<GerenteDTOOut> buscarPorId(@PathVariable Long id) {
+        GerenteDTOOut dto = gerenteService.buscarPorId(id);
+        return ResponseEntity.ok(dto);
+    }    
+
 }

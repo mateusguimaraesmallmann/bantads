@@ -30,17 +30,17 @@ public class MongoDBInitializerConfiguration {
             userRepository.deleteAll();
             log.info("Usuários antigos deletados. Inserindo novos usuários...");
 
-            userRepository.save(new User(null, "cli1@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
-            userRepository.save(new User(null, "cli2@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
-            userRepository.save(new User(null, "cli3@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
-            userRepository.save(new User(null, "cli4@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
-            userRepository.save(new User(null, "cli5@bantads.com.br", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "cli1@bantads.com.br","12912861012", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "cli2@bantads.com.br","09506382000", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "cli3@bantads.com.br","85733854057", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "cli4@bantads.com.br","58872160006", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "cli5@bantads.com.br","76179646090", passwordEncoder.encode("tads"), Tipo.CLIENTE, Status.ACTIVE));
 
-            userRepository.save(new User(null, "ger1@bantads.com.br", passwordEncoder.encode("tads"), Tipo.GERENTE, Status.ACTIVE));
-            userRepository.save(new User(null, "ger2@bantads.com.br", passwordEncoder.encode("tads"), Tipo.GERENTE, Status.ACTIVE));
-            userRepository.save(new User(null, "ger3@bantads.com.br", passwordEncoder.encode("tads"), Tipo.GERENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "ger1@bantads.com.br","98574307084", passwordEncoder.encode("tads"), Tipo.GERENTE, Status.ACTIVE));
+            userRepository.save(new User(null, "ger2@bantads.com.br","64065268052", passwordEncoder.encode("tads"), Tipo.GERENTE, Status.ACTIVE));
+            userRepository.save(new User(null,"ger3@bantads.com.br", "23862179060", passwordEncoder.encode("tads"), Tipo.GERENTE, Status.ACTIVE));
 
-            userRepository.save(new User(null, "adm1@bantads.com.br", passwordEncoder.encode("tads"), Tipo.ADMINISTRADOR, Status.ACTIVE));
+            userRepository.save(new User(null, "adm1@bantads.com.br", "40501740066",passwordEncoder.encode("tads"), Tipo.ADMINISTRADOR, Status.ACTIVE));
 
             log.info("Usuários iniciais do MongoDB inseridos com sucesso!");
         };

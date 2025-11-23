@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 
 import com.bantads.ms_saga.model.dto.input.CadastroClienteDTOIn;
 import com.bantads.ms_saga.model.dto.output.ClienteDTOOut;
+import com.bantads.ms_saga.model.dto.output.GerenteResponse;
 
 @FeignClient(name = "ms-gerente", url = "${ms.gerente.url}")
 public interface GerenteClient {
@@ -23,4 +24,6 @@ public interface GerenteClient {
     @DeleteMapping("/gerentes/{cpf}")
     void removerPorCpf(@PathVariable("cpf") String cpf);
 
+    @GetMapping("/gerentes/obter-por-id/{id}") 
+    GerenteResponse buscarPorId(@PathVariable("id") Long id);
 }

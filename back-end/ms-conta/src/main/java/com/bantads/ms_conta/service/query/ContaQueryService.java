@@ -77,5 +77,9 @@ public class ContaQueryService {
         );
     }
 
+    public ContaLeitura buscarInfosContaPorIdCliente(Long idCliente){
+        return contaLeituraRepository.findByIdCliente(idCliente)
+                .orElseThrow(() -> new EntityNotFoundException("usuario não encontrado"));            
+    }
 }
 

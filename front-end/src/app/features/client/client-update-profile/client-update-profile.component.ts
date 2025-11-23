@@ -8,6 +8,8 @@ import { catchError, debounceTime, distinctUntilChanged, filter, of, Subject, Su
 import { Router } from '@angular/router';
 import { ViacepService } from '../../../core/services/viacep.service';
 import { NgxMaskDirective } from 'ngx-mask';
+import { ClienteCompleto } from '../../../core/models/account.model';
+import { AuthService } from '../../../core/services/authentication/auth.service';
 
 @Component({
   selector: 'app-update-profile',
@@ -28,28 +30,17 @@ export class UpdateProfileComponent implements OnInit{
     private fb: FormBuilder,
     private userService: UserService,
     private router: Router,
-    private viaCep: ViacepService)
+    private viaCep: ViacepService,
+    private authService: AuthService)
     {}
 
   clientUpdateForm!: FormGroup;
   status: 'idle' | 'loading' | 'success' | 'error' = 'idle';
-  cpfUsuario:string = "00000000000";
+  cpfUsuario:string = "";
   private destroy$ = new Subject<void>();
   loadingCep = false;
   cepNotFound = false;
-
-  testUser = {
-    nome: "Paulo Silva",
-    email: "paulo.silva@example.com",
-    salario: 1550.75,
-    cep:"80000000",
-    logradouro: "Rua das Palmeiras",
-    numero: "500",
-    complemento: "Apto 301",
-    bairro: "Centro",
-    cidade: "Curitiba",
-    estado: "PR"
-  };
+  user: any;
 
   ngOnInit(): void {
     this.clientUpdateForm = this.fb.group({
@@ -64,8 +55,9 @@ export class UpdateProfileComponent implements OnInit{
       cidade: [''],
       estado: ['']
     });
-    //this.consultarUsuarioPorCpf();
-    this.popularFormulario();
+    let infos = this.authService.getCurrentUser();
+    this.cpfUsuario = infos?.cpf ? infos?.cpf : "";
+    this.consultarUsuarioPorCpf();
     this.setupCepLookup();
   }
 
@@ -97,14 +89,13 @@ export class UpdateProfileComponent implements OnInit{
 
   consultarUsuarioPorCpf(){
     this.status = 'loading';
-    this.userService.consultarUsuario(this.cpfUsuario)
+    this.userService.consultarClienteSaga(this.cpfUsuario)
       .pipe(
         takeUntil(this.destroy$)
       )
       .subscribe({
         next: (response) => {
-          console.log('Dados recebidos com sucesso:', response);
-          this.popularFormulario();
+          this.popularFormulario(response);
         },
         error: (err) => {
           console.error('Erro ao consultar usuário:', err);
@@ -113,19 +104,19 @@ export class UpdateProfileComponent implements OnInit{
       });
   }
 
-  popularFormulario(//response: ClientUpdate
+  popularFormulario(response: ClienteCompleto
     ){
     this.clientUpdateForm.patchValue ({
-      nome: this.testUser.nome,
-      email: this.testUser.email,
-      salario: this.testUser.salario,
-      cep: this.testUser.cep,
-      logradouro: this.testUser.logradouro,
-      numero: this.testUser.numero,
-      complemento: this.testUser.complemento,
-      bairro: this.testUser.bairro,
-      cidade: this.testUser.cidade,
-      estado: this.testUser.estado
+      nome: response.nome,
+      email: response.email,
+      salario: response.salario,
+      //cep: response.cep,
+      logradouro: response.cidade,
+      // numero: response.numero,
+      // complemento: response.complemento,
+      // bairro: response.bairro,
+      cidade: response.cidade,
+      estado: response.estado
       });
   }
 

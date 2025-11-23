@@ -74,4 +74,9 @@ public class GerenteService {
         return gerenteRepository.existsByCpf(cpf);
     }
 
+    public GerenteDTOOut buscarPorId(Long id) {
+        Gerente gerente = gerenteRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Gerente não encontrado"));
+        return modelMapper.map(gerente, GerenteDTOOut.class);
+    }    
 }

@@ -60,29 +60,39 @@ const contaServiceProxy = httpProxy(process.env.MS_CONTA_URL);
 const gerentesServiceProxy = httpProxy(process.env.MS_GERENTE_URL);
 const sagaServiceProxy = httpProxy(process.env.MS_SAGA_URL);
 
-const JWT_SECRET = Buffer.from(process.env.JWT_SECRET, 'base64');
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Cria o servidor na porta 3000
 var server = http.createServer(app);
 server.listen(3000);
 
 function verifyJWT(req, res, next) {
-  const token = req.headers["x-access-token"] || (req.headers['authorization'] && req.headers['authorization'].split(' ')[1]);
-  if (!token)
-    return res
-      .status(401)
-      .json({ auth: false, message: "Token não fornecido." });
+    let token = req.headers["x-access-token"];
+    if (!token) {
+        const authHeader = req.headers['authorization'];
+        if (authHeader) {
+            if (authHeader.startsWith("Bearer ")) {
+                token = authHeader.slice(7, authHeader.length);
+            } else {
+                token = authHeader;
+            }
+        }
+    }
+    if (!token) {
+        return res.status(401).json({ auth: false, message: "Token não fornecido." });
+    }
 
-
-    jwt.verify(token, JWT_SECRET, function (err, decoded) {
+    jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
         if (err) {
             console.log('Erro na verificação do token:', err.message);
-            return res.status(401).json({ auth: false, message: 'Token inválido ou expirado.' });
+            return res.status(401).json({ auth: false, message: 'Token inválido: ' + err.message });
         }
 
-    req.user = decoded;
-    next();
-  });
+        req.user = decoded;
+        console.log("Usuário autenticado no Gateway:", decoded);
+        
+        next();
+    });
 }
 
 // app.get('/reboot', verifyJWT, (req, res, next) => {
@@ -108,7 +118,9 @@ app.get('/clientes', verifyJWT, (req, res, next) => {
 });
 
 app.get('/clientes/:cpfCliente', verifyJWT, (req, res, next) => {
-    clienteServiceProxy(req, res, next);
+    const cpf = req.params.cpfCliente;
+    req.url = `/clientes/saga/${cpf}`;    
+    sagaServiceProxy(req, res, next);
 });
 
 app.get('/gerentes', verifyJWT, (req, res, next) => {
@@ -135,6 +147,9 @@ app.put('/clientes', verifyJWT, (req, res, next) => {
     gerentesServiceProxy(req, res, next);
 });
 
+app.post('/contas', verifyJWT, (req, res, next) => {
+    contaServiceProxy(req, res, next);
+});
 
 app.post('/logout', function(req, res) {
 res.json({ auth: false, token: null });

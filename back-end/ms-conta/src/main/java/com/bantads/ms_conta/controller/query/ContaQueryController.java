@@ -2,6 +2,7 @@ package com.bantads.ms_conta.controller.query;
 
 import com.bantads.ms_conta.model.dto.output.ExtratoDTOOut;
 import com.bantads.ms_conta.model.dto.output.SaldoDTOOut;
+import com.bantads.ms_conta.model.entity.read.ContaLeitura;
 import com.bantads.ms_conta.service.query.ContaQueryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,12 @@ public class ContaQueryController {
         return ResponseEntity.ok(contaService.buscarSaldo(numero));
     }
 
+    @GetMapping("/{idCliente}")
+    public ResponseEntity<ContaLeitura> buscarInfosContaPorIdCliente(@PathVariable Long idCliente) {
+        return ResponseEntity.ok(contaService.buscarInfosContaPorIdCliente(idCliente));
+    }
+
+    
     // @GetMapping("/{numero}/extrato")
     // public ResponseEntity<ExtratoDTOOut> gerarExtrato(
     //         @PathVariable Long numero

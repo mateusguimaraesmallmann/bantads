@@ -33,7 +33,7 @@ export class AuthService {
       }).pipe(
           map(response => {
               if (response && response.auth && response.token) {
-                  localStorage.setItem('token', response.token);
+                  localStorage.setItem('token', response.data.token);
                   localStorage.setItem('user', JSON.stringify(response.data));
                   return response.data;
               }

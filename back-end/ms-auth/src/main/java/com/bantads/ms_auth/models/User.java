@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @Column(nullable = false, unique = true)
     private String email;
 
+    @Column(nullable = false, unique = true)
+    private String cpf;
+
     @JsonIgnore
     @Column(nullable = true)
     private String password;
@@ -63,6 +66,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return email;
+    }
+
+    public String getCpf(){
+        return cpf;
     }
 
     @Override public boolean isAccountNonExpired() { return true; }

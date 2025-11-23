@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs'; // Importa Observable
 import { ClientUpdate } from '../models/client-update.model';
 import {ClientDetails} from '../models/client-details.model';
+import { ClienteCompleto } from '../models/account.model';
 
 @Injectable({
   providedIn: 'root'
@@ -32,4 +33,10 @@ export class UserService {
   returnAllClients(): Observable<ClientDetails[]>{
     return this.http.get<ClientDetails[]>(this.apiUrl);
   }
+
+  consultarClienteSaga(cpf:string ):Observable<ClienteCompleto>{
+    const url = this.apiUrl + "/" + cpf;
+    return this.http.get<ClienteCompleto>(url);
+  }
+  
 }

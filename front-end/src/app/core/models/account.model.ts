@@ -18,3 +18,19 @@ export interface topClientAccount{
   state: string | null,
   balance: number | null
 }
+
+export interface ClienteCompleto {
+  cpf: string;
+  nome: string;
+  email: string;
+  salario: number;
+  endereco: string;
+  cidade: string;
+  estado: string;
+  conta: string; 
+  saldo: number;
+  limite: number;
+  gerente: string; 
+  gerente_nome: string;
+  gerente_email: string;
+}
