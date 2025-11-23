@@ -57,6 +57,21 @@ public class RabbitConfig {
     }
 
     @Bean
+    public Queue clienteAprovadoQueue() {
+        return new Queue("cliente-aprovado");
+    }
+    
+    @Bean
+    public Queue contaAtivadaQueue() {
+        return new Queue("conta-ativada");
+    }
+
+    @Bean
+    public Queue updateAuthPasswordQueue() {
+        return new Queue("auth-update-password");
+    }
+
+    @Bean
     public Binding bindingContaCreate(Queue contaCommandQueue, DirectExchange commandsExchange) {
         return BindingBuilder
                 .bind(contaCommandQueue)
