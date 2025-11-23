@@ -146,7 +146,7 @@ public class ContaCommandService {
         Map<String, String> emailPayload = new HashMap<>();
         emailPayload.put("email", emailCliente);
         emailPayload.put("assunto", "BANTADS - Solicitação Negada");
-        emailPayload.put("message", String.format(
+        emailPayload.put("mensagem", String.format(
             "Olá %s, informamos que infelizmente sua solicitação de conta não foi aprovada palo seguinte motivo: %s",
             nomeCliente, motivoReprovacao
         ));

@@ -121,11 +121,13 @@ public class ClienteService {
         cliente.setStatus(StatusCliente.REJEITADO);
         clienteRepository.save(cliente);
 
+        String textoMotivo = (motivo != null && !motivo.isBlank()) ? motivo : "Motivo não informado";
+
         Map<String, Object> evento = new HashMap<>();
         evento.put("idCliente", cliente.getId());
         evento.put("nome", cliente.getNome());
         evento.put("email", cliente.getEmail());
-        evento.put("motivoReprovacao", motivo);
+        evento.put("motivoReprovacao", textoMotivo);
 
         rabbitTemplate.convertAndSend("cliente-rejeitado", evento);
 

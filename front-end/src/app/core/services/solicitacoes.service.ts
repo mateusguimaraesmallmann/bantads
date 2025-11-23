@@ -70,7 +70,8 @@ export class SolicitacoesService {
 
   denyRequest(cpf: string, motivo: string) : Observable<any>{
     const url = `${this.CLIENTES_API_URL}/${cpf}/rejeitar`;
-    const motivoRejeicao = { motivo: motivo };
-    return this.http.post(url, motivoRejeicao);
+    const motivoReprovacao = { "motivoReprovacao": motivo };
+    console.log(motivoReprovacao)
+    return this.http.post(url, motivoReprovacao);
   }
 }

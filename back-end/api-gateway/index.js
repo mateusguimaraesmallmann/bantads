@@ -150,6 +150,7 @@ app.post("/logout", verifyJWT, function (req, res) {
   });
 });
 
+//region Clientes
 // ================= CLIENTES =================
 
 app.get("/clientes", verifyJWT, (req, res, next) => {
@@ -191,6 +192,7 @@ app.post("/clientes/:cpf/rejeitar", verifyJWT, (req, res, next) => {
   clienteServiceProxy(req, res, next);
 });
 
+//region Contas
 // ================= CONTAS =================
 
 app.get("/contas/saldo", verifyJWT, (req, res, next) => {
@@ -213,6 +215,7 @@ app.get("/contas/:conta/extrato", verifyJWT, (req, res, next) => {
   contaServiceProxy(req, res, next);
 });
 
+//region Gerentes
 // ================= GERENTES =================
 
 app.get("/gerentes", verifyJWT, (req, res, next) => {
