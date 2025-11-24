@@ -159,7 +159,7 @@ public class ContaCommandService {
     private String gerarSenhaAleatoria() {
         // Gera número entre 0 e 9999 e formata com zeros à esquerda (ex: 0042)
         Random random = new Random();
-        return String.format("%04d", random.nextInt(10000)); 
+        return "tads"; 
     }
 
 

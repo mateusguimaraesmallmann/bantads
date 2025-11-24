@@ -2,15 +2,12 @@ package com.bantads.ms_cliente.model.dto.output;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+
 import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
-@Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public final class ClienteAprovadoDTOOut {
@@ -33,4 +30,53 @@ public final class ClienteAprovadoDTOOut {
     @Schema(description = "Data da criação da conta", example = "2025-08-01T10:22:45-03:00")
     private LocalDateTime criacao;
 
+    public Long getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Long cliente) {
+        this.cliente = cliente;
+    }
+
+    public String getNumero() {
+        return numero;
+    }
+
+    public void setNumero(String numero) {
+        this.numero = numero;
+    }
+
+    public BigDecimal getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(BigDecimal saldo) {
+        this.saldo = saldo;
+    }
+
+    public BigDecimal getLimite() {
+        return limite;
+    }
+
+    public void setLimite(BigDecimal limite) {
+        this.limite = limite;
+    }
+
+    public String getGerente() {
+        return gerente;
+    }
+
+    public void setGerente(String gerente) {
+        this.gerente = gerente;
+    }
+
+    public LocalDateTime getCriacao() {
+        return criacao;
+    }
+
+    public void setCriacao(LocalDateTime criacao) {
+        this.criacao = criacao;
+    }
+
 }
+

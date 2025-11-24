@@ -22,6 +22,8 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,13 +69,23 @@ public class ClienteService {
     }
 
     //region Listar Clientes
-    public List<ClienteDTOOut> listarTodos() {
-        return clienteRepository.findAll()
-                .stream()
+public List<ClienteDTOOut> listarClientes(String filtro) {
+        
+        List<Cliente> clientes;
+
+        if ("para_aprovar".equals(filtro)) {
+            clientes = clienteRepository.findByStatus("EM_ANALISE")
+                                        .orElse(Collections.emptyList()); 
+                                    
+            clientes.sort(Comparator.comparing(Cliente::getId));
+        } else {
+            clientes = clienteRepository.findAll(); 
+            clientes.sort(Comparator.comparing(Cliente::getNome));
+        }
+        return clientes.stream()
                 .map(c -> modelMapper.map(c, ClienteDTOOut.class))
                 .collect(Collectors.toList());
     }
-
 
     public ClienteDTOOut atualizarCliente(String cpf, EditarClienteDTOIn clienteDTO) {
         Cliente existente = clienteRepository.findByCpf(cpf)
@@ -89,6 +101,8 @@ public class ClienteService {
     public ClienteAprovadoDTOOut aprovarCliente(String cpf) {
         Cliente cliente = clienteRepository.findByCpf(cpf)
                 .orElseThrow(() -> new EntityNotFoundException("Cliente não encontrado"));
+
+        System.err.println(cliente.getNome());
 
         cliente.setStatus(StatusCliente.APROVADO);
         clienteRepository.save(cliente);
