@@ -198,6 +198,9 @@ app.post("/clientes/:cpf/rejeitar", verifyJWT, (req, res, next) => {
 
 //region Contas
 // ================= CONTAS =================
+app.get("/contas", verifyJWT, (req, res, next) => {
+  contaServiceProxy(req, res, next);
+});
 
 app.get("/contas/saldo", verifyJWT, (req, res, next) => {
   contaServiceProxy(req, res, next);
@@ -227,15 +230,18 @@ app.get("/gerentes", verifyJWT, (req, res, next) => {
 });
 
 app.post("/gerentes", verifyJWT, (req, res, next) => {
-  gerentesServiceProxy(req, res, next);
+  req.url = "/saga/insercao-gerente";
+  sagaServiceProxy(req, res, next);
 });
 
 app.get("/gerentes/:cpf", verifyJWT, (req, res, next) => {
   gerentesServiceProxy(req, res, next);
 });
 
-app.delete("/gerentes/:cpf", verifyJWT, (req, res, next) => {
-  gerentesServiceProxy(req, res, next);
+app.delete("/gerentes/:cpfGerente", verifyJWT, (req, res, next) => {
+  const cpf = req.params.cpfGerente;
+  req.url = `/saga/remocao-gerente/${cpf}`;
+  sagaServiceProxy(req, res, next);
 });
 
 app.put("/gerentes/:cpf", verifyJWT, (req, res, next) => {

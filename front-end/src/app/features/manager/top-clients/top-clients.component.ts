@@ -56,7 +56,7 @@ export class TopClientsComponent implements OnInit {
                    clientName: clientData.nome,
                    city: clientData.cidade || 'N/A', // Proteção contra null
                    state: clientData.estado || 'N/A',
-                   balance: account.balance
+                   balance: account.saldo
                  };
                }
                return null;
