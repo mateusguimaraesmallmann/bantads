@@ -36,7 +36,7 @@ public class SagaConsumer {
         if (RabbitConfig.GERENTE_CREATE_KEY.equals(routingKey)) {
             handleCreateGerente(command, message);
         } else if (RabbitConfig.GERENTE_DELETE_KEY.equals(routingKey)) {
-            logger.warn("Comando de rollback (DELETE) recebido, mas ainda não implementado.");
+            handleDeleteGerente(command, message); 
         }
     }
     
@@ -84,4 +84,42 @@ public class SagaConsumer {
         );
     }
    
+     private void handleDeleteGerente(SagaCommand<CreateGerenteCommand> command, Message message) {
+        
+        SagaReply<?> reply;
+        String correlationId = message.getMessageProperties().getCorrelationId();
+        
+        try {
+            logger.info("ms-gerente: Comando 'DeleteGerente' recebido. CorrelationId: {}", correlationId);
+            
+            String cpf = (command.getPayload().getCpf());
+
+            gerenteService.removerGerente(cpf);
+
+            reply = SagaReply.success(cpf);
+            logger.info("ms-gerente: Gerente deletado com SUCESSO. Enviando resposta. CorrelationId: {}", correlationId);
+
+        } catch (Exception e) {
+            
+            logger.error("ms-gerente: FALHA ao deletar gerente. Enviando resposta. CorrelationId: {}. Erro: {}", correlationId, e.getMessage());
+            SagaFailureReply failure = new SagaFailureReply(
+                "ms-gerente",
+                e.getMessage(),
+                e.getClass().getSimpleName()
+            );
+            reply = SagaReply.failure(failure);
+            
+        }
+
+        rabbitTemplate.convertAndSend(
+            RabbitConfig.REPLIES_EXCHANGE, 
+            RabbitConfig.SAGA_REPLY_KEY,   
+            reply,
+            msg -> {
+                msg.getMessageProperties().setCorrelationId(correlationId);
+                return msg;
+            }
+        );
+    }
+
 }
