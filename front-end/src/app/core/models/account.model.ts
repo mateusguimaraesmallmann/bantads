@@ -1,9 +1,11 @@
 export interface Account {
+  id: number;
   number: number;
   clientId: number;
   clientName: string | null;
-  balance: number;
-  limit: number;
+  saldo: number;
+  limite: number;
+  idGerente: number;
   managerCpf: string | null;
   managerName: string | null;
   createdAt: Date;
@@ -33,7 +35,7 @@ export interface ClienteCompleto {
   cep: number;
   cidade: string;
   estado: string;
-  bairro:string;   
+  bairro:string;
   conta: string;
   saldo: number;
   limite: number;

@@ -194,6 +194,9 @@ app.post("/clientes/:cpf/rejeitar", verifyJWT, (req, res, next) => {
 
 //region Contas
 // ================= CONTAS =================
+app.get("/contas", verifyJWT, (req, res, next) => {
+  contaServiceProxy(req, res, next);
+});
 
 app.get("/contas/saldo", verifyJWT, (req, res, next) => {
   contaServiceProxy(req, res, next);
