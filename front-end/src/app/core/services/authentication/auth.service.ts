@@ -32,10 +32,11 @@ export class AuthService {
           senha: login.password
       }).pipe(
           map(response => {
-              if (response && response.auth && response.token) {
-                  localStorage.setItem('token', response.data.token);
-                  localStorage.setItem('user', JSON.stringify(response.data));
-                  return response.data;
+            console.log(response)
+              if (response && response.access_token) {
+                  localStorage.setItem('token', response.access_token);
+                  localStorage.setItem('user', JSON.stringify(response.usuario));
+                  return response.tipo;
               }
               alert("Resposta inválida do servidor.")
               return throwError(() => new Error('Resposta inválida do servidor'));

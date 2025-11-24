@@ -41,13 +41,13 @@ export class LoginComponent {
   console.log('login payload', payload);
 
   this.authService.doLogin(payload).subscribe({
-    next: (user) => {
-      if (user) {
-        if (user.role === 'ADMINISTRADOR') {
+    next: (role) => {
+      if (role) {
+        if (role === 'ADMINISTRADOR') {
           window.location.href = '/administrator-home';
-        } else if (user.role === 'GERENTE') {
+        } else if (role === 'GERENTE') {
           window.location.href = '/manager-home';
-        } else if (user.role === 'CLIENTE') {
+        } else if (role === 'CLIENTE') {
           window.location.href = '/client-home';
         }
       } else {

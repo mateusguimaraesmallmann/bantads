@@ -49,6 +49,8 @@ const authServiceProxy = httpProxy(process.env.MS_AUTH_URL, {
       const cpf = objBody.cpf;
       const nome = objBody.nome;
       const email = objBody.email;
+      const conta = objBody.conta;
+      const saldo = objBody.saldo;
       const token_type = "Bearer";
       const tipo = objBody.role;
       const access_token = objBody.token;
@@ -56,7 +58,12 @@ const authServiceProxy = httpProxy(process.env.MS_AUTH_URL, {
       return { access_token, token_type, 
           "usuario": {
                 "cpf": cpf,
-                "email": email 
+                "email": email,
+                "conta":conta,
+                "saldo":saldo,
+                "id":id,
+                "role" : objBody.role,
+                "teste":"aaaa"
             },
             tipo        
       };
