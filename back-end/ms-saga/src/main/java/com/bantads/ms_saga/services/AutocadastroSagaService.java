@@ -29,34 +29,30 @@ public class AutocadastroSagaService {
     @Autowired private RabbitMQSender sender;
     @Autowired private ClienteClient clienteClient;
 
-    public ResponseEntity<?> autoCadastro(String cpf,AutocadastroRequest request) {
+    public ResponseEntity<?> autoCadastro(AutocadastroRequest request) {
         
         try {
-            clienteClient.checkCpfExists(cpf); 
+            clienteClient.checkCpfExists(request.getCpf()); 
 
             logger.warn("Falha na pré-validação: CPF {} já existe.", request.getCpf());
             return ResponseEntity
                 .status(HttpStatus.CONFLICT) 
-                .body("CPF já cadastrado no sistema."); 
+                .body(Map.of("message", "CPF já cadastrado no sistema.", "cpf", request.getCpf())); 
 
         } catch (FeignException.NotFound e) {
             logger.info("Etapa 1 (Síncrona): CPF {} não encontrado. Válido para cadastro.", request.getCpf());
             
             try {
                 logger.info("Etapa 2 (Assíncrona): Iniciando SAGA de Autocadastro...");
-                // 1. Criar o estado inicial do SAGA 
+                
                 AutocadastroSagaState state = new AutocadastroSagaState(request);
                 
-                // 2. Persistir a instância do SAGA no banco 
                 SagaInstance instance = sagaService.createSaga("AUTOCADASTRO", state);
-                logger.info("SAGA de Autocadastro. CorrelationId: {}", instance.getCorrelationId());
 
-                // 3. Criar o primeiro comando (Criar Cliente)
                 CreateClientCommand clienteCmd = new CreateClientCommand(
                     request.getCpf(),
                     request.getNome(),
                     request.getEmail(),
-                    //request.getTelefone(),
                     request.getSalario(),
                     request.getCep(),
                     request.getLogradouro(),
@@ -67,33 +63,29 @@ public class AutocadastroSagaService {
                     request.getEstado()
                 );
 
-                // 4. Enviar o primeiro comando ao RabbitMQ
                 sender.sendSagaCommand(
                     RabbitMQConfig.CLIENTE_CREATE_KEY,
                     new SagaCommand<>(clienteCmd),
                     instance.getCorrelationId()
                 );
 
-                // 5. Retornar "Created" 
                 return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
-                    "message", "Sua solicitação de cadastro foi recebida e está sendo processada.",
-                    "correlationId", instance.getCorrelationId()
+                    "cpf", request.getCpf(), 
+                    "email", request.getEmail() 
                 ));
 
             } catch (Exception sagaException) {
-                // Erro ao TENTAR INICIAR o saga (ex: RabbitMQ down, DB do Saga down)
                 logger.error("Erro ao INICIAR o SAGA de Autocadastro: {}", sagaException.getMessage(), sagaException);
                 return ResponseEntity
                     .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro interno ao iniciar o processo de cadastro.");
+                    .body(Map.of("message", "Erro interno ao iniciar o processo de cadastro."));
             }
 
         } catch (FeignException e) {
-            // Outro erro do Feign (ex: ms-cliente está offline)
             logger.error("Erro de comunicação com ms-cliente durante a pré-validação: {}", e.getMessage(), e);
             return ResponseEntity
                 .status(HttpStatus.SERVICE_UNAVAILABLE) // 503
-                .body("Serviço de validação indisponível. Tente novamente mais tarde.");
+                .body(Map.of("message", "Serviço de validação indisponível. Tente novamente mais tarde."));
         }
     }
    

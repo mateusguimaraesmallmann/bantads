@@ -49,16 +49,17 @@ const authServiceProxy = httpProxy(process.env.MS_AUTH_URL, {
       const cpf = objBody.cpf;
       const nome = objBody.nome;
       const email = objBody.email;
-      const tipo = objBody.tipo;
-      const token = jwt.sign(
-        { id, nome, email, cpf, tipo },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: 300,
-        }
-      );
+      const token_type = "Bearer";
+      const tipo = objBody.role;
+      const access_token = objBody.token;
       userRes.status(200);
-      return { auth: true, token: token, data: objBody };
+      return { access_token, token_type, 
+          "usuario": {
+                "cpf": cpf,
+                "email": email 
+            },
+            tipo        
+      };
     } else {
       userRes.status(401);
       return { message: "Login inválido" };
@@ -162,15 +163,11 @@ app.get("/clientes/id/:idCliente", verifyJWT, (req, res, next) => {
 });
 
 //CRIAÇÃO DE CONTA (AUTOCADASTRO)
-app.post("/autocadastro", (req, res, next) => {
+app.post("/clientes", (req, res, next) => {
   req.url = "/saga/autocadastro";
   sagaServiceProxy(req, res, next);
 });
 
-// app.post("/clientes", (req, res, next) => {
-//   req.url = "/saga/autocadastro";
-//   sagaServiceProxy(req, res, next);
-// });
 
 app.get("/clientes/:cpfCliente", verifyJWT, (req, res, next) => {
   const cpf = req.params.cpfCliente;

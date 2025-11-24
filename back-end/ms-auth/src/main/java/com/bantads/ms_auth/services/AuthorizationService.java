@@ -50,7 +50,7 @@ public class AuthorizationService implements UserDetailsService {
         var authentication = this.manager.authenticate(authenticationToken);
         var usuarioAutenticado = (User) authentication.getPrincipal();
         var tokenJWT = tokenService.generateToken((User) authentication.getPrincipal());
-        return new TokenDTO(tokenJWT, usuarioAutenticado.getRole().toString(), usuarioAutenticado.getStatus().toString(),usuarioAutenticado.getCpf().toString());
+        return new TokenDTO(tokenJWT, usuarioAutenticado.getRole().toString(), usuarioAutenticado.getStatus().toString(),usuarioAutenticado.getCpf().toString(),usuarioAutenticado.getEmail().toString());
     }
     
 }

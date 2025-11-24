@@ -4,5 +4,6 @@ public record TokenDTO(
     String token,
     String role, 
     String status,
-    String cpf
+    String cpf,
+    String email
 ) {}
